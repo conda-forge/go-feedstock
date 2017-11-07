@@ -48,7 +48,7 @@ rmdir /q /s "%PREFIX%\go\bin"
 if errorlevel 1 exit 1
 
 rem Install [de]activate scripts.
-rem Copy the [de]activate scripts to %LIBRARY_PREFIX%\etc\conda\[de]activate.d.
+rem Copy the [de]activate scripts to %PREFIX%\etc\conda\[de]activate.d.
 rem This will allow them to be run on environment activation.
 for %%F in (activate deactivate) do (
   if not exist "%PREFIX%\etc\conda\%%F.d" mkdir "%PREFIX%\etc\conda\%%F.d"
