@@ -1,8 +1,8 @@
 {% set name = "go" %}
-{% set version = "1.9.3" %}
+{% set version = "1.8.5" %}
 {% set p = 'm2-' if win else '' %}
 {% set n = 'm2w64-' if win else '' %}
-{% set sha256 = "4e3d0ad6e91e02efa77d54e86c8b9e34fbe1cbc2935b6d38784dca93331c47ae" %}
+{% set sha256 = "4949fd1a5a4954eb54dd208f2f412e720e23f32c91203116bed0387cf5d0ff2d" %}
 
 package:
   name: {{ name|lower }}
@@ -12,11 +12,6 @@ source:
   fn: {{ name }}-{{ version }}.tar.gz
   url: https://storage.googleapis.com/golang/go{{ version }}.src.tar.gz
   sha256: {{ sha256 }}
-  patches:
-    - 0001-Skip-unshare-and-capset-tests-on-Linux.patch  # [linux]
-    - 0001-Fix-for-TestRespectSetgidDir.patch  # [osx]
-    # https://github.com/golang/go/issues/11217
-    - 0001-Skip-flaky-tests-on-Windows.patch  # [win]
 
 build:
   number: 0
