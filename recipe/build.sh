@@ -22,7 +22,11 @@ elif [[ $(uname) == 'Linux' ]]; then
   ./all.bash
 fi
 
+# Don't need the bootstrap directory anymore
 rm -fr ${GOROOT_BOOTSTRAP}
+# Don't need the cached build objects
+rm -fr ${SRC_DIR}/pkg/obj
+
 mkdir -p ${PREFIX}/go
 # Dropping the verbose option here, because Travis chokes on output >4MB
 cp -r $SRC_DIR/* ${PREFIX}/go/

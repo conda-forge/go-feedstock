@@ -34,7 +34,11 @@ cd %SRC_DIR%\src
 call all.bat
 if errorlevel 1 exit 1
 
+rem Don't need the bootstrap directory anymore
 rmdir /s /q %GOROOT_BOOTSTRAP%
+rem Don't need the cached build objects
+rmdir /s /q %SRC_DIR%\pkg\obj
+
 mkdir %PREFIX%\go
 xcopy /s /y /i /q %SRC_DIR%\* %PREFIX%\go\
 del %PREFIX%\go\bld.bat
