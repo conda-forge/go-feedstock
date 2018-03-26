@@ -19,7 +19,7 @@ source:
     - 0001-Skip-flaky-tests-on-Windows.patch  # [win]
 
 build:
-  number: 0
+  number: 1
   # It's relocatable. $GOROOT FTW!
   binary_relocation: False
 
