@@ -38,3 +38,7 @@ do
     mkdir -p "${PREFIX}/etc/conda/${CHANGE}.d"
     cp "${RECIPE_DIR}/${CHANGE}.sh" "${PREFIX}/etc/conda/${CHANGE}.d/${PKG_NAME}_${CHANGE}.sh"
 done
+
+# Install stdlib with cgo flag
+source $PREFIX/etc/conda/activate.d/${PKG_NAME}_activate.sh
+CGO_ENABLED=0 go install -a -installsuffix cgo std
