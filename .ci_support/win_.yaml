@@ -1,0 +1,5 @@
+curl:
+- '7.44'
+pin_run_as_build:
+  curl:
+    max_pin: x.x
