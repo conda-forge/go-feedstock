@@ -1,8 +1,8 @@
 {% set name = "go" %}
-{% set version = "1.9.4" %}
+{% set version = "1.9.5" %}
 {% set p = 'm2-' if win else '' %}
 {% set n = 'm2w64-' if win else '' %}
-{% set sha256 = "0573a8df33168977185aa44173305e5a0450f55213600e94541604b75d46dc06" %}
+{% set sha256 = "f1c2bb7f32bbd8fa7a19cc1608e0d06582df32ff5f0340967d83fb0017c49fbc" %}
 
 package:
   name: {{ name|lower }}
