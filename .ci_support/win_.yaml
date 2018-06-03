@@ -1,5 +1,25 @@
-curl:
-- '7.59'
-pin_run_as_build:
-  curl:
-    max_pin: x
+c_compiler:
+- vs2008
+- vs2015
+conda_goarch:
+- amd64
+conda_gofile:
+- ELF
+- Mach-O
+- PE32+
+conda_goos:
+- darwin
+- linux
+- windows
+conda_goplatform:
+- linux-64
+- osx-64
+- win-64
+cxx_compiler:
+- vs2008
+- vs2015
+fortran_compiler:
+- gfortran
+zip_keys:
+- - c_compiler
+  - cxx_compiler
