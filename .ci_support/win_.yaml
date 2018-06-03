@@ -8,8 +8,8 @@ conda_gofile:
 - Mach-O
 - PE32+
 conda_goos:
-- darwin
 - linux
+- darwin
 - windows
 conda_goplatform:
 - linux-64
@@ -23,3 +23,6 @@ fortran_compiler:
 zip_keys:
 - - c_compiler
   - cxx_compiler
+- - conda_goplatform
+  - conda_goos
+  - conda_gofile

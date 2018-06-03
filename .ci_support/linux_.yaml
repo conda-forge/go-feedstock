@@ -7,8 +7,8 @@ conda_gofile:
 - Mach-O
 - PE32+
 conda_goos:
-- darwin
 - linux
+- darwin
 - windows
 conda_goplatform:
 - linux-64
