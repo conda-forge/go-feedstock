@@ -1,0 +1,11 @@
+c_compiler:
+- toolchain_c
+curl:
+- '7.59'
+cxx_compiler:
+- toolchain_cxx
+fortran_compiler:
+- toolchain_fort
+pin_run_as_build:
+  curl:
+    max_pin: x

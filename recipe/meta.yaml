@@ -23,11 +23,16 @@ requirements:
     - curl
     - openssl >1        # [not win]
     - perl 5.20.3.1     # [not win]
-    - toolchain         # [not win]
     - {{ p }}tar        # [win]
     - {{ p }}gzip       # [win]
     - {{ p }}patch      # [win]
-    - {{ n }}toolchain  # [win]
+    - {{ compiler('fortran') }}        # [unix]
+    - {{ compiler('m2w64_fortran') }}  # [win]
+    - {{ compiler('c') }}        # [unix]
+    - {{ compiler('m2w64_c') }}  # [win]
+    - {{ compiler('cxx') }}        # [unix]
+    - {{ compiler('m2w64_cxx') }}  # [win]
+  host:
   # Optional (conda 4.4, where are you?)
   # run:
   #   - git

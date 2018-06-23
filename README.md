@@ -21,14 +21,16 @@ dynamically typed, interpreted language.
 Current build status
 ====================
 
-Linux: [![Circle CI](https://circleci.com/gh/conda-forge/go-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/go-feedstock)
-OSX: [![TravisCI](https://travis-ci.org/conda-forge/go-feedstock.svg?branch=master)](https://travis-ci.org/conda-forge/go-feedstock)
-Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/conda-forge/go-feedstock?svg=True)](https://ci.appveyor.com/project/conda-forge/go-feedstock/branch/master)
+[![Linux](https://img.shields.io/circleci/project/github/conda-forge/go-feedstock/master.svg?label=Linux)](https://circleci.com/gh/conda-forge/go-feedstock)
+[![OSX](https://img.shields.io/travis/conda-forge/go-feedstock/master.svg?label=macOS)](https://travis-ci.org/conda-forge/go-feedstock)
+[![Windows](https://img.shields.io/appveyor/ci/conda-forge/go-feedstock/master.svg?label=Windows)](https://ci.appveyor.com/project/conda-forge/go-feedstock/branch/master)
 
 Current release info
 ====================
-Version: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/go/badges/version.svg)](https://anaconda.org/conda-forge/go)
-Downloads: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/go/badges/downloads.svg)](https://anaconda.org/conda-forge/go)
+
+| Name | Downloads | Version | Platforms |
+| --- | --- | --- | --- |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-go-green.svg)](https://anaconda.org/conda-forge/go) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go.svg)](https://anaconda.org/conda-forge/go) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go.svg)](https://anaconda.org/conda-forge/go) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go.svg)](https://anaconda.org/conda-forge/go) |
 
 Installing go
 =============
