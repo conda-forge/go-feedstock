@@ -4,10 +4,12 @@ pushd $GOROOT_BOOTSTRAP/src
 ./make.bash
 popd
 
-# Exports copied from
-#  https://salsa.debian.org/go-team/compiler/golang/blob/golang-1.10/debian/rules#L9
+# Do not use GOROOT_FINAL. Otherwise, every conda environment would
+# need its own non-hardlinked copy of the go (+100MB per env).
+# It is better to rely on setting GOROOT during environment activation.
+#
+# c.f. https://github.com/conda-forge/go-feedstock/pull/21#discussion_r202513916
 export GOROOT=$SRC_DIR/go
-export GOROOT_FINAL=${PREFIX}/go
 export GOCACHE=off
 pushd $GOROOT/src
 if [[ $(uname) == 'Darwin' ]]; then
@@ -23,5 +25,13 @@ popd
 cp -a $SRC_DIR/go ${PREFIX}/go
 
 # Right now, it's just go and gofmt, but might be more in the future!
+# We don't move files, and instead rely on soft-links
 mkdir -p ${PREFIX}/bin && pushd $_
 find ../go/bin -type f -exec ln -s {} . \;
+
+# Copy the rendered [de]activate scripts to %PREFIX%\etc\conda\[de]activate.d.
+# go finds its *.go files via the GOROOT variable
+for F in activate deactivate; do
+  mkdir -p "${PREFIX}/etc/conda/${F}.d"
+  cp -v "${RECIPE_DIR}/${F}-go-core.sh" "${PREFIX}/etc/conda/${F}.d/${F}-go-core.sh"
+done

@@ -6,9 +6,12 @@ cd "%GOROOT_BOOTSTRAP%\src"
 call make.bat
 if errorlevel 1 exit 1
 
-rem GOROOT_FINAL has no effect on Windows
+rem Do not use GOROOT_FINAL. Otherwise, every conda environment would
+rem need its own non-hardlinked copy of the go (+100MB per env).
+rem It is better to rely on setting GOROOT during environment activation.
+rem
+rem c.f. https://github.com/conda-forge/go-feedstock/pull/21#discussion_r202513916
 set "GOROOT=%SRC_DIR%\go"
-set "GOROOT_FINAL=%PREFIX%\go"
 set "GOCACHE=off"
 cd "%GOROOT%\src"
 call all.bat
@@ -17,6 +20,7 @@ if errorlevel 1 exit 1
 mkdir "%PREFIX%\go"
 xcopy /s /y /i /q "%SRC_DIR%\go\*" "%PREFIX%\go\"
 
+rem Right now, it's just go and gofmt, but might be more in the future!
 if not exist "%LIBRARY_BIN%" mkdir "%LIBRARY_BIN%"
 for %%f in ("%PREFIX%\go\bin\*.exe") do (
   move %%f "%LIBRARY_BIN%"
