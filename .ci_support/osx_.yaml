@@ -1,11 +1,30 @@
 MACOSX_DEPLOYMENT_TARGET:
 - '10.9'
-curl:
-- '7.59'
+c_compiler:
+- toolchain_c
+conda_goarch:
+- amd64
+conda_gofile:
+- ELF
+- Mach-O
+- PE32+
+conda_goos:
+- linux
+- darwin
+- windows
+conda_goplatform:
+- linux-64
+- osx-64
+- win-64
+cxx_compiler:
+- toolchain_cxx
+fortran_compiler:
+- toolchain_fort
 macos_machine:
 - x86_64-apple-darwin13.4.0
 macos_min_version:
 - '10.9'
-pin_run_as_build:
-  curl:
-    max_pin: x
+zip_keys:
+- - conda_goplatform
+  - conda_goos
+  - conda_gofile
