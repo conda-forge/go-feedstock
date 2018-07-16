@@ -1,0 +1,19 @@
+conda_goarch:
+  - amd64
+conda_goos:
+  - linux
+  - darwin
+  - windows
+conda_goplatform:
+  - linux-64
+  - osx-64
+  - win-64
+conda_gofile:
+  - ELF
+  - Mach-O
+  - PE32+
+zip_keys:
+  - 
+    - conda_goplatform
+    - conda_goos
+    - conda_gofile

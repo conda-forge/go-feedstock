@@ -21,14 +21,20 @@ dynamically typed, interpreted language.
 Current build status
 ====================
 
-Linux: [![Circle CI](https://circleci.com/gh/conda-forge/go-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/go-feedstock)
-OSX: [![TravisCI](https://travis-ci.org/conda-forge/go-feedstock.svg?branch=master)](https://travis-ci.org/conda-forge/go-feedstock)
-Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/conda-forge/go-feedstock?svg=True)](https://ci.appveyor.com/project/conda-forge/go-feedstock/branch/master)
+[![Linux](https://img.shields.io/circleci/project/github/conda-forge/go-feedstock/master.svg?label=Linux)](https://circleci.com/gh/conda-forge/go-feedstock)
+[![OSX](https://img.shields.io/travis/conda-forge/go-feedstock/master.svg?label=macOS)](https://travis-ci.org/conda-forge/go-feedstock)
+[![Windows](https://img.shields.io/appveyor/ci/conda-forge/go-feedstock/master.svg?label=Windows)](https://ci.appveyor.com/project/conda-forge/go-feedstock/branch/master)
 
 Current release info
 ====================
-Version: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/go/badges/version.svg)](https://anaconda.org/conda-forge/go)
-Downloads: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/go/badges/downloads.svg)](https://anaconda.org/conda-forge/go)
+
+| Name | Downloads | Version | Platforms |
+| --- | --- | --- | --- |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-go-green.svg)](https://anaconda.org/conda-forge/go) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go.svg)](https://anaconda.org/conda-forge/go) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go.svg)](https://anaconda.org/conda-forge/go) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go.svg)](https://anaconda.org/conda-forge/go) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-go--core-green.svg)](https://anaconda.org/conda-forge/go-core) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-core.svg)](https://anaconda.org/conda-forge/go-core) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-core.svg)](https://anaconda.org/conda-forge/go-core) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-core.svg)](https://anaconda.org/conda-forge/go-core) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-go_linux--64-green.svg)](https://anaconda.org/conda-forge/go_linux-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go_linux-64.svg)](https://anaconda.org/conda-forge/go_linux-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go_linux-64.svg)](https://anaconda.org/conda-forge/go_linux-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go_linux-64.svg)](https://anaconda.org/conda-forge/go_linux-64) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-go_osx--64-green.svg)](https://anaconda.org/conda-forge/go_osx-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go_osx-64.svg)](https://anaconda.org/conda-forge/go_osx-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go_osx-64.svg)](https://anaconda.org/conda-forge/go_osx-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go_osx-64.svg)](https://anaconda.org/conda-forge/go_osx-64) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-go_win--64-green.svg)](https://anaconda.org/conda-forge/go_win-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go_win-64.svg)](https://anaconda.org/conda-forge/go_win-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go_win-64.svg)](https://anaconda.org/conda-forge/go_win-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go_win-64.svg)](https://anaconda.org/conda-forge/go_win-64) |
 
 Installing go
 =============
@@ -39,10 +45,10 @@ Installing `go` from the `conda-forge` channel can be achieved by adding `conda-
 conda config --add channels conda-forge
 ```
 
-Once the `conda-forge` channel has been enabled, `go` can be installed with:
+Once the `conda-forge` channel has been enabled, `go, go-core, go_linux-64, go_osx-64, go_win-64` can be installed with:
 
 ```
-conda install go
+conda install go go-core go_linux-64 go_osx-64 go_win-64
 ```
 
 It is possible to list all of the versions of `go` available on your platform with:
