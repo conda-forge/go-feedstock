@@ -16,9 +16,12 @@ source:
     folder: go-bootstrap
 
 build:
-  number: 1
+  number: 3
   binary_relocation: False
   detect_binary_files_with_prefix: False
+  force_ignore_keys:  # [win]
+    - c_compiler      # [win]
+    - cxx_compiler    # [win]
 
 requirements:
   run:
