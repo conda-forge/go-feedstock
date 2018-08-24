@@ -1,5 +1,9 @@
 c_compiler:
 - toolchain_c
+channel_sources:
+- conda-forge,defaults
+channel_targets:
+- conda-forge main
 conda_goarch:
 - amd64
 conda_gofile:
@@ -16,6 +20,8 @@ conda_goplatform:
 - win-64
 cxx_compiler:
 - toolchain_cxx
+docker_image:
+- condaforge/linux-anvil
 fortran_compiler:
 - toolchain_fort
 zip_keys:
