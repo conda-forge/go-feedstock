@@ -67,7 +67,6 @@ outputs:
     script: build-platform.bat  # [win]
     requirements:
       build:
-        - sed      # [osx]
         - m2-sed   # [win]
         - m2-file  # [win]
         - m2-grep  # [win]
