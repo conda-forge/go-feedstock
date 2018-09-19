@@ -22,6 +22,11 @@ build:
   force_ignore_keys:  # [win]
     - c_compiler      # [win]
     - cxx_compiler    # [win]
+  # test data links to these DSOs
+  missing_dso_whitelist:
+    - /usr/lib/libSystem.B.dylib
+    - /usr/lib/libgcc_s.1.dylib
+    - libc.so.6
 
 requirements:
   run:
