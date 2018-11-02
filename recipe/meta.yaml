@@ -1,7 +1,7 @@
 {% set name = "go" %}
-{% set version = "1.10.4" %}
+{% set version = "1.10.5" %}
 {% set n = 'm2w64-' if win else '' %}
-{% set sha256 = "6fe44965ed453cd968a81988523e9b0e794d3a478f91fd7983c28763d52d5781" %}
+{% set sha256 = "49f806f66762077861b7de7081f586995940772d29d4c45068c134441a743fa2" %}
 
 package:
   name: {{ name|lower }}
@@ -16,7 +16,7 @@ source:
     folder: go-bootstrap
 
 build:
-  number: 1
+  number: 0
   binary_relocation: False
   detect_binary_files_with_prefix: False
   force_ignore_keys:  # [win]
