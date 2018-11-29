@@ -16,7 +16,7 @@ source:
     folder: go-bootstrap
 
 build:
-  number: 0
+  number: 1000
   binary_relocation: False
   detect_binary_files_with_prefix: False
   force_ignore_keys:  # [win]
