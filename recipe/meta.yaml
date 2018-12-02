@@ -53,7 +53,7 @@ outputs:
         - {{ n }}toolchain
         {% endif %}
 
-        - perl 5.20.3.1  # [not win]
+        - perl  # [not win]
     test:
       files:
         - hello.go
