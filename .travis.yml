@@ -48,7 +48,7 @@ install:
       echo "Configuring conda."
       source /Users/travis/miniconda3/bin/activate root
 
-      conda install --yes --quiet conda-forge::conda-forge-ci-setup=2
+      conda install --yes --quiet conda-forge::conda-forge-ci-setup=2 conda-build=3.16
       setup_conda_rc ./ ./recipe ./.ci_support/${CONFIG}.yaml
 
       source run_conda_forge_build_setup
