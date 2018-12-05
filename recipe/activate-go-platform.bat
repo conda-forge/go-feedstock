@@ -3,3 +3,11 @@
 
 @set "CONDA_GOARCH_BACKUP=%GOARCH%"
 @set "GOARCH=@GOARCH@"
+
+if "%CONDA_BUILD%"==1 (
+  @set "GOPATH_BACKUP=%GOPATH%"
+  @set "GOPATH=%SRC_DIR%"
+
+  @set "PATH_BACKUP=%PATH%"
+  @set "PATH=%GOPATH%\bin;%PATH%"
+)

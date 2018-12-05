@@ -1,6 +1,2 @@
 @set "CONDA_GOROOT_BACKUP=%GOROOT%"
 @set "GOROOT=%CONDA_PREFIX%\go"
-
-if "%CONDA_BUILD%"==1 (
-  set GOPATH=%SRC_DIR%
-)

@@ -12,7 +12,7 @@ source:
     folder: go
 
 build:
-  number: 1000
+  number: 1001
   binary_relocation: False
   detect_binary_files_with_prefix: False
   force_ignore_keys:    # [win]
