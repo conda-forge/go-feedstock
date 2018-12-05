@@ -41,7 +41,7 @@ install:
     - cmd: conda.exe config --add channels conda-forge
 
     # Configure the VM.
-    - cmd: conda.exe install -n root --quiet --yes conda-forge-ci-setup=2
+    - cmd: conda.exe install -n root --quiet --yes conda-forge-ci-setup=2 conda-build=3.16
     - cmd: run_conda_forge_build_setup
 
 # Skip .NET project specific build phase.

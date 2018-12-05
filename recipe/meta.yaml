@@ -1,7 +1,6 @@
 {% set name = "go" %}
-{% set version = "1.10.5" %}
+{% set version = "1.11.2" %}
 {% set n = 'm2w64-' if win else '' %}
-{% set sha256 = "f0a3ed5c775f39a970d4937c64b3b178992e23a5df57ae56a59a1c99253094f4" %}
 
 package:
   name: {{ name|lower }}
@@ -9,10 +8,10 @@ package:
 
 source:
   - url: https://storage.googleapis.com/golang/go{{ version }}.src.tar.gz
-    sha256: {{ sha256 }}
+    sha256: 042fba357210816160341f1002440550e952eb12678f7c9e7e9d389437942550
     folder: go
-  - url: https://storage.googleapis.com/golang/go1.4-bootstrap-20170531.tar.gz
-    sha256: 49f806f66762077861b7de7081f586995940772d29d4c45068c134441a743fa2
+  - url: https://storage.googleapis.com/golang/go1.4-bootstrap-20171003.tar.gz
+    sha256: f4ff5b5eb3a3cae1c993723f3eab519c5bae18866b5e5f96fe1102f0cb5c3e52
     folder: go-bootstrap
 
 build:
