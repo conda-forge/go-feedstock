@@ -6,4 +6,5 @@ export GOARCH=@GOARCH@
 
 if [[ $CONDA_BUILD == 1 ]]; then
   export GOPATH=$SRC_DIR
+  export PATH=$GOPATH/bin:$PATH
 fi
