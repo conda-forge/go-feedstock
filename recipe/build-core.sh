@@ -1,7 +1,7 @@
 # First, build go1.4 using gcc, then use that go to build go>1.4
 export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
 pushd $GOROOT_BOOTSTRAP/src
-env CGO_ENABLED=0 ./make.bash
+./make.bash
 popd
 
 # Do not use GOROOT_FINAL. Otherwise, every conda environment would
