@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.11.2" %}
+{% set version = "1.11.4" %}
 {% set n = 'm2w64-' if win else '' %}
 
 package:
@@ -8,7 +8,7 @@ package:
 
 source:
   - url: https://storage.googleapis.com/golang/go{{ version }}.src.tar.gz
-    sha256: 042fba357210816160341f1002440550e952eb12678f7c9e7e9d389437942550
+    sha256: 4cfd42720a6b1e79a8024895fa6607b69972e8e32446df76d6ce79801bbadb15
     folder: go
   - url: https://storage.googleapis.com/golang/go1.4-bootstrap-20171003.tar.gz
     sha256: f4ff5b5eb3a3cae1c993723f3eab519c5bae18866b5e5f96fe1102f0cb5c3e52
