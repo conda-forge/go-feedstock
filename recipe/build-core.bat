@@ -11,6 +11,9 @@ cd "%GOROOT%\src"
 call all.bat
 if errorlevel 1 exit 1
 
+rem Don't need the cached build objects
+rmdir /s /q %SRC_DIR%\go\pkg\obj
+
 mkdir "%PREFIX%\go"
 xcopy /s /y /i /q "%SRC_DIR%\go\*" "%PREFIX%\go\"
 
