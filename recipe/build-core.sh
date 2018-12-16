@@ -21,6 +21,9 @@ elif [[ $(uname) == 'Linux' ]]; then
 fi
 popd
 
+# Don't need the cached build objects
+rm -fr ${SRC_DIR}/go/pkg/obj
+
 # Dropping the verbose option here, because Travis chokes on output >4MB
 cp -a $SRC_DIR/go ${PREFIX}/go
 
