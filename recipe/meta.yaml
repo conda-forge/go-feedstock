@@ -30,9 +30,11 @@ build:
 
 requirements:
   run:
-    - {{ pin_subpackage(name.lower()+"_linux-64", exact=True) }}  # [linux]
+    - {{ pin_subpackage(name.lower()+"_linux-64", exact=True) }}  # [linux64]
+    - {{ pin_subpackage(name.lower()+"_linux-32", exact=True) }}  # [linux32]
     - {{ pin_subpackage(name.lower()+"_osx-64", exact=True) }}    # [osx]
-    - {{ pin_subpackage(name.lower()+"_win-64", exact=True) }}    # [win]
+    - {{ pin_subpackage(name.lower()+"_win-64", exact=True) }}    # [win64]
+    - {{ pin_subpackage(name.lower()+"_win-32", exact=True) }}    # [win32]
 
 test:
   commands:
