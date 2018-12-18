@@ -1,11 +1,5 @@
 setlocal enabledelayedexpansion
 
-rem First, build go1.4 using gcc, then use that go to build go>1.4
-set "GOROOT_BOOTSTRAP=%SRC_DIR%\go-bootstrap"
-cd "%GOROOT_BOOTSTRAP%\src"
-call make.bat
-if errorlevel 1 exit 1
-
 rem Do not use GOROOT_FINAL. Otherwise, every conda environment would
 rem need its own non-hardlinked copy of the go (+100MB per env).
 rem It is better to rely on setting GOROOT during environment activation.
