@@ -1,6 +1,5 @@
 {% set name = "go" %}
 {% set version = "1.11.2" %}
-{% set n = 'm2w64-' if win else '' %}
 
 package:
   name: {{ name|lower }}
@@ -43,14 +42,6 @@ outputs:
     requirements:
       build:
         - {{ compiler('go1.4-bootstrap') }}
-        {% if not win %}
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
-        {% else %}
-        - {{ n }}toolchain
-        {% endif %}
-
         - perl  # [not win]
     test:
       files:
@@ -81,12 +72,51 @@ outputs:
         - posix  # [win]
       commands:
         - go env
+
         - go build hello.go
         # Check that the file types match what is expected for each platform
         ## https://stackoverflow.com/questions/2768608/batch-equivalent-of-bash-backticks#2768660
         - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix]
         - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win]
 
+  - name: {{ name|lower }}-cgo_{{ target_platform }}
+    script: build-cgo.sh   # [not win]
+    script: build-cgo.bat  # [win]
+    requirements:
+      build:
+        - {{ compiler('c') }}        # [unix]
+        - {{ compiler('cxx') }}      # [unix]
+        - {{ compiler('fortran') }}  # [unix]
+
+        - {{ compiler('m64w_c') }}        # [win]
+        - {{ compiler('m64w_cxx') }}      # [win]
+        - {{ compiler('m64w_fortran') }}  # [win]
+
+        - sed      # [osx]
+        - m2-sed   # [win]
+        - m2-file  # [win]
+        - m2-grep  # [win]
+      host:
+        - {{ name|lower }}-core
+
+      run:
+        - {{ name|lower }}-core
+        - {{ compiler('c') }}        # [unix]
+        - {{ compiler('cxx') }}      # [unix]
+        - {{ compiler('fortran') }}  # [unix]
+
+        - {{ compiler('m64w_c') }}        # [win]
+        - {{ compiler('m64w_cxx') }}      # [win]
+        - {{ compiler('m64w_fortran') }}  # [win]
+
+    test:
+      files:
+        - hello-c.go
+      requires:
+        - posix  # [win]
+      commands:
+        - go env
+        - go build hello-c.go
 
 about:
   home: http://golang.org

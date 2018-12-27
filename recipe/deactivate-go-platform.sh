@@ -1,4 +1,4 @@
-if [ $CONDA_BUILD == 1]; then
+if [[ $CONDA_BUILD = 1 ]]; then
   export GOPATH="${GOPATH_BACKUP}"
   unset GOPATH_BACKUP
   if [ -z "$GOPATH" ]; then

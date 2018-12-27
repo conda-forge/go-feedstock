@@ -8,6 +8,10 @@ rem c.f. https://github.com/conda-forge/go-feedstock/pull/21#discussion_r2025139
 set "GOROOT=%SRC_DIR%\go"
 set "GOCACHE=off"
 cd "%GOROOT%\src"
+
+rem CGO is only available when the go_platform matched the target_platform
+set CGO_ENABLED=0
+
 call all.bat
 if errorlevel 1 exit 1
 
@@ -32,7 +36,7 @@ rem go finds its *.go files via the GOROOT variable
 for %%F in (activate deactivate) do (
   if not exist "%PREFIX%\etc\conda\%%F.d" mkdir "%PREFIX%\etc\conda\%%F.d"
   if errorlevel 1 exit 1
-  copy "%RECIPE_DIR%\%%F-go-core.bat" "%PREFIX%\etc\conda\%%F.d\%%F-go-core.bat"
+  copy "%RECIPE_DIR%\%%F-go-core.bat" "%PREFIX%\etc\conda\%%F.d\%%F-z60-go-core.bat"
   if errorlevel 1 exit 1
   dir %PREFIX%\etc\conda\%%F.d\
 )

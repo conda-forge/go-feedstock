@@ -6,12 +6,17 @@
 export GOROOT=$SRC_DIR/go
 export GOCACHE=off
 pushd $GOROOT/src
+
+# CGO is only available when the go_platform matched the target_platform
+export CGO_ENABLED=0
+
 if [[ $(uname) == 'Darwin' ]]; then
   # Tests on macOS receive SIGABRT on Travis :-/
   # All tests run fine on Mac OS X:10.9.5:13F1911 locally
   ./make.bash
 elif [[ $(uname) == 'Linux' ]]; then
-  ./all.bash
+  # TODO: remove this before going back to master if possible
+  ./make.bash
 fi
 popd
 
@@ -30,5 +35,5 @@ find ../go/bin -type f -exec ln -s {} . \;
 # go finds its *.go files via the GOROOT variable
 for F in activate deactivate; do
   mkdir -p "${PREFIX}/etc/conda/${F}.d"
-  cp -v "${RECIPE_DIR}/${F}-go-core.sh" "${PREFIX}/etc/conda/${F}.d/${F}-go-core.sh"
+  cp -v "${RECIPE_DIR}/${F}-go-core.sh" "${PREFIX}/etc/conda/${F}.d/${F}-z60-go-core.sh"
 done
