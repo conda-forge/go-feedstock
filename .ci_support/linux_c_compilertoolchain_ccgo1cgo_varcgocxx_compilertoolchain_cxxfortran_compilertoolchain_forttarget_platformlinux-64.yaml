@@ -2,6 +2,10 @@ build_number_decrement:
 - '1000'
 c_compiler:
 - toolchain_c
+cgo:
+- '1'
+cgo_var:
+- cgo
 channel_sources:
 - conda-forge,defaults
 channel_targets:
@@ -26,6 +30,15 @@ docker_image:
 - condaforge/linux-anvil
 fortran_compiler:
 - toolchain_fort
+go14_compiler:
+- go1.4-bootstrap
+perl:
+- '5.26'
+pin_run_as_build:
+  perl:
+    max_pin: x.x.x
+target_platform:
+- linux-64
 zip_keys:
 - - c_compiler
   - cxx_compiler
@@ -34,6 +47,8 @@ zip_keys:
   - channel_targets
   - docker_image
   - build_number_decrement
+- - cgo
+  - cgo_var
 - - conda_goplatform
   - conda_goos
   - conda_gofile
