@@ -90,10 +90,10 @@ outputs:
 
         # Check that the file types match what is expected for each platform
         ## https://stackoverflow.com/questions/2768608/batch-equivalent-of-bash-backticks#2768660
+        - go build hello.go
         - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix and not cgo]
         - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win and not cgo]
 
-        - go build hello.go
         - go build hello-c.go  # [cgo]
 
 
