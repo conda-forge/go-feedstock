@@ -33,13 +33,12 @@ outputs:
       commands:                                                       # [cgo]
         - go version                                                  # [cgo]
 
-  - name: {{ name }}-core        # [cgo]
-  - name: {{ name }}-nocgo-core  # [not cgo]
+  - name: {{ name }}-{{ cgo_var }}
     script: build-core.sh   # [not win]
     script: build-core.bat  # [win]
     requirements:
       build:
-        - {{ compiler('go1.4-bootstrap') }}
+        - {{ compiler('go14') }}
 
         - perl     # [not win]
         - sed      # [osx]
@@ -47,11 +46,7 @@ outputs:
         - m2-grep  # [win]
 
         - {{ compiler('c') }}              # [unix and cgo]
-        - {{ compiler('cxx') }}            # [unix and cgo]
-        - {{ compiler('fortran') }}        # [unix and cgo]
         - {{ compiler('m2w64_c') }}        # [win and cgo]
-        - {{ compiler('m2w64_cxx') }}      # [win and cgo]
-        - {{ compiler('m2w64_fortran') }}  # [win and cgo]
       run:                                 # [cgo]
         - {{ compiler('c') }}              # [unix and cgo]
         - {{ compiler('cxx') }}            # [unix and cgo]
@@ -83,12 +78,8 @@ outputs:
         - m2-sed   # [win]
         - m2-file  # [win]
         - m2-grep  # [win]
-      host:
-        - {{ pin_subpackage("go-core", exact=True) }}  # [cgo]
-        - {{ pin_subpackage("go-nocgo-core", exact=True) }}  # [not cgo]
       run:
-        - {{ pin_subpackage("go-core", exact=True) }}  # [cgo]
-        - {{ pin_subpackage("go-nocgo-core", exact=True) }}  # [not cgo]
+        - {{ pin_subpackage("go-"+cgo_var, exact=True) }}
 
     test:
       files:
