@@ -7,7 +7,6 @@ for %%F in (activate deactivate) do (
   if errorlevel 1 exit 1
   copy "%RECIPE_DIR%\%%F-go-%cgo_var%.bat" "%PREFIX%\etc\conda\%%F.d\%%F-z60-go-%cgo_var%.bat"
   if errorlevel 1 exit 1
-  dir %PREFIX%\etc\conda\%%F.d\
 )
 
 call "%PREFIX%\etc\conda\activate.d\activate-z60-go-%cgo_var%.bat"
