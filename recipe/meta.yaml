@@ -13,7 +13,7 @@ source:
     #  - 0001-addr2line.diff  # [linux]
 
 build:
-  number: 1000
+  number: 1001
   binary_relocation: False
   detect_binary_files_with_prefix: False
   force_ignore_keys:    # [win]
@@ -43,21 +43,16 @@ outputs:
       build:
         - {{ compiler('go14') }}
         - {{ compiler('c') }}              # [unix and cgo]
+        - {{ compiler('cxx') }}            # [unix and cgo]
         - {{ compiler('fortran') }}        # [unix and cgo]
         - {{ compiler('m2w64_c') }}        # [win and cgo]
+        - {{ compiler('m2w64_cxx') }}      # [win and cgo]
         - {{ compiler('m2w64_fortran') }}  # [win and cgo]
 
         - perl     # [not win]
         - m2-sed   # [win]
         - m2-grep  # [win]
 
-        # Packages needed for fixing tests
-        # see golang/go#23888
-      run:                                 # [cgo]
-        - {{ compiler('c') }}              # [unix and cgo]
-        - {{ compiler('fortran') }}        # [unix and cgo]
-        - {{ compiler('m2w64_c') }}        # [win and cgo]
-        - {{ compiler('m2w64_fortran') }}  # [win and cgo]
     test:
       files:
         - hello.go
