@@ -42,8 +42,10 @@ outputs:
     requirements:
       build:
         - {{ compiler('go14') }}
-        - {{ compiler('c') }}        # [unix and cgo]
-        - {{ compiler('m2w64_c') }}  # [win and cgo]
+        - {{ compiler('c') }}              # [unix and cgo]
+        - {{ compiler('fortran') }}        # [unix and cgo]
+        - {{ compiler('m2w64_c') }}        # [win and cgo]
+        - {{ compiler('m2w64_fortran') }}  # [win and cgo]
 
         - perl     # [not win]
         - m2-sed   # [win]
@@ -51,9 +53,11 @@ outputs:
 
         # Packages needed for fixing tests
         # see golang/go#23888
-      run:                           # [cgo]
-        - {{ compiler('c') }}        # [unix and cgo]
-        - {{ compiler('m2w64_c') }}  # [win and cgo]
+      run:                                 # [cgo]
+        - {{ compiler('c') }}              # [unix and cgo]
+        - {{ compiler('fortran') }}        # [unix and cgo]
+        - {{ compiler('m2w64_c') }}        # [win and cgo]
+        - {{ compiler('m2w64_fortran') }}  # [win and cgo]
     test:
       files:
         - hello.go
