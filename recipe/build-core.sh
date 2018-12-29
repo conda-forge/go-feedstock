@@ -16,6 +16,9 @@ source "${PREFIX}/etc/conda/activate.d/activate-z60-go-${cgo_var}.sh"
 # c.f. https://github.com/conda-forge/go-feedstock/pull/21#discussion_r202513916
 export GOROOT=$SRC_DIR/go
 export GOCACHE=off
+# This is a fix for user.Current issue
+export USER="${USER:-conda}"
+export HOME="${HOME:-$(cd $SRC_DIR/..;pwd)}"
 
 pushd $GOROOT/src
 if [[ $(uname) == 'Darwin' ]]; then
@@ -23,8 +26,7 @@ if [[ $(uname) == 'Darwin' ]]; then
   # All tests run fine on Mac OS X:10.9.5:13F1911 locally
   ./make.bash
 elif [[ $(uname) == 'Linux' ]]; then
-  # TODO: remove this before going back to master if possible
-  ./make.bash
+  ./all.bash
 fi
 popd
 
