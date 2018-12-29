@@ -1,3 +1,7 @@
+cgo:
+- '1'
+cgo_var:
+- cgo
 channel_sources:
 - conda-forge,defaults
 channel_targets:
@@ -16,9 +20,19 @@ conda_goplatform:
 - linux-64
 - osx-64
 - win-64
-fortran_compiler:
-- flang
+go14_compiler:
+- go1.4-bootstrap
+m2w64_c_compiler:
+- m2w64-toolchain
+m2w64_cxx_compiler:
+- m2w64-toolchain
+m2w64_fortran_compiler:
+- m2w64-toolchain
+target_platform:
+- win-64
 zip_keys:
+- - cgo
+  - cgo_var
 - - conda_goplatform
   - conda_goos
   - conda_gofile

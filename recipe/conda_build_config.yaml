@@ -1,3 +1,11 @@
+go14_compiler:
+  - go1.4-bootstrap
+cgo:
+  - 0
+  - 1
+cgo_var:
+  - nocgo
+  - cgo
 conda_goarch:
   - amd64
 conda_goos:
@@ -13,6 +21,9 @@ conda_gofile:
   - Mach-O
   - PE32+
 zip_keys:
+  - 
+    - cgo
+    - cgo_var
   - 
     - conda_goplatform
     - conda_goos

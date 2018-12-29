@@ -14,11 +14,6 @@ for %%F in (activate deactivate) do (
   if errorlevel 1 exit 1
 
   rem Copy the rendered [de]activate scripts to %PREFIX%\etc\conda\[de]activate.d.
-  copy "%%F-go-platform.bat" "%PREFIX%\etc\conda\%%F.d\%%F-%PKG_NAME%.bat"
+  copy "%%F-go-platform.bat" "%PREFIX%\etc\conda\%%F.d\%%F-z61-%PKG_NAME%.bat"
   if errorlevel 1 exit 1
 )
-
-rem Install stdlib with cgo flag
-set CGO_ENABLED=0
-call "%PREFIX%\etc\conda\activate.d\activate-%PKG_NAME%".bat
-"%LIBRARY_BIN%\go" install -a -installsuffix cgo std

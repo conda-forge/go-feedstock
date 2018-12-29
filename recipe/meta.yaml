@@ -1,92 +1,109 @@
 {% set name = "go" %}
-{% set version = "1.11.2" %}
-{% set n = 'm2w64-' if win else '' %}
+{% set version = "1.11.3" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
   - url: https://storage.googleapis.com/golang/go{{ version }}.src.tar.gz
-    sha256: 042fba357210816160341f1002440550e952eb12678f7c9e7e9d389437942550
+    sha256: 7ec5140f384db2bd42b396c93c231dfba342ee137ad8a4b33120016951eb1231
     folder: go
-  - url: https://storage.googleapis.com/golang/go1.4-bootstrap-20171003.tar.gz
-    sha256: f4ff5b5eb3a3cae1c993723f3eab519c5bae18866b5e5f96fe1102f0cb5c3e52
-    folder: go-bootstrap
+    #patches:
+    #  - 0001-addr2line.diff  # [linux]
 
 build:
   number: 1000
   binary_relocation: False
   detect_binary_files_with_prefix: False
-  force_ignore_keys:  # [win]
-    - c_compiler      # [win]
-    - cxx_compiler    # [win]
+  force_ignore_keys:    # [win]
+    - c_compiler        # [win]
+    - cxx_compiler      # [win]
+    - fortran_compiler  # [win]
   # test data links to these DSOs
   missing_dso_whitelist:
     - /usr/lib/libSystem.B.dylib
     - /usr/lib/libgcc_s.1.dylib
     - libc.so.6
 
-requirements:
-  run:
-    - {{ pin_subpackage(name.lower()+"_linux-64", exact=True) }}  # [linux]
-    - {{ pin_subpackage(name.lower()+"_osx-64", exact=True) }}    # [osx]
-    - {{ pin_subpackage(name.lower()+"_win-64", exact=True) }}    # [win]
-
-test:
-  commands:
-    - go help
-    - go version
-
 outputs:
-  - name: {{ name|lower }}-core
+  - name: {{ name }}                                   # [cgo]
+    requirements:                                      # [cgo]
+      run:                                             # [cgo]
+        - {{ pin_subpackage(name+"_"+target_platform,  # [cgo]
+                            exact=True) }}             # [cgo]
+    test:                                              # [cgo]
+      commands:                                        # [cgo]
+        - go version                                   # [cgo]
+
+  - name: {{ name }}-{{ cgo_var }}
     script: build-core.sh   # [not win]
     script: build-core.bat  # [win]
     requirements:
       build:
-        {% if not win %}
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
-        {% else %}
-        - {{ n }}toolchain
-        {% endif %}
+        - {{ compiler('go14') }}
+        - {{ compiler('c') }}              # [unix and cgo]
+        - {{ compiler('fortran') }}        # [unix and cgo]
+        - {{ compiler('m2w64_c') }}        # [win and cgo]
+        - {{ compiler('m2w64_fortran') }}  # [win and cgo]
 
-        - perl  # [not win]
+        - perl     # [not win]
+        - m2-sed   # [win]
+        - m2-grep  # [win]
+
+        # Packages needed for fixing tests
+        # see golang/go#23888
+      run:                                 # [cgo]
+        - {{ compiler('c') }}              # [unix and cgo]
+        - {{ compiler('fortran') }}        # [unix and cgo]
+        - {{ compiler('m2w64_c') }}        # [win and cgo]
+        - {{ compiler('m2w64_fortran') }}  # [win and cgo]
     test:
       files:
         - hello.go
+        - hello-c.go  # [cgo]
       commands:
+        # Environment checks
         - go env
-        - go run hello.go
-        - cmd /c echo x%GOROOT% NEQ x%CONDA_PREFIX%\go        # [win]
-        - cmd /c if x%GOROOT% NEQ x%CONDA_PREFIX%\go exit 1   # [win]
+        - test $(go env GOROOT) = ${CONDA_PREFIX}/go         # [unix]
+        - cmd /c if x%GOROOT% NEQ x%CONDA_PREFIX%\go exit 1  # [win]
 
-  - name: {{ name|lower }}_{{ conda_goplatform }}
-    script: build-platform.sh   # [not win]
-    script: build-platform.bat  # [win]
+        - test $(go env CGO_ENABLED) -eq {{ cgo }}  # [unix]
+
+        # Test go can actually compile and run a basic program
+        - go run hello.go
+
+        # Test cgo is working properly
+        - go run hello-c.go    # [cgo]
+
+  - name: {{ name }}_{{ target_platform }}         # [cgo]
+  - name: {{ name }}-nocgo_{{ conda_goplatform }}  # [not cgo]
+    script: build-{{ cgo_var }}-platform.sh   # [unix]
+    script: build-{{ cgo_var }}-platform.bat  # [win]
     requirements:
       build:
         - sed      # [osx]
         - m2-sed   # [win]
-        - m2-file  # [win]
-        - m2-grep  # [win]
-      host:
-        - {{ pin_subpackage("go-core", exact=True) }}
       run:
-        - {{ pin_subpackage("go-core", exact=True) }}
+        - {{ pin_subpackage("go-"+cgo_var, exact=True) }}
     test:
       files:
         - hello.go
+        - hello-c.go
       requires:
-        - posix  # [win]
+        - posix    # [win]
+        - m2-file  # [win]
+        - m2-grep  # [win]
       commands:
         - go env
-        - go build hello.go
+
         # Check that the file types match what is expected for each platform
         ## https://stackoverflow.com/questions/2768608/batch-equivalent-of-bash-backticks#2768660
-        - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix]
-        - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win]
+        - go build hello.go
+        - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix and not cgo]
+        - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win and not cgo]
+
+        - go build hello-c.go  # [cgo]
 
 
 about:
