@@ -25,13 +25,14 @@ build:
     - libc.so.6
 
 outputs:
-  - name: {{ name }}                                                  # [cgo]
-    requirements:                                                     # [cgo]
-      run:                                                            # [cgo]
-        - {{ pin_subpackage(name+"_"+target_platform, exact=True) }}  # [cgo]
-    test:                                                             # [cgo]
-      commands:                                                       # [cgo]
-        - go version                                                  # [cgo]
+  - name: {{ name }}                                   # [cgo]
+    requirements:                                      # [cgo]
+      run:                                             # [cgo]
+        - {{ pin_subpackage(name+"_"+target_platform,  # [cgo]
+                            exact=True) }}             # [cgo]
+    test:                                              # [cgo]
+      commands:                                        # [cgo]
+        - go version                                   # [cgo]
 
   - name: {{ name }}-{{ cgo_var }}
     script: build-core.sh   # [not win]
@@ -44,11 +45,11 @@ outputs:
         - m2-sed   # [win]
         - m2-grep  # [win]
 
-        - {{ compiler('c') }}              # [unix and cgo]
-        - {{ compiler('m2w64_c') }}        # [win and cgo]
-      run:                                 # [cgo]
-        - {{ compiler('c') }}              # [unix and cgo]
-        - {{ compiler('m2w64_fortran') }}  # [win and cgo]
+        - {{ compiler('c') }}        # [unix and cgo]
+        - {{ compiler('m2w64_c') }}  # [win and cgo]
+      run:                           # [cgo]
+        - {{ compiler('c') }}        # [unix and cgo]
+        - {{ compiler('m2w64_c') }}  # [win and cgo]
     test:
       files:
         - hello.go
