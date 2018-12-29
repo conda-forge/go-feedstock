@@ -8,12 +8,12 @@ for F in activate deactivate; do
   cp "${RECIPE_DIR}/${F}-go-platform.sh" .
 
   # Second, expand the GOOS and GOARCH variables
-  # We have to use the conda provided ones in this case
+  # This is the CGO build, so we can't use goos variant
   goos=$(uname 2>&1 | tr '[:upper:]' '[:lower:]')
   sed -i.bak \
     -e "s|@GOOS@|${goos}|g" \
     -e "s|@GOARCH@|${conda_goarch}|g" "${F}-go-platform.sh"
 
   # Copy the rendered [de]activate scripts to $PREFIX/etc/conda/[de]activate.d
-  cp -v "${F}-go-platform.sh" "${PREFIX}/etc/conda/${F}.d/${F}-z60-${PKG_NAME}.sh"
+  cp -v "${F}-go-platform.sh" "${PREFIX}/etc/conda/${F}.d/${F}-z61-${PKG_NAME}.sh"
 done

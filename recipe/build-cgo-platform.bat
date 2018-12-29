@@ -8,12 +8,13 @@ for %%F in (activate deactivate) do (
   if errorlevel 1 exit 1
 
   rem Second, expand the GOOS and GOARCH variables
+  rem This is the CGO build, so we can't depend on conda goos variant
   sed -i.bak ^
     -e "s|@GOOS@|windows|g" ^
     -e "s|@GOARCH@|%conda_goarch%|g" "%%F-go-platform.bat"
   if errorlevel 1 exit 1
 
   rem Copy the rendered [de]activate scripts to %PREFIX%\etc\conda\[de]activate.d.
-  copy "%%F-go-platform.bat" "%PREFIX%\etc\conda\%%F.d\%%F-z60-%PKG_NAME%.bat"
+  copy "%%F-go-platform.bat" "%PREFIX%\etc\conda\%%F.d\%%F-z61-%PKG_NAME%.bat"
   if errorlevel 1 exit 1
 )

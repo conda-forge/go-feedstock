@@ -14,6 +14,6 @@ for %%F in (activate deactivate) do (
   if errorlevel 1 exit 1
 
   rem Copy the rendered [de]activate scripts to %PREFIX%\etc\conda\[de]activate.d.
-  copy "%%F-go-platform.bat" "%PREFIX%\etc\conda\%%F.d\%%F-z60-%PKG_NAME%.bat"
+  copy "%%F-go-platform.bat" "%PREFIX%\etc\conda\%%F.d\%%F-z61-%PKG_NAME%.bat"
   if errorlevel 1 exit 1
 )

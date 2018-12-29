@@ -13,5 +13,5 @@ for F in activate deactivate; do
     -e "s|@GOARCH@|${conda_goarch}|g" "${F}-go-platform.sh"
 
   # Copy the rendered [de]activate scripts to $PREFIX/etc/conda/[de]activate.d
-  cp -v "${F}-go-platform.sh" "${PREFIX}/etc/conda/${F}.d/${F}-z60-${PKG_NAME}.sh"
+  cp -v "${F}-go-platform.sh" "${PREFIX}/etc/conda/${F}.d/${F}-z61-${PKG_NAME}.sh"
 done
