@@ -9,6 +9,8 @@ source:
   - url: https://storage.googleapis.com/golang/go{{ version }}.src.tar.gz
     sha256: 042fba357210816160341f1002440550e952eb12678f7c9e7e9d389437942550
     folder: go
+    #patches:
+    #  - 0001-addr2line.diff  # [linux]
 
 build:
   number: 1001
@@ -40,13 +42,15 @@ outputs:
     requirements:
       build:
         - {{ compiler('go14') }}
+        - {{ compiler('c') }}        # [unix and cgo]
+        - {{ compiler('m2w64_c') }}  # [win and cgo]
 
         - perl     # [not win]
         - m2-sed   # [win]
         - m2-grep  # [win]
 
-        - {{ compiler('c') }}        # [unix and cgo]
-        - {{ compiler('m2w64_c') }}  # [win and cgo]
+        # Packages needed for fixing tests
+        # see golang/go#23888
       run:                           # [cgo]
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('m2w64_c') }}  # [win and cgo]

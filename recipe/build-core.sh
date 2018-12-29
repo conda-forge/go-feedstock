@@ -16,17 +16,24 @@ source "${PREFIX}/etc/conda/activate.d/activate-z60-go-${cgo_var}.sh"
 # c.f. https://github.com/conda-forge/go-feedstock/pull/21#discussion_r202513916
 export GOROOT=$SRC_DIR/go
 export GOCACHE=off
+
 # This is a fix for user.Current issue
 export USER="${USER:-conda}"
 export HOME="${HOME:-$(cd $SRC_DIR/..;pwd)}"
+# This is a fix for golang/go#23888
+if [ -x "${ADDR2LINE:-}" ]; then 
+  ln $ADDR2LINE $(dirname $ADDR2LINE)/addr2line
+fi
 
 pushd $GOROOT/src
 if [[ $(uname) == 'Darwin' ]]; then
   # Tests on macOS receive SIGABRT on Travis :-/
   # All tests run fine on Mac OS X:10.9.5:13F1911 locally
+  # issue: golang/go#29160
   ./make.bash
 elif [[ $(uname) == 'Linux' ]]; then
-  ./all.bash
+  # testsanitizers hangs > 10minutes
+  ./make.bash
 fi
 popd
 
