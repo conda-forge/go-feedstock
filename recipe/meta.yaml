@@ -52,8 +52,10 @@ outputs:
         - perl     # [not win]
         - m2-sed   # [win]
         - m2-grep  # [win]
-
     test:
+      requires:
+        - {{ compiler('c') }}              # [unix and cgo]
+        - {{ compiler('m2w64_c') }}        # [win and cgo]
       files:
         - hello.go
         - hello-c.go  # [cgo]
@@ -86,6 +88,8 @@ outputs:
         - hello.go
         - hello-c.go
       requires:
+        - {{ compiler('c') }}              # [unix and cgo]
+        - {{ compiler('m2w64_c') }}        # [win and cgo]
         - posix    # [win]
         - m2-file  # [win]
         - m2-grep  # [win]
