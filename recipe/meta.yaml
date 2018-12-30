@@ -13,7 +13,7 @@ source:
     #  - 0001-addr2line.diff  # [linux]
 
 build:
-  number: 1002
+  number: 1003
   binary_relocation: False
   detect_binary_files_with_prefix: False
   force_ignore_keys:    # [win]
@@ -27,15 +27,6 @@ build:
     - libc.so.6
 
 outputs:
-  - name: {{ name }}                                   # [cgo]
-    requirements:                                      # [cgo]
-      run:                                             # [cgo]
-        - {{ pin_subpackage(name+"_"+target_platform,  # [cgo]
-                            exact=True) }}             # [cgo]
-    test:                                              # [cgo]
-      commands:                                        # [cgo]
-        - go version                                   # [cgo]
-
   - name: {{ name }}-{{ cgo_var }}
     script: build-core.sh   # [not win]
     script: build-core.bat  # [win]
@@ -73,8 +64,8 @@ outputs:
         # Test cgo is working properly
         - go run hello-c.go    # [cgo]
 
-  - name: {{ name }}_{{ target_platform }}         # [cgo]
-  - name: {{ name }}-nocgo_{{ conda_goplatform }}  # [not cgo]
+  - name: {{ name }}-{{ cgo_var }}_{{ target_platform }}   # [cgo]
+  - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [not cgo]
     script: build-{{ cgo_var }}-platform.sh   # [unix]
     script: build-{{ cgo_var }}-platform.bat  # [win]
     requirements:
@@ -103,6 +94,16 @@ outputs:
         - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win and not cgo]
 
         - go build hello-c.go  # [cgo]
+  {% if not cgo %}
+  - name: {{ name }}
+    requirements:
+      run:
+        - {{ pin_subpackage(name+"-nocgo_"+target_platform,
+                            exact=True) }}
+    test:
+      commands:
+        - go version
+  {% endif %}
 
 
 about:

@@ -68,8 +68,9 @@ jobs:
     # Configure the VM.
     - script: |
         run_conda_forge_build_setup
+
       displayName: conda-forge build setup
-    run_conda_forge_build_setup
+    
 
     # Special cased version setting some more things!
     - script: |
