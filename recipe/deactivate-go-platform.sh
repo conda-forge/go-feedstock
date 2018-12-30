@@ -5,10 +5,10 @@ if [[ $CONDA_BUILD = 1 ]]; then
     unset GOPATH
   fi
 
-  export PATH="${CONDA_GO_BACKUP_PATH}"
-  unset CONDA_GO_BACKUP_PATH
-  if [ -z "$PATH" ]; then
-    unset PATH
+  export GOBIN="${CONDA_BACKUP_GOBIN}"
+  unset CONDA_BACKUP_GOBIN
+  if [ -z "$GOBIN" ]; then
+    unset GOBIN
   fi
 fi
 
