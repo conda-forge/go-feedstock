@@ -10,5 +10,5 @@ if %CONDA_BUILD%==1 (
   set "GOPATH=%SRC_DIR%"
 
   set "CONDA_BACKUP_GOBIN=%GOBIN%"
-  set "GOBIN=%LIBRARY_BIN%"
+  set "GOBIN=%PREFIX%\bin"
 )
