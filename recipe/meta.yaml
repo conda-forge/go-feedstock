@@ -13,7 +13,7 @@ source:
     #  - 0001-addr2line.diff  # [linux]
 
 build:
-  number: 1001
+  number: 1002
   binary_relocation: False
   detect_binary_files_with_prefix: False
   force_ignore_keys:    # [win]
