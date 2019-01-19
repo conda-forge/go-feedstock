@@ -1,7 +1,9 @@
+<!--
+# -*- mode: jinja -*-
+-->
+
 About go
 ========
-
-[![Powered by NumFOCUS](https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](http://numfocus.org)
 
 Home: http://golang.org
 
@@ -34,8 +36,6 @@ Current release info
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-go--cgo-green.svg)](https://anaconda.org/conda-forge/go-cgo) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-cgo.svg)](https://anaconda.org/conda-forge/go-cgo) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-cgo.svg)](https://anaconda.org/conda-forge/go-cgo) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-cgo.svg)](https://anaconda.org/conda-forge/go-cgo) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-go--cgo_linux--64-green.svg)](https://anaconda.org/conda-forge/go-cgo_linux-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-cgo_linux-64.svg)](https://anaconda.org/conda-forge/go-cgo_linux-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-cgo_linux-64.svg)](https://anaconda.org/conda-forge/go-cgo_linux-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-cgo_linux-64.svg)](https://anaconda.org/conda-forge/go-cgo_linux-64) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-go--nocgo-green.svg)](https://anaconda.org/conda-forge/go-nocgo) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-nocgo.svg)](https://anaconda.org/conda-forge/go-nocgo) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-nocgo.svg)](https://anaconda.org/conda-forge/go-nocgo) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-nocgo.svg)](https://anaconda.org/conda-forge/go-nocgo) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-go--nocgo_linux--64-green.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-nocgo_linux-64.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-nocgo_linux-64.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-nocgo_linux-64.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) |
 
 Installing go
 =============
@@ -46,10 +46,10 @@ Installing `go` from the `conda-forge` channel can be achieved by adding `conda-
 conda config --add channels conda-forge
 ```
 
-Once the `conda-forge` channel has been enabled, `go-cgo, go-cgo_linux-64, go-nocgo, go-nocgo_linux-64` can be installed with:
+Once the `conda-forge` channel has been enabled, `go-cgo, go-cgo_linux-64` can be installed with:
 
 ```
-conda install go-cgo go-cgo_linux-64 go-nocgo go-nocgo_linux-64
+conda install go-cgo go-cgo_linux-64
 ```
 
 It is possible to list all of the versions of `go-cgo` available on your platform with:
@@ -61,6 +61,8 @@ conda search go-cgo --channel conda-forge
 
 About conda-forge
 =================
+
+[![Powered by NumFOCUS](https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](http://numfocus.org)
 
 conda-forge is a community-led conda channel of installable packages.
 In order to provide high-quality builds, the process has been automated into the

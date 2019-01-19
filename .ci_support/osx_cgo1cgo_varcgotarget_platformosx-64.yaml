@@ -1,31 +1,17 @@
 MACOSX_DEPLOYMENT_TARGET:
 - '10.9'
-build_number_decrement:
-- '0'
 c_compiler:
 - clang
 cgo:
-- '0'
+- '1'
 cgo_var:
-- nocgo
+- cgo
 channel_sources:
-- conda-forge/label/gcc7,defaults
+- conda-forge,defaults
 channel_targets:
-- conda-forge gcc7
+- conda-forge main
 conda_goarch:
 - amd64
-conda_gofile:
-- ELF
-- Mach-O
-- PE32+
-conda_goos:
-- linux
-- darwin
-- windows
-conda_goplatform:
-- linux-64
-- osx-64
-- win-64
 cxx_compiler:
 - clangxx
 fortran_compiler:
@@ -44,14 +30,5 @@ pin_run_as_build:
 target_platform:
 - osx-64
 zip_keys:
-- - c_compiler
-  - cxx_compiler
-  - fortran_compiler
-  - channel_sources
-  - channel_targets
-  - build_number_decrement
 - - cgo
   - cgo_var
-- - conda_goplatform
-  - conda_goos
-  - conda_gofile
