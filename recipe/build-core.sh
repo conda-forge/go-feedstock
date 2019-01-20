@@ -30,6 +30,8 @@ if [[ $(uname) == 'Darwin' ]]; then
   # Tests on macOS receive SIGABRT on Travis :-/
   # All tests run fine on Mac OS X:10.9.5:13F1911 locally
   # issue: golang/go#29160
+  export LDFLAGS=${LDFLAGS/-Wl,-pie/}
+  export LDFLAGS_LD=${LDFLAGS_LD/-pie/}
   ./make.bash
 elif [[ $(uname) == 'Linux' ]]; then
   # testsanitizers hangs > 10minutes
