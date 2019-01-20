@@ -13,7 +13,7 @@ source:
     #  - 0001-addr2line.diff  # [linux]
 
 build:
-  number: 1003
+  number: 1004
   binary_relocation: False
   detect_binary_files_with_prefix: False
   force_ignore_keys:    # [win]
@@ -65,7 +65,7 @@ outputs:
         - go run hello-c.go    # [cgo]
 
   - name: {{ name }}-{{ cgo_var }}_{{ target_platform }}   # [cgo]
-  - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [not cgo]
+  - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [nocgo]
     script: build-{{ cgo_var }}-platform.sh   # [unix]
     script: build-{{ cgo_var }}-platform.bat  # [win]
     requirements:
@@ -90,20 +90,18 @@ outputs:
         # Check that the file types match what is expected for each platform
         ## https://stackoverflow.com/questions/2768608/batch-equivalent-of-bash-backticks#2768660
         - go build hello.go
-        - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix and not cgo]
-        - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win and not cgo]
+        - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix and nocgo]
+        - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win and nocgo]
 
         - go build hello-c.go  # [cgo]
-  {% if not cgo %}
-  - name: {{ name }}
-    requirements:
-      run:
-        - {{ pin_subpackage(name+"-nocgo_"+target_platform,
-                            exact=True) }}
-    test:
-      commands:
-        - go version
-  {% endif %}
+  - name: {{ name }}                                         # [nocgo]
+    requirements:                                            # [nocgo]
+      run:                                                   # [nocgo]
+        - {{ pin_subpackage(name+"-nocgo_"+target_platform,  # [nocgo]
+                            exact=True) }}                   # [nocgo]
+    test:                                                    # [nocgo]
+      commands:                                              # [nocgo]
+        - go version                                         # [nocgo]
 
 
 about:

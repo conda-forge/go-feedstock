@@ -1,8 +1,11 @@
 go14_compiler:
   - go1.4-bootstrap
 cgo:
-  - 0
-  - 1
+  - false
+  - true
+nocgo:
+  - true
+  - false
 cgo_var:
   - nocgo
   - cgo
@@ -23,6 +26,7 @@ conda_gofile:
 zip_keys:
   - 
     - cgo
+    - nocgo
     - cgo_var
   - 
     - conda_goplatform

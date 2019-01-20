@@ -31,9 +31,9 @@ mkdir "%PREFIX%\go"
 xcopy /s /y /i /q "%SRC_DIR%\go\*" "%PREFIX%\go\"
 
 rem Right now, it's just go and gofmt, but might be more in the future!
-if not exist "%LIBRARY_BIN%" mkdir "%LIBRARY_BIN%"
+if not exist "%PREFIX%\bin" mkdir "%PREFIX%\bin"
 for %%f in ("%PREFIX%\go\bin\*.exe") do (
-  move %%f "%LIBRARY_BIN%"
+  move %%f "%PREFIX%\bin"
 )
 
 rem all files in bin are gone
