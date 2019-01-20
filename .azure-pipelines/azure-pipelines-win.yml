@@ -10,8 +10,8 @@ jobs:
   strategy:
     maxParallel: 4
     matrix:
-      win_cgo1cgo_varcgotarget_platformwin-64:
-        CONFIG: win_cgo1cgo_varcgotarget_platformwin-64
+      win_cgotruecgo_varcgotarget_platformwin-64:
+        CONFIG: win_cgotruecgo_varcgotarget_platformwin-64
         CONDA_BLD_PATH: D:\\bld\\
         UPLOAD_PACKAGES: False
   steps:

@@ -3,7 +3,7 @@ MACOSX_DEPLOYMENT_TARGET:
 c_compiler:
 - clang
 cgo:
-- '1'
+- 'true'
 cgo_var:
 - cgo
 channel_sources:

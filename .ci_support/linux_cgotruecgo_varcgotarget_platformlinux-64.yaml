@@ -1,5 +1,7 @@
+c_compiler:
+- gcc
 cgo:
-- '1'
+- 'true'
 cgo_var:
 - cgo
 channel_sources:
@@ -8,16 +10,21 @@ channel_targets:
 - conda-forge main
 conda_goarch:
 - amd64
+cxx_compiler:
+- gxx
+docker_image:
+- condaforge/linux-anvil-comp7
+fortran_compiler:
+- gfortran
 go14_compiler:
 - go1.4-bootstrap
-m2w64_c_compiler:
-- m2w64-toolchain
-m2w64_cxx_compiler:
-- m2w64-toolchain
-m2w64_fortran_compiler:
-- m2w64-toolchain
+perl:
+- '5.26'
+pin_run_as_build:
+  perl:
+    max_pin: x.x.x
 target_platform:
-- win-64
+- linux-64
 zip_keys:
 - - cgo
   - cgo_var
