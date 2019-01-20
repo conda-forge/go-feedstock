@@ -1,7 +1,7 @@
 cgo:
-- 'true'
+- 'false'
 cgo_var:
-- cgo
+- nocgo
 channel_sources:
 - conda-forge,defaults
 channel_targets:
@@ -29,7 +29,7 @@ m2w64_cxx_compiler:
 m2w64_fortran_compiler:
 - m2w64-toolchain
 nocgo:
-- 'false'
+- 'true'
 target_platform:
 - win-64
 zip_keys:
