@@ -1,11 +1,13 @@
-build_number_decrement:
-- '0'
 c_compiler:
 - gcc
+cgo:
+- 'false'
+cgo_var:
+- nocgo
 channel_sources:
-- conda-forge/label/gcc7,defaults
+- conda-forge,defaults
 channel_targets:
-- conda-forge gcc7
+- conda-forge main
 conda_goarch:
 - amd64
 conda_gofile:
@@ -26,14 +28,21 @@ docker_image:
 - condaforge/linux-anvil-comp7
 fortran_compiler:
 - gfortran
+go14_compiler:
+- go1.4-bootstrap
+nocgo:
+- 'true'
+perl:
+- '5.26'
+pin_run_as_build:
+  perl:
+    max_pin: x.x.x
+target_platform:
+- linux-64
 zip_keys:
-- - c_compiler
-  - cxx_compiler
-  - fortran_compiler
-  - channel_sources
-  - channel_targets
-  - docker_image
-  - build_number_decrement
+- - cgo
+  - nocgo
+  - cgo_var
 - - conda_goplatform
   - conda_goos
   - conda_gofile
