@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.9.7" %}
+{% set version = "1.10.7" %}
 
 package:
   name: {{ name }}
@@ -7,13 +7,13 @@ package:
 
 source:
   - url: https://storage.googleapis.com/golang/go{{ version }}.src.tar.gz
-    sha256: 582814fa45e8ecb0859a208e517b48aa0ad951e3b36c7fff203d834e0ef27722
+    sha256: b84a0d7c90789f3a2ec5349dbe7419efb81f1fac9289b6f60df86bd919bd4447
     folder: go
     #patches:
     #  - 0001-addr2line.diff  # [linux]
 
 build:
-  number: 1001
+  number: 1000
   binary_relocation: False
   detect_binary_files_with_prefix: False
   force_ignore_keys:    # [win]
