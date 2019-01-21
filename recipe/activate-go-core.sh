@@ -1,2 +1,0 @@
-export CONDA_GOROOT_BACKUP="${GOROOT:-}"
-export GOROOT="${CONDA_PREFIX}/go"

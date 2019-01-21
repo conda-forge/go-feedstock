@@ -1,5 +1,14 @@
-@set "CONDA_GOOS_BACKUP=%GOOS%"
-@set "GOOS=@GOOS@"
+@echo off
+set "CONDA_BACKUP_GOOS=%GOOS%"
+set "GOOS=@GOOS@"
 
-@set "CONDA_GOARCH_BACKUP=%GOARCH%"
-@set "GOARCH=@GOARCH@"
+set "CONDA_BACKUP_GOARCH=%GOARCH%"
+set "GOARCH=@GOARCH@"
+
+if "%CONDA_BUILD%x"=="1x" (
+  set "CONDA_BACKUP_GOPATH=%GOPATH%"
+  set "GOPATH=%SRC_DIR%"
+
+  set "CONDA_BACKUP_GOBIN=%GOBIN%"
+  set "GOBIN=%PREFIX%\bin"
+)

@@ -1,0 +1,48 @@
+c_compiler:
+- gcc
+cgo:
+- 'true'
+cgo_var:
+- cgo
+channel_sources:
+- conda-forge,defaults
+channel_targets:
+- conda-forge main
+conda_goarch:
+- amd64
+conda_gofile:
+- ELF
+- Mach-O
+- PE32+
+conda_goos:
+- linux
+- darwin
+- windows
+conda_goplatform:
+- linux-64
+- osx-64
+- win-64
+cxx_compiler:
+- gxx
+docker_image:
+- condaforge/linux-anvil-comp7
+fortran_compiler:
+- gfortran
+go14_compiler:
+- go1.4-bootstrap
+nocgo:
+- 'false'
+perl:
+- '5.26'
+pin_run_as_build:
+  perl:
+    max_pin: x.x.x
+target_platform:
+- linux-64
+zip_keys:
+- - cgo
+  - nocgo
+  - cgo_var
+- - conda_goplatform
+  - conda_goos
+  - conda_gofile
