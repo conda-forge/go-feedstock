@@ -1,9 +1,11 @@
 c_compiler:
 - gcc
 cgo:
-- 'false'
+- 'true'
+cgo_enabled:
+- '1'
 cgo_var:
-- nocgo
+- cgo
 channel_sources:
 - conda-forge,defaults
 channel_targets:
@@ -31,7 +33,7 @@ fortran_compiler:
 go14_compiler:
 - go1.4-bootstrap
 nocgo:
-- 'true'
+- 'false'
 perl:
 - '5.26'
 pin_run_as_build:
@@ -43,6 +45,7 @@ zip_keys:
 - - cgo
   - nocgo
   - cgo_var
+  - cgo_enabled
 - - conda_goplatform
   - conda_goos
   - conda_gofile

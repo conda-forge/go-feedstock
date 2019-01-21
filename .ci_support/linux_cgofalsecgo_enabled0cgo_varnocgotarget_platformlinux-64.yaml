@@ -1,11 +1,11 @@
-MACOSX_DEPLOYMENT_TARGET:
-- '10.9'
 c_compiler:
-- clang
+- gcc
 cgo:
-- 'true'
+- 'false'
+cgo_enabled:
+- '0'
 cgo_var:
-- cgo
+- nocgo
 channel_sources:
 - conda-forge,defaults
 channel_targets:
@@ -25,28 +25,27 @@ conda_goplatform:
 - osx-64
 - win-64
 cxx_compiler:
-- clangxx
+- gxx
+docker_image:
+- condaforge/linux-anvil-comp7
 fortran_compiler:
 - gfortran
 go14_compiler:
 - go1.4-bootstrap
-macos_machine:
-- x86_64-apple-darwin13.4.0
-macos_min_version:
-- '10.9'
 nocgo:
-- 'false'
+- 'true'
 perl:
 - '5.26'
 pin_run_as_build:
   perl:
     max_pin: x.x.x
 target_platform:
-- osx-64
+- linux-64
 zip_keys:
 - - cgo
   - nocgo
   - cgo_var
+  - cgo_enabled
 - - conda_goplatform
   - conda_goos
   - conda_gofile
