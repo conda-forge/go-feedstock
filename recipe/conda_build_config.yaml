@@ -3,6 +3,9 @@ go14_compiler:
 cgo:
   - false
   - true
+cgo_enabled:
+  - 0
+  - 1
 nocgo:
   - true
   - false
@@ -28,6 +31,7 @@ zip_keys:
     - cgo
     - nocgo
     - cgo_var
+    - cgo_enabled
   - 
     - conda_goplatform
     - conda_goos

@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.9.7" %}
+{% set version = "1.10.7" %}
 
 package:
   name: {{ name }}
@@ -7,13 +7,13 @@ package:
 
 source:
   - url: https://storage.googleapis.com/golang/go{{ version }}.src.tar.gz
-    sha256: 582814fa45e8ecb0859a208e517b48aa0ad951e3b36c7fff203d834e0ef27722
+    sha256: b84a0d7c90789f3a2ec5349dbe7419efb81f1fac9289b6f60df86bd919bd4447
     folder: go
     #patches:
     #  - 0001-addr2line.diff  # [linux]
 
 build:
-  number: 1001
+  number: 1000
   binary_relocation: False
   detect_binary_files_with_prefix: False
   force_ignore_keys:    # [win]
@@ -47,6 +47,7 @@ outputs:
       requires:
         - {{ compiler('c') }}              # [unix and cgo]
         - {{ compiler('m2w64_c') }}        # [win and cgo]
+        - posix                            # [win]
       files:
         - hello.go
         - hello-c.go  # [cgo]
@@ -56,7 +57,8 @@ outputs:
         - test $(go env GOROOT) = ${CONDA_PREFIX}/go         # [unix]
         - cmd /c if x%GOROOT% NEQ x%CONDA_PREFIX%\go exit 1  # [win]
 
-        - test $(go env CGO_ENABLED) -eq {{ cgo }}  # [unix]
+        - test $(go env CGO_ENABLED) -eq {{ cgo_enabled }}  # [unix]
+        - for /f "usebackq tokens=*" %%a in (`go env CGO_ENABED`) do test %%a -eq {{ cgo_enabled }}  # [win]
 
         # Test go can actually compile and run a basic program
         - go run hello.go

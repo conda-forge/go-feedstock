@@ -10,11 +10,11 @@ jobs:
   strategy:
     maxParallel: 8
     matrix:
-      linux_cgofalsecgo_varnocgotarget_platformlinux-64:
-        CONFIG: linux_cgofalsecgo_varnocgotarget_platformlinux-64
+      linux_cgofalsecgo_enabled0cgo_varnocgotarget_platformlinux-64:
+        CONFIG: linux_cgofalsecgo_enabled0cgo_varnocgotarget_platformlinux-64
         UPLOAD_PACKAGES: False
-      linux_cgotruecgo_varcgotarget_platformlinux-64:
-        CONFIG: linux_cgotruecgo_varcgotarget_platformlinux-64
+      linux_cgotruecgo_enabled1cgo_varcgotarget_platformlinux-64:
+        CONFIG: linux_cgotruecgo_enabled1cgo_varcgotarget_platformlinux-64
         UPLOAD_PACKAGES: False
   steps:
   - script: |
