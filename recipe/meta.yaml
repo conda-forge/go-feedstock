@@ -63,9 +63,6 @@ outputs:
         # Test go can actually compile and run a basic program
         - go run hello.go
 
-        # Test cgo is working properly
-        - go run hello-c.go    # [cgo]
-
   - name: {{ name }}-{{ cgo_var }}_{{ target_platform }}   # [cgo]
   - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [nocgo]
     script: build-{{ cgo_var }}-platform.sh   # [unix]
@@ -95,6 +92,7 @@ outputs:
         - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix and nocgo]
         - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win and nocgo]
 
+        # Test cgo is working properly
         - go build hello-c.go  # [cgo]
   - name: {{ name }}                                         # [nocgo]
     requirements:                                            # [nocgo]
