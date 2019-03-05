@@ -10,11 +10,8 @@ jobs:
   strategy:
     maxParallel: 8
     matrix:
-      osx_cgofalsenocgotruetarget_platformosx-64:
-        CONFIG: osx_cgofalsenocgotruetarget_platformosx-64
-        UPLOAD_PACKAGES: False
-      osx_cgotruenocgofalsetarget_platformosx-64:
-        CONFIG: osx_cgotruenocgofalsetarget_platformosx-64
+      osx_:
+        CONFIG: osx_
         UPLOAD_PACKAGES: False
 
   steps:
