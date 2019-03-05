@@ -50,7 +50,6 @@ outputs:
         - posix                            # [win]
       files:
         - hello.go
-        - hello-c.go  # [cgo]
       commands:
         # Environment checks
         - go env
