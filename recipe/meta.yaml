@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.10.7" %}
+{% set version = "1.10.2" %}
 
 package:
   name: {{ name }}
@@ -7,13 +7,13 @@ package:
 
 source:
   - url: https://storage.googleapis.com/golang/go{{ version }}.src.tar.gz
-    sha256: b84a0d7c90789f3a2ec5349dbe7419efb81f1fac9289b6f60df86bd919bd4447
+    sha256: 6264609c6b9cd8ed8e02ca84605d727ce1898d74efa79841660b2e3e985a98bd
     folder: go
     #patches:
     #  - 0001-addr2line.diff  # [linux]
 
 build:
-  number: 1000
+  number: 0
   binary_relocation: False
   detect_binary_files_with_prefix: False
   force_ignore_keys:    # [win]
@@ -50,7 +50,6 @@ outputs:
         - posix                            # [win]
       files:
         - hello.go
-        - hello-c.go  # [cgo]
       commands:
         # Environment checks
         - go env
@@ -62,9 +61,6 @@ outputs:
 
         # Test go can actually compile and run a basic program
         - go run hello.go
-
-        # Test cgo is working properly
-        - go run hello-c.go    # [cgo]
 
   - name: {{ name }}-{{ cgo_var }}_{{ target_platform }}   # [cgo]
   - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [nocgo]
@@ -95,6 +91,7 @@ outputs:
         - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix and nocgo]
         - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win and nocgo]
 
+        # Test cgo is working properly
         - go build hello-c.go  # [cgo]
   - name: {{ name }}                                         # [nocgo]
     requirements:                                            # [nocgo]

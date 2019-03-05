@@ -3,18 +3,15 @@
 # -*- mode: yaml -*-
 
 jobs:
-- job: osx_64
+- job: osx
   pool:
     vmImage: macOS-10.13
   timeoutInMinutes: 240
   strategy:
     maxParallel: 8
     matrix:
-      osx_cgofalsenocgotruetarget_platformosx-64:
-        CONFIG: osx_cgofalsenocgotruetarget_platformosx-64
-        UPLOAD_PACKAGES: False
-      osx_cgotruenocgofalsetarget_platformosx-64:
-        CONFIG: osx_cgotruenocgofalsetarget_platformosx-64
+      osx_:
+        CONFIG: osx_
         UPLOAD_PACKAGES: False
 
   steps:
@@ -84,4 +81,6 @@ jobs:
       set -x -e
       upload_package ./ ./recipe ./.ci_support/${CONFIG}.yaml
     displayName: Upload recipe
+    env:
+      BINSTAR_TOKEN: $(BINSTAR_TOKEN)
     condition: not(eq(variables['UPLOAD_PACKAGES'], 'False'))
