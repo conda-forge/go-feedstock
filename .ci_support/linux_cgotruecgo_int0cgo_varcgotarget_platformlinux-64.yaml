@@ -4,6 +4,8 @@ c_compiler_version:
 - '7'
 cgo:
 - 'true'
+cgo_int:
+- '0'
 cgo_var:
 - cgo
 channel_sources:

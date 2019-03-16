@@ -5,9 +5,11 @@ c_compiler:
 c_compiler_version:
 - '4'
 cgo:
-- 'true'
+- 'false'
+cgo_int:
+- '0'
 cgo_var:
-- cgo
+- nocgo
 channel_sources:
 - conda-forge,defaults
 channel_targets:
@@ -41,7 +43,7 @@ macos_machine:
 macos_min_version:
 - '10.9'
 nocgo:
-- 'false'
+- 'true'
 perl:
 - '5.26'
 pin_run_as_build:
