@@ -56,7 +56,7 @@ outputs:
         - test $(go env GOROOT) = ${CONDA_PREFIX}/go         # [unix]
         - cmd /c if x%GOROOT% NEQ x%CONDA_PREFIX%\go exit 1  # [win]
 
-        - test $(go env CGO_ENABLED) -eq {{ cgo }}  # [unix]
+        - test $(go env CGO_ENABLED) -eq {{ cgo_int }}  # [unix]
 
         # Test go can actually compile and run a basic program
         - go run hello.go
