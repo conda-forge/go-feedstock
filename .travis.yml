@@ -11,8 +11,6 @@ osx_image: xcode9.4
 env:
   matrix:
     - CONFIG=osx_cgofalsecgo_int0cgo_varnocgotarget_platformosx-64
-    - CONFIG=osx_cgofalsecgo_int1cgo_varnocgotarget_platformosx-64
-    - CONFIG=osx_cgotruecgo_int0cgo_varcgotarget_platformosx-64
     - CONFIG=osx_cgotruecgo_int1cgo_varcgotarget_platformosx-64
 
   global:

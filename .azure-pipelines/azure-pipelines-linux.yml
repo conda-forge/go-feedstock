@@ -13,12 +13,6 @@ jobs:
       linux_cgofalsecgo_int0cgo_varnocgotarget_platformlinux-64:
         CONFIG: linux_cgofalsecgo_int0cgo_varnocgotarget_platformlinux-64
         UPLOAD_PACKAGES: False
-      linux_cgofalsecgo_int1cgo_varnocgotarget_platformlinux-64:
-        CONFIG: linux_cgofalsecgo_int1cgo_varnocgotarget_platformlinux-64
-        UPLOAD_PACKAGES: False
-      linux_cgotruecgo_int0cgo_varcgotarget_platformlinux-64:
-        CONFIG: linux_cgotruecgo_int0cgo_varcgotarget_platformlinux-64
-        UPLOAD_PACKAGES: False
       linux_cgotruecgo_int1cgo_varcgotarget_platformlinux-64:
         CONFIG: linux_cgotruecgo_int1cgo_varcgotarget_platformlinux-64
         UPLOAD_PACKAGES: False

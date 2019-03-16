@@ -55,6 +55,7 @@ zip_keys:
 - - cgo
   - nocgo
   - cgo_var
+  - cgo_int
 - - conda_goplatform
   - conda_goos
   - conda_gofile
