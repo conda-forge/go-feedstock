@@ -3,6 +3,9 @@ go14_compiler:
 cgo:
   - false
   - true
+cgo_int:
+  - 0
+  - 1
 nocgo:
   - true
   - false
