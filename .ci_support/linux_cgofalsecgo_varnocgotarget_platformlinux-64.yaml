@@ -1,5 +1,7 @@
 c_compiler:
 - gcc
+c_compiler_version:
+- '7'
 cgo:
 - 'false'
 cgo_var:
@@ -24,10 +26,14 @@ conda_goplatform:
 - win-64
 cxx_compiler:
 - gxx
+cxx_compiler_version:
+- '7'
 docker_image:
 - condaforge/linux-anvil-comp7
 fortran_compiler:
 - gfortran
+fortran_compiler_version:
+- '7'
 go14_compiler:
 - go1.4-bootstrap
 nocgo:
