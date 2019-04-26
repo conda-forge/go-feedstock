@@ -26,7 +26,7 @@ set "GOROOT=%SRC_DIR%\go"
 set "GOCACHE=off"
 
 pushd "%GOROOT%\src"
-call all.bat
+call make.bat
 if errorlevel 1 exit 1
 popd
 
