@@ -11,7 +11,7 @@ nocgo:
   - false # [not osx]
 cgo_var:
   - nocgo
-  - cgo
+  - cgo  # [not osx]
 conda_goarch:
   - amd64
 conda_goos:

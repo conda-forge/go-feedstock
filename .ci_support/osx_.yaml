@@ -1,9 +1,7 @@
 MACOSX_DEPLOYMENT_TARGET:
 - '10.9'
-c_compiler:
-- clang
-c_compiler_version:
-- '4'
+build_number_decrement:
+- '0'
 cgo:
 - 'false'
 cgo_int:
@@ -28,14 +26,8 @@ conda_goplatform:
 - linux-64
 - osx-64
 - win-64
-cxx_compiler:
-- clangxx
-cxx_compiler_version:
-- '4'
-fortran_compiler:
-- gfortran
-fortran_compiler_version:
-- '4'
+docker_image:
+- condaforge/linux-anvil
 go14_compiler:
 - go1.4-bootstrap
 macos_machine:
@@ -49,8 +41,6 @@ perl:
 pin_run_as_build:
   perl:
     max_pin: x.x.x
-target_platform:
-- osx-64
 zip_keys:
 - - cgo
   - nocgo
