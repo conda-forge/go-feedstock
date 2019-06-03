@@ -97,7 +97,7 @@ outputs:
   - name: {{ name }}                                                      # [nocgo]
     requirements:                                                         # [nocgo]
       run:                                                                # [nocgo]
-        - {{ pin_subpackage(name+"-nocgo_"+target_platform,exact=True) }} # [nocgo]                 # [nocgo]
+        - {{ pin_subpackage(name+"-nocgo_"+target_platform,exact=True) }} # [nocgo]
     test:                                                                 # [nocgo]
       commands:                                                           # [nocgo]
         - go version                                                      # [nocgo]
