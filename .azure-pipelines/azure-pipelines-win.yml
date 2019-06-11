@@ -10,12 +10,12 @@ jobs:
   strategy:
     maxParallel: 4
     matrix:
-      win_cgofalsecgo_varnocgotarget_platformwin-64:
-        CONFIG: win_cgofalsecgo_varnocgotarget_platformwin-64
+      win_cgofalsenocgotruetarget_platformwin-64:
+        CONFIG: win_cgofalsenocgotruetarget_platformwin-64
         CONDA_BLD_PATH: D:\\bld\\
         UPLOAD_PACKAGES: False
-      win_cgotruecgo_varcgotarget_platformwin-64:
-        CONFIG: win_cgotruecgo_varcgotarget_platformwin-64
+      win_cgotruenocgofalsetarget_platformwin-64:
+        CONFIG: win_cgotruenocgofalsetarget_platformwin-64
         CONDA_BLD_PATH: D:\\bld\\
         UPLOAD_PACKAGES: False
   steps:
@@ -72,8 +72,8 @@ jobs:
 
     # Configure the VM.
     - script: |
+        set "CI=azure"
         run_conda_forge_build_setup
-
       displayName: conda-forge build setup
     
 

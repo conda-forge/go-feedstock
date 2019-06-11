@@ -10,10 +10,10 @@ environment:
     secure: tumuXLL8PU75WMnRDemRy02ruEq2RpNxeK3dz0MjFssnosPm2v4EFjfNB4PTotA1
 
   matrix:
-    - CONFIG: win_cgofalsecgo_varnocgotarget_platformwin-64
+    - CONFIG: win_cgofalsenocgotruetarget_platformwin-64
       CONDA_INSTALL_LOCN: C:\Miniconda36-x64
 
-    - CONFIG: win_cgotruecgo_varcgotarget_platformwin-64
+    - CONFIG: win_cgotruenocgofalsetarget_platformwin-64
       CONDA_INSTALL_LOCN: C:\Miniconda36-x64
 
 
@@ -23,6 +23,7 @@ platform:
     - x64
 
 install:
+    - cmd: set "CI=appveyor"
     # If there is a newer build queued for the same PR, cancel this one.
     - cmd: |
         powershell -Command "(New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/conda-forge/conda-forge-ci-setup-feedstock/master/recipe/conda_forge_ci_setup/ff_ci_pr_build.py', 'ff_ci_pr_build.py')"
