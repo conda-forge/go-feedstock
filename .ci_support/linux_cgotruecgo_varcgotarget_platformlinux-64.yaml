@@ -43,6 +43,8 @@ perl:
 pin_run_as_build:
   perl:
     max_pin: x.x.x
+target_platform:
+- linux-64
 zip_keys:
 - - cgo
   - nocgo
