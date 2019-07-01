@@ -1,7 +1,5 @@
 MACOSX_DEPLOYMENT_TARGET:
 - '10.9'
-build_number_decrement:
-- '0'
 cgo:
 - 'false'
 cgo_int:
@@ -26,8 +24,6 @@ conda_goplatform:
 - linux-64
 - osx-64
 - win-64
-docker_image:
-- condaforge/linux-anvil
 go14_compiler:
 - go1.4-bootstrap
 macos_machine:
