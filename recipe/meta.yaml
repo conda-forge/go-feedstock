@@ -65,6 +65,7 @@ outputs:
         - go run hello-c.go    # [cgo]
 
   - name: {{ name }}-{{ cgo_var }}_{{ target_platform }}   # [cgo]
+  
   - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [nocgo]
     script: build-{{ cgo_var }}-platform.sh   # [unix]
     script: build-{{ cgo_var }}-platform.bat  # [win]
@@ -94,14 +95,14 @@ outputs:
         - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win and nocgo]
 
         - go build hello-c.go  # [cgo]
-  - name: {{ name }}                                         # [nocgo]
-    requirements:                                            # [nocgo]
-      run:                                                   # [nocgo]
-        - {{ pin_subpackage(name+"-nocgo_"+target_platform,  # [nocgo]
-                            exact=True) }}                   # [nocgo]
-    test:                                                    # [nocgo]
-      commands:                                              # [nocgo]
-        - go version                                         # [nocgo]
+  
+  - name: {{ name }}                                                        # [nocgo]
+    requirements:                                                           # [nocgo]
+      run:                                                                  # [nocgo]
+        - {{ pin_subpackage(name+"-nocgo_"+target_platform, exact=True) }}  # [nocgo]
+    test:                                                                   # [nocgo]
+      commands:                                                             # [nocgo]
+        - go version                                                        # [nocgo]
 
 
 about:
