@@ -36,6 +36,12 @@ if [[ $(uname) == 'Darwin' ]]; then
   ./make.bash
 elif [[ $(uname) == 'Linux' ]]; then
   # testsanitizers hangs > 10minutes
+  if [[ ${cgo_var} == 'cgo' ]]; then
+    export GO_LFFLAGS=${LGFLAGS}
+    export GO_EXTLINK_ENABLED=1
+    # TODO: For future versions of go
+    # export GO_LDSO= ld from conda-forge
+  fi
   ./make.bash
 fi
 popd
