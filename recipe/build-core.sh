@@ -1,5 +1,8 @@
 set -euf 
 
+# Make the build more verbose so that we can see
+set -x
+
 #
 # Install and source the [de]activate scripts.
 for F in activate deactivate; do
