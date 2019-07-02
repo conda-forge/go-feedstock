@@ -43,9 +43,10 @@ elif [[ $(uname) == 'Linux' ]]; then
     # export GO_LDSO= ld from conda-forge
     
     # The go bootstrapper seems to need this for whatever reason
-    ln -sf ${CC} ${PREFIX}/bin/gcc
-    ln -sf ${CXX} ${PREFIX}/bin/g++   
+    ln -sf ${CC} ${BUILD_PREFIX}/bin/gcc
+    ln -sf ${CXX} ${BUILD_PREFIX}/bin/g++   
   fi
+  echo "Build: PATH=${PATH}"
   ./make.bash -v
 fi
 popd
