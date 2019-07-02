@@ -41,6 +41,10 @@ elif [[ $(uname) == 'Linux' ]]; then
     export GO_EXTLINK_ENABLED=1
     # TODO: For future versions of go
     # export GO_LDSO= ld from conda-forge
+    
+    # The go bootstrapper seems to need this for whatever reason
+    ln -sf ${CC} ${PREFIX}/bin/gcc
+    ln -sf ${CXX} ${PREFIX}/bin/g++   
   fi
   ./make.bash -v
 fi
