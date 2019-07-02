@@ -17,4 +17,4 @@ export CONDA_BACKUP_CGO_FFLAGS="${CGO_FFLAGS:-}"
 export CGO_FFLAGS="${FFLAGS:-}"
 
 export CONDA_BACKUP_CGO_LDFLAGS="${CGO_LDFLAGS:-}"
-export CGO_LDFLAGS="-linkmode=external,$LDFLAGS"
+export CGO_LDFLAGS="$LDFLAGS"
