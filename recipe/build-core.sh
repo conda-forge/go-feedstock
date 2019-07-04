@@ -1,5 +1,8 @@
 set -euf 
 
+# Make the build more verbose so that we can see
+set -x
+
 #
 # Install and source the [de]activate scripts.
 for F in activate deactivate; do
@@ -33,7 +36,18 @@ if [[ $(uname) == 'Darwin' ]]; then
   ./make.bash
 elif [[ $(uname) == 'Linux' ]]; then
   # testsanitizers hangs > 10minutes
-  ./make.bash
+  if [[ ${cgo_var} == 'cgo' ]]; then
+    export GO_LFFLAGS=${LDFLAGS}
+    export GO_EXTLINK_ENABLED=1
+    # TODO: For future versions of go
+    # export GO_LDSO= ld from conda-forge
+    
+    # The go bootstrapper seems to need this for whatever reason
+    ln -sf ${CC} ${BUILD_PREFIX}/bin/gcc
+    ln -sf ${CXX} ${BUILD_PREFIX}/bin/g++   
+  fi
+  echo "Build: PATH=${PATH}"
+  ./make.bash -v
 fi
 popd
 

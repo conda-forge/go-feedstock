@@ -57,17 +57,10 @@ Current build status
                 </a>
               </td>
             </tr><tr>
-              <td>osx_cgofalsenocgotruetarget_platformosx-64</td>
+              <td>osx</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=osx&configuration=osx_cgofalsenocgotruetarget_platformosx-64" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_cgotruenocgofalsetarget_platformosx-64</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=osx&configuration=osx_cgotruenocgofalsetarget_platformosx-64" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=osx&configuration=osx_" alt="variant">
                 </a>
               </td>
             </tr><tr>
@@ -192,4 +185,5 @@ Feedstock Maintainers
 * [@nehaljwani](https://github.com/nehaljwani/)
 * [@scopatz](https://github.com/scopatz/)
 * [@sodre](https://github.com/sodre/)
+* [@stuarteberg](https://github.com/stuarteberg/)
 

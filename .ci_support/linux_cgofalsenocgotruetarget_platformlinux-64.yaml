@@ -4,6 +4,8 @@ c_compiler_version:
 - '7'
 cgo:
 - 'false'
+cgo_int:
+- '0'
 cgo_var:
 - nocgo
 channel_sources:
@@ -49,6 +51,7 @@ zip_keys:
 - - cgo
   - nocgo
   - cgo_var
+  - cgo_int
 - - conda_goplatform
   - conda_goos
   - conda_gofile
