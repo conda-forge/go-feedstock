@@ -33,6 +33,12 @@ jobs:
     # - script: rmdir C:\cygwin /s /q
     #   continueOnError: true
 
+    # Go in C:\ breaks conda-build for go feedstock
+    - script: |
+        rmdir %GOROOT% /s /q
+      continueOnError: true
+
+
     - powershell: |
         Set-PSDebug -Trace 1
 
