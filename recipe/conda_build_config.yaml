@@ -2,16 +2,16 @@ go14_compiler:
   - go1.4-bootstrap
 cgo:
   - false
-  - true  # [not osx]
+  - true
 cgo_int:
   - 0
-  - 1     # [not osx]
+  - 1
 nocgo:
   - true
-  - false # [not osx]
+  - false
 cgo_var:
   - nocgo
-  - cgo  # [not osx]
+  - cgo
 conda_goarch:
   - amd64
 conda_goos:

@@ -1,5 +1,7 @@
 cgo:
 - 'true'
+cgo_int:
+- 1
 cgo_var:
 - cgo
 channel_sources:
@@ -36,6 +38,7 @@ zip_keys:
 - - cgo
   - nocgo
   - cgo_var
+  - cgo_int
 - - conda_goplatform
   - conda_goos
   - conda_gofile
