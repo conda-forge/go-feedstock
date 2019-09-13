@@ -1,17 +1,24 @@
+MACOSX_DEPLOYMENT_TARGET:  # [osx]
+  - '10.10'                # [osx]
 go14_compiler:
   - go1.4-bootstrap
+
+go_variant_ver:
+  - 1.3.0
+  - 1.2.0
+go_variant_str:
+  - nocgo
+  - cgo
 cgo:
   - false
   - true
-cgo_int:
-  - 0
-  - 1
 nocgo:
   - true
   - false
-cgo_var:
-  - nocgo
-  - cgo
+cgo_enabled:
+  - 0
+  - 1
+
 conda_goarch:
   - amd64
 conda_goos:
@@ -28,10 +35,11 @@ conda_gofile:
   - PE32+
 zip_keys:
   - 
+    - go_variant_ver
+    - go_variant_str
     - cgo
     - nocgo
-    - cgo_var
-    - cgo_int
+    - cgo_enabled
   - 
     - conda_goplatform
     - conda_goos
