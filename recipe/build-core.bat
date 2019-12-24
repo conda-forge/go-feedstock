@@ -1,5 +1,8 @@
 setlocal enabledelayedexpansion
 
+rem Remove GOROOT if already defined
+rmdir %GOROOT% /s /q
+
 rem Copy the rendered [de]activate scripts to %PREFIX%\etc\conda\[de]activate.d.
 rem go finds its *.go files via the GOROOT variable
 for %%F in (activate deactivate) do (
