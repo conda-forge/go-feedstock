@@ -37,6 +37,10 @@ rem Don't need the cached build objects
 rmdir /s /q %SRC_DIR%\go\pkg\obj
 
 mkdir "%PREFIX%\go"
+
+rem There are some special weird files in this test that cause issues packing on windows
+rmdir /s /q "%SRC_DIR%\go\test\fixedbugs\issue27836.dir"
+
 xcopy /s /y /i /q "%SRC_DIR%\go\*" "%PREFIX%\go\"
 
 rem Right now, it's just go and gofmt, but might be more in the future!
