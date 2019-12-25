@@ -13,11 +13,11 @@ jobs:
       win_cgofalsecgo_varnocgotarget_platformwin-64:
         CONFIG: win_cgofalsecgo_varnocgotarget_platformwin-64
         CONDA_BLD_PATH: D:\\bld\\
-        UPLOAD_PACKAGES: False
+        UPLOAD_PACKAGES: True
       win_cgotruecgo_varcgotarget_platformwin-64:
         CONFIG: win_cgotruecgo_varcgotarget_platformwin-64
         CONDA_BLD_PATH: D:\\bld\\
-        UPLOAD_PACKAGES: False
+        UPLOAD_PACKAGES: True
   steps:
     # TODO: Fast finish on azure pipelines?
     - script: |
@@ -32,12 +32,6 @@ jobs:
     # Cygwin's git breaks conda-build. (See https://github.com/conda-forge/conda-smithy-feedstock/pull/2.)
     # - script: rmdir C:\cygwin /s /q
     #   continueOnError: true
-
-    # Go in C:\ breaks conda-build for go feedstock
-    - script: |
-        rmdir %GOROOT% /s /q
-      continueOnError: true
-
 
     - powershell: |
         Set-PSDebug -Trace 1
@@ -66,7 +60,7 @@ jobs:
 
     - task: CondaEnvironment@1
       inputs:
-        packageSpecs: 'python=3.6 conda-build=3.16 conda conda-forge::conda-forge-ci-setup=2' # Optional
+        packageSpecs: 'python=3.6 conda-build conda conda-forge::conda-forge-ci-setup=2' # Optional
         installOptions: "-c conda-forge"
         updateConda: false
       displayName: Install conda-build and activate environment
@@ -105,7 +99,9 @@ jobs:
       condition: not(contains(variables['CONFIG'], 'vs2008'))
 
     - script: |
+        set "GIT_BRANCH=%BUILD_SOURCEBRANCHNAME%"
         upload_package .\ .\recipe .ci_support\%CONFIG%.yaml
+      displayName: Upload package
       env:
         BINSTAR_TOKEN: $(BINSTAR_TOKEN)
       condition: not(eq(variables['UPLOAD_PACKAGES'], 'False'))
