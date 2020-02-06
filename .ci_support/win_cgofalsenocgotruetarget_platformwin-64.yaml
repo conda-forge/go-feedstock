@@ -33,9 +33,9 @@ nocgo:
 target_platform:
 - win-64
 zip_keys:
-# - - cgo
-#   - nocgo
-#   - cgo_var
+- - cgo
+  - nocgo
+  - cgo_var
 - - conda_goplatform
   - conda_goos
   - conda_gofile
