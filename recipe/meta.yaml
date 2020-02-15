@@ -1,11 +1,7 @@
 {% set name = "go" %}
 {% set version = "1.13.5" %}
 
-# Sigh...
-{% set cgo = true %}  # [cgo == 'true']
-{% set cgo = false %}  # [cgo == 'false']
-
-{% if cgo %}
+{% if cgo == "true" %}
 {% set cgo_int = "1" %}
 {% set cgo_var = "cgo" %}
 {% else %}
@@ -61,23 +57,23 @@ outputs:
     requirements:
       build:
         - {{ compiler('go14') }}
-        - {{ compiler('c') }}              # [unix and cgo]
-        - {{ compiler('cxx') }}            # [unix and cgo]
-        - {{ compiler('fortran') }}        # [unix and cgo]
-        - {{ compiler('m2w64_c') }}        # [win and cgo]
-        - {{ compiler('m2w64_cxx') }}      # [win and cgo]
-        - {{ compiler('m2w64_fortran') }}  # [win and cgo]
+        - {{ compiler('c') }}              # [unix and cgo == "true"]
+        - {{ compiler('cxx') }}            # [unix and cgo == "true"]
+        - {{ compiler('fortran') }}        # [unix and cgo == "true"]
+        - {{ compiler('m2w64_c') }}        # [win and cgo == "true"]
+        - {{ compiler('m2w64_cxx') }}      # [win and cgo == "true"]
+        - {{ compiler('m2w64_fortran') }}  # [win and cgo == "true"]
 
         - perl     # [not win]
         - m2-sed   # [win]
         - m2-grep  # [win]
     test:
       requires:
-        - {{ compiler('c') }}              # [unix and cgo]
-        - {{ compiler('m2w64_c') }}        # [win and cgo]
+        - {{ compiler('c') }}              # [unix and cgo == "true"]
+        - {{ compiler('m2w64_c') }}        # [win and cgo == "true"]
       files:
         - hello.go
-        - hello-c.go  # [cgo]
+        - hello-c.go  # [cgo == "true"]
       commands:
         # Environment checks
         - go env
@@ -91,10 +87,10 @@ outputs:
         - go run hello.go
 
         # Test cgo is working properly
-        - go run hello-c.go    # [cgo]
+        - go run hello-c.go    # [cgo == "true"]
 
-  - name: {{ name }}-{{ cgo_var }}_{{ target_platform }}   # [cgo]
-  - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [not cgo]
+  - name: {{ name }}-{{ cgo_var }}_{{ target_platform }}   # [cgo == "true"]
+  - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [cgo == "false"]
     script: build-{{ cgo_var }}-platform.sh   # [unix]
     script: build-{{ cgo_var }}-platform.bat  # [win]
     requirements:
@@ -108,8 +104,8 @@ outputs:
         - hello.go
         - hello-c.go
       requires:
-        - {{ compiler('c') }}              # [unix and cgo]
-        - {{ compiler('m2w64_c') }}        # [win and cgo]
+        - {{ compiler('c') }}              # [unix and cgo == "true"]
+        - {{ compiler('m2w64_c') }}        # [win and cgo == "true"]
         - posix    # [win]
         - m2-file  # [win]
         - m2-grep  # [win]
@@ -119,18 +115,18 @@ outputs:
         # Check that the file types match what is expected for each platform
         ## https://stackoverflow.com/questions/2768608/batch-equivalent-of-bash-backticks#2768660
         - go build hello.go
-        - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix and (not cgo)]
-        - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win and not cgo]
+        - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix and cgo == "false"]
+        - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win and cgo == "false"]
 
-        - go build hello-c.go  # [cgo]
+        - go build hello-c.go  # [cgo == "true"]
 
-  - name: {{ name }}                                                        # [not cgo]
-    requirements:                                                           # [not cgo]
-      run:                                                                  # [not cgo]
-        - {{ pin_subpackage(name+"-nocgo_"+target_platform, exact=True) }}  # [not cgo]
-    test:                                                                   # [not cgo]
-      commands:                                                             # [not cgo]
-        - go version                                                        # [not cgo]
+  - name: {{ name }}                                                        # [cgo == "false"]
+    requirements:                                                           # [cgo == "false"]
+      run:                                                                  # [cgo == "false"]
+        - {{ pin_subpackage(name+"-nocgo_"+target_platform, exact=True) }}  # [cgo == "false"]
+    test:                                                                   # [cgo == "false"]
+      commands:                                                             # [cgo == "false"]
+        - go version                                                        # [cgo == "false"]
 
 
 about:
