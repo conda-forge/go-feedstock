@@ -3,8 +3,10 @@
 
 {% set cgo_var = "cgo" %}    # [cgo]
 {% set cgo_int = "1" %}      # [cgo]
+{% set cgo_platform_name = target_platform %}   # [cgo]
 {% set cgo_var = "nocgo" %}  # [not cgo]
 {% set cgo_int = "0" %}      # [not cgo]
+{% set cgo_platform_name = conda_goplatform %}  # [not cgo]
 
 package:
   name: {{ name }}
@@ -68,8 +70,7 @@ outputs:
         # Test cgo is working properly
         - go run hello-c.go    # [cgo]
 
-  - name: {{ name }}-{{ cgo_var }}_{{ target_platform }}   # [cgo]
-  - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [not cgo]
+  - name: {{ name }}-{{ cgo_var }}_{{ cgo_platform_name }}
     script: build-{{ cgo_var }}-platform.sh   # [unix]
     script: build-{{ cgo_var }}-platform.bat  # [win]
     requirements:

@@ -1,18 +1,27 @@
 go14_compiler:
   - go1.4-bootstrap
 cgo:
-  - false
   - true
+  - false
+  - false
+  - false
 conda_goarch:
+  - native
+  - amd64
+  - amd64
   - amd64
 conda_goplatform:
+  - native
   - linux-64
   - osx-64
   - win-64
 conda_gofile:
+  - native
   - ELF
   - Mach-O
   - PE32+
 zip_keys:
+  - cgo
   - conda_goplatform
   - conda_gofile
+  - conda_goarch
