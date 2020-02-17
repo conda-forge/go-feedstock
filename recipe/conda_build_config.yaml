@@ -1,38 +1,51 @@
 go14_compiler:
   - go1.4-bootstrap
 cgo:
-  - false
   - true
+  - false
+  - false
+  - false
 cgo_int:
-  - 0
   - 1
+  - 0
+  - 0
+  - 0
 nocgo:
-  - true
   - false
+  - true
+  - true
+  - true
 cgo_var:
-  - nocgo
   - cgo
+  - nocgo
+  - nocgo
+  - nocgo
 conda_goarch:
   - amd64
+  - amd64
+  - amd64
+  - amd64
 conda_goos:
+  - native
   - linux
   - darwin
   - windows
 conda_goplatform:
+  - native
   - linux-64
   - osx-64
   - win-64
 conda_gofile:
+  - native
   - ELF
   - Mach-O
   - PE32+
 zip_keys:
-  - 
-    - cgo
-    - nocgo
-    - cgo_var
-    - cgo_int
-  - 
-    - conda_goplatform
-    - conda_goos
-    - conda_gofile
+  - cgo
+  - nocgo
+  - cgo_var
+  - cgo_int
+  - conda_goarch
+  - conda_goplatform
+  - conda_goos
+  - conda_gofile
