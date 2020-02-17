@@ -6,15 +6,23 @@ c_compiler_version:
 - '9'
 cgo:
 - 'false'
+- 'false'
+- 'false'
 cgo_int:
 - '0'
+- '0'
+- '0'
 cgo_var:
+- nocgo
+- nocgo
 - nocgo
 channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
 conda_goarch:
+- amd64
+- amd64
 - amd64
 conda_gofile:
 - ELF
@@ -44,6 +52,8 @@ macos_min_version:
 - '10.9'
 nocgo:
 - 'true'
+- 'true'
+- 'true'
 perl:
 - 5.26.2
 pin_run_as_build:
@@ -56,6 +66,7 @@ zip_keys:
   - nocgo
   - cgo_var
   - cgo_int
-- - conda_goplatform
+  - conda_goarch
+  - conda_goplatform
   - conda_goos
   - conda_gofile

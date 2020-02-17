@@ -1,12 +1,18 @@
 cgo:
 - 'false'
+- 'false'
+- 'false'
 cgo_var:
+- nocgo
+- nocgo
 - nocgo
 channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
 conda_goarch:
+- amd64
+- amd64
 - amd64
 conda_gofile:
 - ELF
@@ -30,12 +36,15 @@ m2w64_fortran_compiler:
 - m2w64-toolchain
 nocgo:
 - 'true'
+- 'true'
+- 'true'
 target_platform:
 - win-64
 zip_keys:
-# - - cgo
-#   - nocgo
-#   - cgo_var
-- - conda_goplatform
+- - cgo
+  - nocgo
+  - cgo_var
+  - conda_goarch
+  - conda_goplatform
   - conda_goos
   - conda_gofile
