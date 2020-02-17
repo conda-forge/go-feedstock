@@ -1,6 +1,15 @@
 {% set name = "go" %}
 {% set version = "1.13.5" %}
 
+# This helps the linter think that cgo_var is always a defined jinja variable
+{% set cgo_var = "cgo" %}     # [cgo]
+{% set cgo_var = "nocgo" %}  # [nocgo]
+
+# having a selector on the `name` field causes problems with the linter
+{% if conda_goplatform == "native" %}
+{% set conda_goplatform = target_platform %}
+{% endif %}
+
 package:
   name: {{ name }}
   version: {{ version }}
@@ -63,8 +72,7 @@ outputs:
         # Test cgo is working properly
         - go run hello-c.go    # [cgo]
 
-  - name: {{ name }}-{{ cgo_var }}_{{ target_platform }}   # [cgo]
-  - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [nocgo]
+  - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}
     script: build-{{ cgo_var }}-platform.sh   # [unix]
     script: build-{{ cgo_var }}-platform.bat  # [win]
     requirements:
