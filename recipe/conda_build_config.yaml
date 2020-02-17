@@ -3,21 +3,8 @@ go14_compiler:
 cgo:
   - false
   - true
-cgo_int:
-  - 0
-  - 1
-nocgo:
-  - true
-  - false
-cgo_var:
-  - nocgo
-  - cgo
 conda_goarch:
   - amd64
-conda_goos:
-  - linux
-  - darwin
-  - windows
 conda_goplatform:
   - linux-64
   - osx-64
@@ -27,12 +14,5 @@ conda_gofile:
   - Mach-O
   - PE32+
 zip_keys:
-  - 
-    - cgo
-    - nocgo
-    - cgo_var
-    - cgo_int
-  - 
-    - conda_goplatform
-    - conda_goos
-    - conda_gofile
+  - conda_goplatform
+  - conda_gofile

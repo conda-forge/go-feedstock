@@ -1,5 +1,11 @@
 setlocal enabledelayedexpansion
 
+if %cgo%=="true" (
+    set cgo_var="cgo"
+) else (
+    set cgo_var="nocgo"
+)
+
 rem Remove GOROOT if already defined
 rmdir %GOROOT% /s /q
 

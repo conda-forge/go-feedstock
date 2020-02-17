@@ -1,7 +1,13 @@
-set -euf 
+set -euf
 
 # Make the build more verbose so that we can see
 set -x
+
+if [[ ${cgo} == "true" ]]; then
+    cgo_var=cgo
+else
+    cgo_var=nocgo
+fi
 
 #
 # Install and source the [de]activate scripts.
@@ -24,7 +30,7 @@ export GOCACHE=off
 export USER="${USER:-conda}"
 export HOME="${HOME:-$(cd $SRC_DIR/..;pwd)}"
 # This is a fix for golang/go#23888
-if [ -x "${ADDR2LINE:-}" ]; then 
+if [ -x "${ADDR2LINE:-}" ]; then
   ln $ADDR2LINE $(dirname $ADDR2LINE)/addr2line
 fi
 
@@ -41,10 +47,10 @@ elif [[ $(uname) == 'Linux' ]]; then
     export GO_EXTLINK_ENABLED=1
     # TODO: For future versions of go
     # export GO_LDSO= ld from conda-forge
-    
+
     # The go bootstrapper seems to need this for whatever reason
     ln -sf ${CC} ${BUILD_PREFIX}/bin/gcc
-    ln -sf ${CXX} ${BUILD_PREFIX}/bin/g++   
+    ln -sf ${CXX} ${BUILD_PREFIX}/bin/g++
   fi
   echo "Build: PATH=${PATH}"
   ./make.bash -v

@@ -1,6 +1,11 @@
 {% set name = "go" %}
 {% set version = "1.13.5" %}
 
+{% set cgo_var = "cgo" %}    # [cgo]
+{% set cgo_int = "1" %}      # [cgo]
+{% set cgo_var = "nocgo" %}  # [not cgo]
+{% set cgo_int = "0" %}      # [not cgo]
+
 package:
   name: {{ name }}
   version: {{ version }}
@@ -64,7 +69,7 @@ outputs:
         - go run hello-c.go    # [cgo]
 
   - name: {{ name }}-{{ cgo_var }}_{{ target_platform }}   # [cgo]
-  - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [nocgo]
+  - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [not cgo]
     script: build-{{ cgo_var }}-platform.sh   # [unix]
     script: build-{{ cgo_var }}-platform.bat  # [win]
     requirements:
@@ -89,18 +94,18 @@ outputs:
         # Check that the file types match what is expected for each platform
         ## https://stackoverflow.com/questions/2768608/batch-equivalent-of-bash-backticks#2768660
         - go build hello.go
-        - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix and nocgo]
-        - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win and nocgo]
+        - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix and not cgo]
+        - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win and not cgo]
 
         - go build hello-c.go  # [cgo]
 
-  - name: {{ name }}                                                        # [nocgo]
-    requirements:                                                           # [nocgo]
-      run:                                                                  # [nocgo]
-        - {{ pin_subpackage(name+"-nocgo_"+target_platform, exact=True) }}  # [nocgo]
-    test:                                                                   # [nocgo]
-      commands:                                                             # [nocgo]
-        - go version                                                        # [nocgo]
+  - name: {{ name }}                                                        # [not cgo]
+    requirements:                                                           # [not cgo]
+      run:                                                                  # [not cgo]
+        - {{ pin_subpackage(name+"-nocgo_"+target_platform, exact=True) }}  # [not cgo]
+    test:                                                                   # [not cgo]
+      commands:                                                             # [not cgo]
+        - go version                                                        # [not cgo]
 
 
 about:

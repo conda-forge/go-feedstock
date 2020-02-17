@@ -1,4 +1,7 @@
 rem Install [de]activate scripts.
+
+set conda_goos="windows"
+
 for %%F in (activate deactivate) do (
   if not exist "%PREFIX%\etc\conda\%%F.d" mkdir "%PREFIX%\etc\conda\%%F.d"
   if errorlevel 1 exit 1
