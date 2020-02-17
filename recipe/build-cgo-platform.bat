@@ -1,4 +1,8 @@
 rem Install [de]activate scripts.
+
+rem Windows only builds for amd64
+if %conda_goarch%==native set conda_goarch=amd64
+
 for %%F in (activate deactivate) do (
   if not exist "%PREFIX%\etc\conda\%%F.d" mkdir "%PREFIX%\etc\conda\%%F.d"
   if errorlevel 1 exit 1

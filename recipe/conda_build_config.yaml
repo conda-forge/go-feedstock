@@ -21,7 +21,7 @@ cgo_var:
   - nocgo
   - nocgo
 conda_goarch:
-  - amd64
+  - native
   - amd64
   - amd64
   - amd64

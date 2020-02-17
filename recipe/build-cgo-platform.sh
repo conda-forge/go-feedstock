@@ -1,5 +1,10 @@
 set -euf
 
+if [[ "$conda_goarch" == "native" ]]; then
+    # TODO: detect linux ppc64le and arm64
+    conda_goarch=amd64
+fi
+
 # Install [de]activate scripts.
 for F in activate deactivate; do
   mkdir -p "${PREFIX}/etc/conda/${F}.d"
