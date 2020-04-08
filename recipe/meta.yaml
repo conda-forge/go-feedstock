@@ -84,6 +84,9 @@ outputs:
     requirements:
       run:
         - {{ pin_subpackage(name, exact=True) }}
+    run_exports:  # [osx]
+      strong:
+        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
     test:
       commands:
         # Environment checks
