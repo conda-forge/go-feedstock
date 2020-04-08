@@ -9,7 +9,7 @@ go14_compiler:
 go_variant_str:
 - cgo
 go_variant_ver:
-- '1'
+- 1.2.1
 m2w64_c_compiler:
 - m2w64-toolchain
 m2w64_cxx_compiler:
