@@ -65,8 +65,8 @@ outputs:
 
   - name: {{ name }}-{{ cgo_var }}_{{ target_platform }}   # [cgo]
   - name: {{ name }}-{{ cgo_var }}_{{ conda_goplatform }}  # [nocgo]
-    script: build-{{ cgo_var }}-platform.sh   # [unix]
-    script: build-{{ cgo_var }}-platform.bat  # [win]
+    script: {{ cgo_var}}/build-platform.sh   # [unix]
+    script: {{ cgo_var}/build-platform.bat  # [win]
     requirements:
       build:
         - sed      # [osx]
