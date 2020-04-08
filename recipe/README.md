@@ -9,4 +9,4 @@ This is the version that most closely matches the upstream release, with the dif
 In order to get cgo working, we usually have to patch `go` itself.
 
 The nocgo version is built with `CGO_ENABLED=0` and it only requires the go1.4 bootstrap program to build. 
-This version should be easier to build in different architectures, but had the disadvantage of not matching the upstream release as closesly.
+This version should be easier to build in different architectures, but has the disadvantage of not matching the upstream release as closely.

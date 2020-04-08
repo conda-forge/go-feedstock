@@ -79,6 +79,8 @@ outputs:
       summary: 'The Go Programming Language'
 
   - name: {{ name }}-{{ go_variant_str }}_{{ target_platform }}
+    script: compiler/build.sh   # [unix]
+    script: compiler/build.bat  # [win]
     requirements:
       run:
         - {{ pin_subpackage(name, exact=True) }}

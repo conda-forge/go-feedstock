@@ -11,15 +11,3 @@ if [[ $CONDA_BUILD = 1 ]]; then
     unset GOBIN
   fi
 fi
-
-export GOOS="${CONDA_BACKUP_GOOS}"
-unset CONDA_BACKUP_GOOS
-if [ -z $GOOS ]; then
-	unset GOOS
-fi
-
-export GOARCH="${CONDA_BACKUP_GOARCH}"
-unset CONDA_BACKUP_GOARCH
-if [ -z $GOARCH ]; then
-	unset GOARCH
-fi

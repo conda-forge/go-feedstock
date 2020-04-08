@@ -15,8 +15,8 @@ go_variant_str:
   - nocgo
   - cgo
 go_variant_ver:
-  - 1
-  - 1
+  - 1.3.1
+  - 1.2.1
 
 # One-hot-encoding of the variant selection above
 cgo:
