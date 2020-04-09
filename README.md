@@ -29,45 +29,24 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
-              <td>linux_cgoFalsego_variant_strnocgogo_variant_ver1.3.1target_platformlinux-64</td>
+              <td>linux_cgotruego_variant_strcgogo_variant_ver1.2.1target_platformlinux-64</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_cgoFalsego_variant_strnocgogo_variant_ver1.3.1target_platformlinux-64" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_cgotruego_variant_strcgogo_variant_ver1.2.1target_platformlinux-64" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_cgoTruego_variant_strcgogo_variant_ver1.2.1target_platformlinux-64</td>
+              <td>osx_cgotruego_variant_strcgogo_variant_ver1.2.1target_platformosx-64</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_cgoTruego_variant_strcgogo_variant_ver1.2.1target_platformlinux-64" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=osx&configuration=osx_cgotruego_variant_strcgogo_variant_ver1.2.1target_platformosx-64" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_cgoFalsego_variant_strnocgogo_variant_ver1.3.1target_platformosx-64</td>
+              <td>win_cgotruego_variant_strcgogo_variant_ver1.2.1target_platformwin-64</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=osx&configuration=osx_cgoFalsego_variant_strnocgogo_variant_ver1.3.1target_platformosx-64" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_cgoTruego_variant_strcgogo_variant_ver1.2.1target_platformosx-64</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=osx&configuration=osx_cgoTruego_variant_strcgogo_variant_ver1.2.1target_platformosx-64" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>win_cgoFalsego_variant_strnocgogo_variant_ver1.3.1target_platformwin-64</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=win&configuration=win_cgoFalsego_variant_strnocgogo_variant_ver1.3.1target_platformwin-64" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>win_cgoTruego_variant_strcgogo_variant_ver1.2.1target_platformwin-64</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=win&configuration=win_cgoTruego_variant_strcgogo_variant_ver1.2.1target_platformwin-64" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=win&configuration=win_cgotruego_variant_strcgogo_variant_ver1.2.1target_platformwin-64" alt="variant">
                 </a>
               </td>
             </tr>

@@ -26,8 +26,8 @@ go_variant_ver:
 
 # One-hot-encoding of the variant selection above
 cgo:
-  - True
-  - False
+  - true
+  - false
 
 #
 # Tie the variables together

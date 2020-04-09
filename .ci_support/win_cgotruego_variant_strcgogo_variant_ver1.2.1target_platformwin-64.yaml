@@ -1,5 +1,5 @@
 cgo:
-- 'True'
+- 'true'
 channel_sources:
 - conda-forge,defaults
 channel_targets:
