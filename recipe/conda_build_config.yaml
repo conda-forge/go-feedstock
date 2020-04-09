@@ -26,11 +26,11 @@ go_variant_ver:
 
 # One-hot-encoding of the variant selection above
 cgo:
-  - false
-  - true
+  - False
+  - True
 nocgo:
-  - true
-  - false
+  - True
+  - False
 
 #
 # Tie the variables together
