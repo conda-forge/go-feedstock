@@ -5,8 +5,11 @@ set -euf
 test "$(which go)" == "${CONDA_PREFIX}/bin/go"
 
 
-# Ensure CGO_ENABLED=1
+# Ensure CGO_ENABLED=0, and disable the toolchain compilers
 test "$(go env CGO_ENABLED)" == 0
+export CC=false
+export CXX=false
+export FC=false
 
 
 # Print diagnostics

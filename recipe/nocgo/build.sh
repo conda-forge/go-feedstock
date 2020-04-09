@@ -1,15 +1,5 @@
 set -euf
 
-
-# Hide the full path of the CC and CXX compilers since they get hardcoded here:
-#  - ./cmd/go/internal/cfg/zdefaultcc.go
-#  - ./cmd/cgo/zdefaultcc.go
-# This bug does not show up while running the tests because conda-build does
-# not remove the _build_env.
-export CC=$(basename ${CC})
-export CXX=$(basename ${CXX})
-
-
 # Do not use GOROOT_FINAL. Otherwise, every conda environment would
 # need its own non-hardlinked copy of the go (+100MB per env).
 # It is better to rely on setting GOROOT during environment activation.
@@ -19,8 +9,12 @@ export GOROOT=$SRC_DIR/go
 export GOCACHE=off
 
 
-# Disable CGO, and set compiler flags to match conda-forge settings
+# Disable CGO, and set compilers to /dev/null
 export CGO_ENABLED=0
+export CC=/dev/null
+export CXX=/dev/null
+export FC=/dev/null
+
 
 # This is a fix for user.Current issue
 export USER="${USER:-conda}"

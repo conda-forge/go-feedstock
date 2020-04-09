@@ -11,8 +11,9 @@ source:
     sha256: de878218c43aa3c3bad54c1c52d95e3b0e5d336e1285c647383e775541a28b25
     patches:
       # Please see https://github.com/sodre/go/pull/1 for details
-      # AppVeyor fails to apply the patch
-      - f-conda-integration.diff
+      - patches/f-conda-integration.diff
+      # Please see https://github.com/sodre/go/pull/2 for details
+      - patches/i-nocgo-issue10607.diff
 
 build:
   binary_relocation: False
@@ -26,7 +27,7 @@ build:
     - /usr/lib/libSystem.B.dylib  # [osx]
     - /usr/lib/libgcc_s.1.dylib   # [osx]
   number: 0
-  skip: True  # [not cgo]
+  skip: True  # [cgo]
 
 requirements:
   run:
