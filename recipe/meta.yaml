@@ -18,16 +18,15 @@ source:
 build:
   binary_relocation: False
   detect_binary_files_with_prefix: False
-  force_ignore_keys:        # [win]
-    - c_compiler            # [win]
-    - cxx_compiler          # [win]
-    - fortran_compiler      # [win]
+  force_ignore_keys:    # [win]
+    - c_compiler        # [win]
+    - cxx_compiler      # [win]
+    - fortran_compiler  # [win]
   # test data links to these DSOs
   missing_dso_whitelist:
     - /usr/lib/libSystem.B.dylib  # [osx]
     - /usr/lib/libgcc_s.1.dylib   # [osx]
   number: 0
-  skip: True  # [cgo]
 
 requirements:
   run:
