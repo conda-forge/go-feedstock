@@ -28,12 +28,6 @@ go_variant_ver:
 cgo:
   - True
   - False
-nocgo:
-  - False
-  - True
-skip:
-  - True  # [not win]
-  - False
 
 #
 # Tie the variables together
@@ -42,4 +36,3 @@ zip_keys:
     - go_variant_str
     - go_variant_ver
     - cgo
-    - nocgo

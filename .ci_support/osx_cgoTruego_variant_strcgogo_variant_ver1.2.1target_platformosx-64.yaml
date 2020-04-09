@@ -28,8 +28,6 @@ macos_machine:
 - x86_64-apple-darwin13.4.0
 macos_min_version:
 - '10.9'
-nocgo:
-- 'False'
 perl:
 - 5.26.2
 pin_run_as_build:
@@ -41,4 +39,3 @@ zip_keys:
 - - go_variant_str
   - go_variant_ver
   - cgo
-  - nocgo

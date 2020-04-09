@@ -10,8 +10,12 @@ jobs:
   strategy:
     maxParallel: 8
     matrix:
-      linux_cgoTruego_variant_strcgogo_variant_ver1.2.1nocgoFalsetarget_platformlinux-64:
-        CONFIG: linux_cgoTruego_variant_strcgogo_variant_ver1.2.1nocgoFalsetarget_platformlinux-64
+      linux_cgoFalsego_variant_strnocgogo_variant_ver1.3.1target_platformlinux-64:
+        CONFIG: linux_cgoFalsego_variant_strnocgogo_variant_ver1.3.1target_platformlinux-64
+        UPLOAD_PACKAGES: True
+        DOCKER_IMAGE: condaforge/linux-anvil-comp7
+      linux_cgoTruego_variant_strcgogo_variant_ver1.2.1target_platformlinux-64:
+        CONFIG: linux_cgoTruego_variant_strcgogo_variant_ver1.2.1target_platformlinux-64
         UPLOAD_PACKAGES: True
         DOCKER_IMAGE: condaforge/linux-anvil-comp7
   steps:

@@ -10,8 +10,11 @@ jobs:
   strategy:
     maxParallel: 8
     matrix:
-      osx_cgoTruego_variant_strcgogo_variant_ver1.2.1nocgoFalsetarget_platformosx-64:
-        CONFIG: osx_cgoTruego_variant_strcgogo_variant_ver1.2.1nocgoFalsetarget_platformosx-64
+      osx_cgoFalsego_variant_strnocgogo_variant_ver1.3.1target_platformosx-64:
+        CONFIG: osx_cgoFalsego_variant_strnocgogo_variant_ver1.3.1target_platformosx-64
+        UPLOAD_PACKAGES: True
+      osx_cgoTruego_variant_strcgogo_variant_ver1.2.1target_platformosx-64:
+        CONFIG: osx_cgoTruego_variant_strcgogo_variant_ver1.2.1target_platformosx-64
         UPLOAD_PACKAGES: True
 
   steps:
