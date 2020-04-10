@@ -4,10 +4,4 @@ if [[ $CONDA_BUILD = 1 ]]; then
   if [ -z "$GOPATH" ]; then
     unset GOPATH
   fi
-
-  export GOBIN="${CONDA_BACKUP_GOBIN}"
-  unset CONDA_BACKUP_GOBIN
-  if [ -z "$GOBIN" ]; then
-    unset GOBIN
-  fi
 fi

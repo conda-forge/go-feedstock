@@ -12,6 +12,62 @@ index 1e0d59ea1c..58a8753883 100755
    ;;
  esac
  
+diff --git a/src/cmd/go/go_test.go b/src/cmd/go/go_test.go
+index 1c3dcd851b..bc72d3e8b3 100644
+--- a/src/cmd/go/go_test.go
++++ b/src/cmd/go/go_test.go
+@@ -1580,6 +1580,19 @@ func TestInstallIntoGOBIN(t *testing.T) {
+ 	tg.wantExecutable("testdata/bin1/go-cmd-test"+exeSuffix, "go install go-cmd-test did not write to testdata/bin1/go-cmd-test")
+ }
+ 
++// Test that without $GOBIN set, binaries get installed
++// into the PREFIX/bin directory when CONDA_BUILD is 1.
++func TestInstallIntoGOBINWithCondaBuild(t *testing.T) {
++	tg := testgo(t)
++	defer tg.cleanup()
++	tg.setenv("CONDA_BUILD", "1")
++	prefix := filepath.Join(tg.pwd(), "testdata", "conda_build_prefix")
++	tg.creatingTemp(prefix)
++	tg.setenv("PREFIX", prefix)
++	tg.setenv("GOPATH", filepath.Join(tg.pwd(), "testdata"))
++	tg.run("install", "go-cmd-test")
++	tg.wantExecutable("testdata/conda_build_prefix/bin/go-cmd-test"+exeSuffix, "go install go-cmd-test did not write to testdata/conda_build_prefix/bin/go-cmd-test")
++}
+ // Issue 11065
+ func TestInstallToCurrentDirectoryCreatesExecutable(t *testing.T) {
+ 	tg := testgo(t)
+diff --git a/src/cmd/go/internal/cfg/cfg.go b/src/cmd/go/internal/cfg/cfg.go
+index 8dc4d1fbd2..e5373e99b7 100644
+--- a/src/cmd/go/internal/cfg/cfg.go
++++ b/src/cmd/go/internal/cfg/cfg.go
+@@ -94,7 +94,7 @@ func init() {
+ 
+ var (
+ 	GOROOT       = findGOROOT()
+-	GOBIN        = os.Getenv("GOBIN")
++	GOBIN        = findGOBIN()
+ 	GOROOTbin    = filepath.Join(GOROOT, "bin")
+ 	GOROOTpkg    = filepath.Join(GOROOT, "pkg")
+ 	GOROOTsrc    = filepath.Join(GOROOT, "src")
+@@ -198,3 +198,18 @@ func isGOROOT(path string) bool {
+ 	}
+ 	return stat.IsDir()
+ }
++
++// findGOBIN returns the GOBIN value, using either an explicitly
++// provided environment variable, or $PREFIX$/bin if the CONDA_BUILD
++// environment variable is set to 1.
++func findGOBIN() string {
++	if env, ok := os.LookupEnv("GOBIN"); ok {
++		return env
++	}
++	if condaBuild := os.Getenv("CONDA_BUILD"); condaBuild == "1" {
++		if prefix, ok := os.LookupEnv("PREFIX"); ok {
++			return filepath.Join(prefix, "bin")
++		}
++	}
++	return ""
++}
 diff --git a/src/cmd/go/internal/work/exec.go b/src/cmd/go/internal/work/exec.go
 index 0ab7976c56..4dfa856221 100644
 --- a/src/cmd/go/internal/work/exec.go

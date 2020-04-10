@@ -1,10 +1,11 @@
-echo on
+@echo on
 
 rem Diagnostics
 where go
 go env
 
 rem Run go's built-in test, we skip the filepath one, and cmd/go
+set CONDA_BUILD=0
 go tool dist test -k -v -no-rebuild -run=!^^go_test:path/filepath^|go_test:cmd/go^|go_test:net/http/cgi$
 if errorlevel 1 exit 1
 

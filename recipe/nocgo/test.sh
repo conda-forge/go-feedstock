@@ -12,11 +12,16 @@ test "$(go env CXX)" == "/dev/null"
 export FC=false
 
 
+# Test GOBIN is set to $PREFIX/bin
+test "$(go env GOBIN)" == "$PREFIX/bin"
+
+
 # Print diagnostics
 go env
 
 
 # Run go's built-in test
+export CONDA_BUILD=0
 case $(uname -s) in
   Darwin)
     # Expect PASS
