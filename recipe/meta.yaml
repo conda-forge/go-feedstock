@@ -27,7 +27,6 @@ build:
     - /usr/lib/libSystem.B.dylib  # [osx]
     - /usr/lib/libgcc_s.1.dylib   # [osx]
   number: 0
-  skip: True
 
 requirements:
   run:
@@ -53,8 +52,6 @@ outputs:
         - {{ compiler('m2w64_c') }}        # [win and cgo]
         - {{ compiler('m2w64_cxx') }}      # [win and cgo]
         - {{ compiler('m2w64_fortran') }}  # [win and cgo]
-        - m2-sed   # [win]
-        - m2-grep  # [win]
       run:
         - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
         - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
@@ -89,6 +86,8 @@ outputs:
       strong:  # [osx]
         - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
     test:
+      script:  compiler/test.sh   # [unix]
+      script:  compiler/test.bat  # [win]
       commands:
         # Environment checks
         - go env
