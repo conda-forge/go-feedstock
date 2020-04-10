@@ -1,5 +1,5 @@
 # ########################################################################### #
-# NOTE: If you change this file, you must renerate the conda-forge feedstock. #
+# NOTE: If you change this file, you must regenerate the feedstock.           #
 #   - conda smithy regenerate                                                 #
 #   - @conda-forge-admin, please rerender                                     #
 # ########################################################################### #
