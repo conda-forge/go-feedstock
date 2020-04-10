@@ -13,10 +13,10 @@ index 1e0d59ea1c..58a8753883 100755
  esac
  
 diff --git a/src/cmd/go/go_test.go b/src/cmd/go/go_test.go
-index 1c3dcd851b..ab482c04ef 100644
+index 1c3dcd851b..7818387bb0 100644
 --- a/src/cmd/go/go_test.go
 +++ b/src/cmd/go/go_test.go
-@@ -1580,6 +1580,35 @@ func TestInstallIntoGOBIN(t *testing.T) {
+@@ -1580,6 +1580,36 @@ func TestInstallIntoGOBIN(t *testing.T) {
  	tg.wantExecutable("testdata/bin1/go-cmd-test"+exeSuffix, "go install go-cmd-test did not write to testdata/bin1/go-cmd-test")
  }
  
@@ -26,6 +26,7 @@ index 1c3dcd851b..ab482c04ef 100644
 +	tg := testgo(t)
 +	defer tg.cleanup()
 +	tg.setenv("CONDA_GO_COMPILER", "1")
++	tg.setenv("CONDA_BUILD", "")
 +	prefix := filepath.Join(tg.pwd(), "testdata", "conda_prefix")
 +	tg.creatingTemp(prefix)
 +	tg.setenv("CONDA_PREFIX", prefix)
@@ -44,7 +45,7 @@ index 1c3dcd851b..ab482c04ef 100644
 +	prefix := filepath.Join(tg.pwd(), "testdata", "conda_build_prefix")
 +	tg.creatingTemp(prefix)
 +	tg.setenv("PREFIX", prefix)
-+	tg.setenv("SRCDIR", filepath.Join(tg.pwd(), "testdata"))
++	tg.setenv("SRC_DIR", filepath.Join(tg.pwd(), "testdata"))
 +	tg.run("install", "go-cmd-test")
 +	tg.wantExecutable("testdata/conda_build_prefix/bin/go-cmd-test"+exeSuffix, "go install go-cmd-test did not write to testdata/conda_build_prefix/bin/go-cmd-test")
 +}
