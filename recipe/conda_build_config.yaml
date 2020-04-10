@@ -6,6 +6,8 @@
 
 # Select the MACOSX Deployment target
 # This will change depending on the version of go
+# For the correct deployment target, please see go's Release notes
+# c.f.: https://golang.org/doc/go1.12#darwin
 MACOSX_DEPLOYMENT_TARGET:  # [osx]
   - '10.10'                # [osx]
 
