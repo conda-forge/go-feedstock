@@ -64,7 +64,7 @@ outputs:
         - {{ pin_compatible(compiler('fortran')) }}  # [unix and cgo]
 
         - {{ pin_compatible(compiler('m2w64_c')) }}        # [win and cgo]
-        - {{ pin_compatible(compiler('m2w64_cxx)) }}       # [win and cgo]
+        - {{ pin_compatible(compiler('m2w64_cxx')) }}       # [win and cgo]
         - {{ pin_compatible(compiler('m2w64_fortran')) }}  # [win and cgo]
     test:
       requires:
