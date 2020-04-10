@@ -7,7 +7,10 @@
 # Select the MACOSX Deployment target
 # This will change depending on the version of go
 MACOSX_DEPLOYMENT_TARGET:  # [osx]
-  - '10.10'                # [osx]
+  # golang 1.12.x
+  # - '10.10'              # [osx]
+  # golang 1.13.x
+  - '10.11'                # [osx]
 
 
 # We use go1.4 as our bootstrap compiler
