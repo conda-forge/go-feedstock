@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.12.17" %}
+{% set version = "1.13.10" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: de878218c43aa3c3bad54c1c52d95e3b0e5d336e1285c647383e775541a28b25
+    sha256: eb9ccc8bf59ed068e7eff73e154e4f5ee7eec0a47a610fb864e3332a2fdc8b8c
     patches:
       # Please see https://github.com/sodre/go/pull/1 for details
       - patches/f-conda-integration.diff
