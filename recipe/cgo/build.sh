@@ -32,4 +32,4 @@ export CXX=$(basename ${CXX})
 
 #
 # continue with the rest of the build
-source $RECIPE_DIR/build.sh
+source $RECIPE_DIR/build-base.sh

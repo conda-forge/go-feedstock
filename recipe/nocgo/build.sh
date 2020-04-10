@@ -9,4 +9,4 @@ export FC=/dev/null
 
 #
 # Continue with the rest of the build
-source $RECIPE_DIR/build.sh
+source $RECIPE_DIR/build-base.sh
