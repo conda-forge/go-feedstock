@@ -1,5 +1,9 @@
 @echo on
 
+rem Batch equivalent to backticks
+rem  https://stackoverflow.com/questions/2768608/batch-equivalent-of-bash-backticks#2768660
+rem for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'
+
 rem Diagnostics
 where go
 go env

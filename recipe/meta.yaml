@@ -24,8 +24,9 @@ build:
     - fortran_compiler  # [win]
   # test data links to these DSOs
   missing_dso_whitelist:
-    - /usr/lib/libSystem.B.dylib  # [osx]
-    - /usr/lib/libgcc_s.1.dylib   # [osx]
+    - $RPATH/libc.so.6             # [linux and not cgo]
+    - /usr/lib/libSystem.B.dylib   # [osx]
+    - $SYSROOT\System32\winmm.dll  # [win]
   number: 0
 
 requirements:
