@@ -15,7 +15,6 @@ go env
 rem Run go's built-in tests
 rem Expect FAIL, we run them to obtain logs
 go tool dist test -k -v -no-rebuild -run=^^go_test:cmd/go$
-if errorlevel 0 exit 1
 
 
 rem Expect PASS
