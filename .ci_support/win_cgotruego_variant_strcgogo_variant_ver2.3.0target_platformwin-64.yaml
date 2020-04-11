@@ -1,41 +1,24 @@
 cgo:
 - 'true'
-cgo_var:
-- cgo
 channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
-conda_goarch:
-- amd64
-conda_gofile:
-- ELF
-- Mach-O
-- PE32+
-conda_goos:
-- linux
-- darwin
-- windows
-conda_goplatform:
-- linux-64
-- osx-64
-- win-64
 go14_compiler:
 - go1.4-bootstrap
+go_variant_str:
+- cgo
+go_variant_ver:
+- 2.3.0
 m2w64_c_compiler:
 - m2w64-toolchain
 m2w64_cxx_compiler:
 - m2w64-toolchain
 m2w64_fortran_compiler:
 - m2w64-toolchain
-nocgo:
-- 'false'
 target_platform:
 - win-64
 zip_keys:
-# - - cgo
-#   - nocgo
-#   - cgo_var
-- - conda_goplatform
-  - conda_goos
-  - conda_gofile
+- - go_variant_str
+  - go_variant_ver
+  - cgo
