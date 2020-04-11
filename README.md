@@ -1,21 +1,14 @@
-About go
-========
+About go-nocgo
+==============
 
 Home: http://golang.org
 
-Package license: BSD-Style
+Package license: BSD-3-Clause
 
 Feedstock license: BSD 3-Clause
 
 Summary: The Go Programming Language
 
-Go is expressive, concise, clean, and efficient. Its concurrency mechanisms
-make it easy to write programs that get the most out of multicore and
-networked machines, while its novel type system enables flexible and
-modular program construction. Go compiles quickly to machine code yet has
-the convenience of garbage collection and the power of run-time reflection.
-It's a fast, statically typed, compiled language that feels like a
-dynamically typed, interpreted language.
 
 
 Current build status
@@ -67,14 +60,14 @@ Current build status
               <td>linux_cgofalsecgo_int0cgo_varnocgotarget_platformlinux-64</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_cgofalsecgo_int0cgo_varnocgotarget_platformlinux-64" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformlinux-64" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_cgotruecgo_int1cgo_varcgotarget_platformlinux-64</td>
+              <td>linux_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformlinux-64</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_cgotruecgo_int1cgo_varcgotarget_platformlinux-64" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformlinux-64" alt="variant">
                 </a>
               </td>
             </tr><tr>
@@ -138,10 +131,10 @@ Current release info
 | [![Conda Recipe](https://img.shields.io/badge/recipe-go--nocgo-green.svg)](https://anaconda.org/conda-forge/go-nocgo) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-nocgo.svg)](https://anaconda.org/conda-forge/go-nocgo) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-nocgo.svg)](https://anaconda.org/conda-forge/go-nocgo) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-nocgo.svg)](https://anaconda.org/conda-forge/go-nocgo) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-go--nocgo_linux--64-green.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-nocgo_linux-64.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-nocgo_linux-64.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-nocgo_linux-64.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) |
 
-Installing go
-=============
+Installing go-nocgo
+===================
 
-Installing `go` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
+Installing `go-nocgo` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
 
 ```
 conda config --add channels conda-forge
@@ -198,17 +191,17 @@ Terminology
                   produce the finished article (built conda distributions)
 
 
-Updating go-feedstock
-=====================
+Updating go-nocgo-feedstock
+===========================
 
-If you would like to improve the go recipe or build a new
+If you would like to improve the go-nocgo recipe or build a new
 package version, please fork this repository and submit a PR. Upon submission,
 your changes will be run on the appropriate platforms to give the reviewer an
 opportunity to confirm that the changes result in a successful build. Once
 merged, the recipe will be re-built and uploaded automatically to the
 `conda-forge` channel, whereupon the built conda packages will be available for
 everybody to install and use from the `conda-forge` channel.
-Note that all branches in the conda-forge/go-feedstock are
+Note that all branches in the conda-forge/go-nocgo-feedstock are
 immediately built and any created packages are uploaded, so PRs should be based
 on branches in forks and branches in the main repository should only be used to
 build distinct package versions.

@@ -1,38 +1,40 @@
+# ########################################################################### #
+# NOTE: If you change this file, you must regenerate the feedstock.           #
+#   - conda smithy regenerate                                                 #
+#   - @conda-forge-admin, please rerender                                     #
+# ########################################################################### #
+
+# Select the MACOSX Deployment target
+# This will change depending on the version of go
+# For the correct deployment target, please see go's Release notes
+# c.f.: https://golang.org/doc/go1.12#darwin
+MACOSX_DEPLOYMENT_TARGET:  # [osx]
+  - '10.10'                # [osx]
+
+
+# We use go1.4 as our bootstrap compiler
 go14_compiler:
   - go1.4-bootstrap
-cgo:
-  - false
-  - true
-cgo_int:
-  - 0
-  - 1
-nocgo:
-  - true
-  - false
-cgo_var:
-  - nocgo
+
+
+# Select the GO variants that we are building
+# The variant names, and versions come from https://bit.ly/conda-go-select
+go_variant_str:
   - cgo
-conda_goarch:
-  - amd64
-conda_goos:
-  - linux
-  - darwin
-  - windows
-conda_goplatform:
-  - linux-64
-  - osx-64
-  - win-64
-conda_gofile:
-  - ELF
-  - Mach-O
-  - PE32+
+  - nocgo
+go_variant_ver:
+  - 2.3.0
+  - 2.2.0
+
+# One-hot-encoding of the variant selection above
+cgo:
+  - true
+  - false
+
+#
+# Tie the variables together
 zip_keys:
-  - 
+  -
+    - go_variant_str
+    - go_variant_ver
     - cgo
-    - nocgo
-    - cgo_var
-    - cgo_int
-  - 
-    - conda_goplatform
-    - conda_goos
-    - conda_gofile
