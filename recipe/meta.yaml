@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.12.17" %}
+{% set version = "1.13.10" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,12 +8,12 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: de878218c43aa3c3bad54c1c52d95e3b0e5d336e1285c647383e775541a28b25
+    sha256: eb9ccc8bf59ed068e7eff73e154e4f5ee7eec0a47a610fb864e3332a2fdc8b8c
     patches:
       # Please see patches/README.md for more details
       - patches/0001-issue10607-is-only-valid-when-running-with-CGO.patch
-      - patches/0002-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
-      - patches/0003-Fix-cgo_fortran-test-setup-for-conda.patch
+      - patches/0002-Fix-cgo_fortran-test-setup-for-conda.patch
+      - patches/0003-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
       - patches/0004-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
       - patches/0005-Inherit-CGO_-environment-variables.patch
 
