@@ -3,9 +3,8 @@
 rem Put TMPDIR on the same drive as the conda prefix (the D drive),
 rem to avoid a known issue in the go test suite:
 rem https://github.com/golang/go/issues/24846#issuecomment-381380628
-set TMP=%PREFIX%\tmp
-set TMPDIR=%TMP%
-mkdir "%TMP%
+set TMPDIR=%PREFIX%\tmp
+mkdir "%TMPDIR%"
 
 
 rem Batch equivalent to backticks
