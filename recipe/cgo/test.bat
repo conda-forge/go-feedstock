@@ -1,6 +1,6 @@
 @echo on
 
-rem Put GOTMPDIR on the same drive as the conda prefix (the D drive),
+rem Put TMPDIR on the same drive as the conda prefix (the D drive),
 rem to avoid a known issue in the go test suite:
 rem https://github.com/golang/go/issues/24846#issuecomment-381380628
 set TMPDIR=%PREFIX%\tmp
