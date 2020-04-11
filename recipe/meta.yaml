@@ -17,7 +17,6 @@ source:
       - patches/0004-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
       - patches/0005-Inherit-CGO_-environment-variables.patch
 
-
 build:
   binary_relocation: False
   detect_binary_files_with_prefix: False
@@ -53,7 +52,7 @@ outputs:
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('cxx') }}      # [unix and cgo]
         - {{ compiler('fortran') }}  # [unix and cgo]
-        - perl        # [unix]
+        - perl                       # [unix]
 
         - {{ compiler('m2w64_c') }}        # [win and cgo]
         - {{ compiler('m2w64_cxx') }}      # [win and cgo]
@@ -67,11 +66,11 @@ outputs:
         - {{ pin_compatible(compiler('fortran')) }}  # [unix and cgo]
 
         - {{ pin_compatible(compiler('m2w64_c')) }}        # [win and cgo]
-        - {{ pin_compatible(compiler('m2w64_cxx')) }}       # [win and cgo]
+        - {{ pin_compatible(compiler('m2w64_cxx')) }}      # [win and cgo]
         - {{ pin_compatible(compiler('m2w64_fortran')) }}  # [win and cgo]
     test:
       requires:
-        - {{ compiler('c') }}  # [unix and cgo]
+        - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('m2w64_c') }}  # [win and cgo]
       script:  {{ go_variant_str }}/test.sh   # [unix]
       script:  {{ go_variant_str }}/test.bat  # [win]
@@ -103,6 +102,15 @@ outputs:
       license_family: BSD
       license_file: go/LICENSE
       summary: 'The Go ({{go_variant_str}}) compiler activation scripts for conda-build.'
+      description: |
+          This package enables the CONDA_GO_COMPILER environment variable. 
+          This variable is used by conda-forge's patched GoLang compiler to 
+          set conda-aware GOBIN and GOPATH default values. These default 
+          values are ignored if GOBIN and GOPATH environment variables 
+          are set independently by the user.
+
+          For more details, please see the go-feedstock recipe.
+      dev_url: https://github.com/conda-forge/go-feedstock
 
 about:
   home: http://golang.org
