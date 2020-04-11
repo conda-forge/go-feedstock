@@ -1,10 +1,10 @@
 @echo on
 
-rem Put TMPDIR on the same drive as the conda prefix (the D drive),
+rem Put TMP on the same drive as the conda prefix (the D drive),
 rem to avoid a known issue in the go test suite:
 rem https://github.com/golang/go/issues/24846#issuecomment-381380628
-set TMPDIR=%PREFIX%\tmp
-mkdir "%TMPDIR%"
+set TMP=%PREFIX%\tmp
+mkdir "%TMP%"
 
 
 rem Batch equivalent to backticks
@@ -17,12 +17,13 @@ where go
 go env
 
 
-rem Run the failing tests by themselves, this is mostly to get logs
-rem They fail on Azure, but succeed on AppVeyor and on local Windows VM
+rem Run go's built-in tests
+rem Expect FAIL, we run them to obtain logs
 go tool dist test -k -v -no-rebuild -run=^^go_test:cmd/go$
+if errorlevel 0 exit 1
 
 
-rem Run go's built-in test, we skip the filepath one, and cmd/go
+rem Expect PASS
 go tool dist test -v -no-rebuild -run=!^^go_test:cmd/go$
 if errorlevel 1 exit 1
 
