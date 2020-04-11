@@ -3,10 +3,8 @@
 rem Put GOTMPDIR on the same drive as the conda prefix (the D drive),
 rem to avoid a known issue in the go test suite:
 rem https://github.com/golang/go/issues/24846#issuecomment-381380628
-set TMP=%PREFIX%\tmp
 set TMPDIR=%PREFIX%\tmp
-set GOTMPDIR=%PREFIX%\tmp
-mkdir "%TMP%
+mkdir "%TMPDIR%
 
 
 rem Diagnostics
