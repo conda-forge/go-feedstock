@@ -30,6 +30,8 @@ build:
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
   number: 1
+  # TODO: Remove this line once aarch is building
+  skip: True  # [cgo or not linux]
 
 requirements:
   run:
