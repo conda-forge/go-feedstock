@@ -14,7 +14,7 @@ Then each patch is added to the the patches section in meta.yaml.
 
 
 ## <a name="feedstock-go1.13.10"></a>feedstock-go1.13.10
-This branch is a rebase of the patches created for [feedstock-go1.12][#feedstock-go1.12].
+This branch is a rebase of the patches created for [feedstock-go1.12](#feedstock-go1.12).
 Here are the steps we took to create it:
 
 ### Setup
@@ -93,7 +93,7 @@ If you need push access to sodre/go's repository, please contact him.
     git push -u sodre feedstock-go1.13.10 
     ```
 
-Regenerate the patches according to the [instructions][#regenerate]
+Regenerate the patches according to the [instructions](#regenerate)
 
 
     
