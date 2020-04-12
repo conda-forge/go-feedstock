@@ -5,6 +5,17 @@ export USER="${USER:-conda}"
 export HOME="${HOME:-$(cd $SRC_DIR/..;pwd)}"
 
 
+#
+# Use precompiled bootstrap
+case $ARCH in
+  aarch64|ppc64le)
+    export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
+    ;;
+  *)
+    ;;
+esac
+
+
 # Do not use GOROOT_FINAL. Otherwise, every conda environment would
 # need its own non-hardlinked copy of the go (+100MB per env).
 # It is better to rely on setting GOROOT during environment activation.
