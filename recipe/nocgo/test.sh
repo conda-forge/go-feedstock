@@ -26,6 +26,11 @@ case $(uname -s) in
     # Expect FAIL
     ;;
   Linux)
+    # Fix issue where go tests find a .git/config file in the
+    # feedstock root.
+    # c.f.: https://github.com/conda-forge/go-feedstock/pull/75#issuecomment-612568766
+    pushd $GOROOT; git init; git add --all .; popd
+
     # Expect PASS
     go tool dist test -k -v -no-rebuild
     ;;
