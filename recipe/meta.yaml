@@ -52,7 +52,7 @@ outputs:
     script: {{ go_variant_str }}/build.bat  # [win]
     requirements:
       build:
-        - {{ compiler('go14') }}
+        - {{ compiler('go14') }}  # [not aarch64]
 
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('cxx') }}      # [unix and cgo]
