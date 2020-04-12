@@ -12,6 +12,7 @@ case $ARCH in
     export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
     ;;
   *)
+    export GOCACHE=off
     ;;
 esac
 
@@ -22,7 +23,6 @@ esac
 #
 # c.f. https://github.com/conda-forge/go-feedstock/pull/21#discussion_r202513916
 export GOROOT=$SRC_DIR/go
-export GOCACHE=off
 
 
 # Print diagnostics before building
