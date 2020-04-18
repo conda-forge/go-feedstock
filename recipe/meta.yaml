@@ -57,9 +57,11 @@ outputs:
         - {{ compiler('m2w64_cxx') }}      # [win and cgo]
         - {{ compiler('m2w64_fortran') }}  # [win and cgo]
       run:
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
         - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
       run_constrained:
+        # TODO: Move to run section once conda/conda#9845 is fixed
+        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
+
         - {{ pin_compatible(compiler('c')) }}        # [unix and cgo]
         - {{ pin_compatible(compiler('cxx')) }}      # [unix and cgo]
         - {{ pin_compatible(compiler('fortran')) }}  # [unix and cgo]
@@ -88,15 +90,13 @@ outputs:
     requirements:
       run:
         - {{ pin_subpackage(name, exact=True) }}
-    run_exports:  # [osx]
-      strong:  # [osx]
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
+    #TODO: Re-enable once conda/conda#9845 if fixed.
+    #run_exports:                                  # [osx]
+    #  strong:                                     # [osx]
+    #    - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
     test:
       script:  compiler/test.sh   # [unix]
       script:  compiler/test.bat  # [win]
-      commands:
-        # Environment checks
-        - go env
     about:
       home: http://golang.org
       license: BSD-3-Clause
