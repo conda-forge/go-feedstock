@@ -17,9 +17,8 @@ go env
 case $(uname -s) in
   Darwin)
     # Expect PASS when run independently
-    go tool dist test -v -no-rebuild -run='!^runtime|runtime:cpu124$'
-    go tool dist test -v -no-rebuild -run='^runtime$'
-    go tool dist test -v -no-rebuild -run='^runtime:cpu124$'
+    go tool dist test -v -no-rebuild -run='!^go_test:runtime$'
+    go tool dist test -v -no-rebuild -run='^go_test:runtime$'
     # Expect FAIL
     ;;
   Linux)
