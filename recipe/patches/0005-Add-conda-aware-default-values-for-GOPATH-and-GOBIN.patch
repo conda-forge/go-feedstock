@@ -1,0 +1,179 @@
+From 4b32ff42cc57d6c6b9c19d346cfbba76feaeae8e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
+Date: Thu, 9 Apr 2020 21:00:34 -0400
+Subject: [PATCH 5/5] Add conda-aware default values for GOPATH and GOBIN
+
+These new defaults are to make integration with conda-build easier and
+are only in effect if the environment variable CONDA_GO_COMPILER is
+set to 1.
+
+Here is the behavior for GOBIN:
+  - (previous) If GOBIN environment variable is set, return that value.
+  - (new) If CONDA_GO_COMPILER equals 1:
+    - If CONDA_BUILD=1 and PREFIX is set, then GOBIN default value is
+      set to $PREFIX/bin
+    - If CONDA_PREFIX is set, then GOBIN default value is set to
+      $CONDA_PREFIX/bin
+  - (previous) Return "", which was the previous default value.
+
+Here is the behavior for GOPATH:
+  - (previous) If GOPATH environment is set, return that value
+  - (new) If CONDA_GO_COMPILER equals 1:
+    - If CONDA_BUILD=1 and SRC_DIR is set, then GOPATH default value is
+      set to $SRC_DIR/gopath
+  - (previous) Return "", which was the previous default value.
+
+This change makes it so we don't have to rely on activate/deactivate
+scripts for unix and windows. It also means, that the end-users can
+override these defaults, which was not possible before while still
+maintaining compatibilit with the current case.
+---
+ src/cmd/go/go_test.go                         | 30 +++++++++++++++++++
+ src/cmd/go/internal/cfg/cfg.go                | 29 +++++++++++++++++-
+ .../gocache/src/go-cmd-test/helloworld.go     |  5 ++++
+ src/go/build/build.go                         | 18 ++++++++++-
+ 4 files changed, 80 insertions(+), 2 deletions(-)
+ create mode 100644 src/cmd/go/testdata/gocache/src/go-cmd-test/helloworld.go
+
+diff --git a/src/cmd/go/go_test.go b/src/cmd/go/go_test.go
+index f6caa01fd2..e687fbaeb7 100644
+--- a/src/cmd/go/go_test.go
++++ b/src/cmd/go/go_test.go
+@@ -1611,6 +1611,36 @@ func TestInstallIntoGOBIN(t *testing.T) {
+ 	tg.wantExecutable("testdata/bin1/go-cmd-test"+exeSuffix, "go install go-cmd-test did not write to testdata/bin1/go-cmd-test")
+ }
+ 
++// Test that without $GOBIN set, binaries get installed
++// into the PREFIX/bin directory when CONDA_BUILD is 1.
++func TestInstallIntoGOBINWithCondaCompiler(t *testing.T) {
++	tg := testgo(t)
++	defer tg.cleanup()
++	tg.setenv("CONDA_GO_COMPILER", "1")
++	tg.setenv("CONDA_BUILD", "")
++	prefix := filepath.Join(tg.pwd(), "testdata", "conda_prefix")
++	tg.creatingTemp(prefix)
++	tg.setenv("CONDA_PREFIX", prefix)
++	tg.setenv("GOPATH", filepath.Join(tg.pwd(), "testdata"))
++	tg.run("install", "go-cmd-test")
++	tg.wantExecutable("testdata/conda_prefix/bin/go-cmd-test"+exeSuffix, "go install go-cmd-test did not write to testdata/conda_prefix/bin/go-cmd-test")
++}
++
++// Test that without $GOBIN set, binaries get installed
++// into the PREFIX/bin directory when CONDA_BUILD is 1.
++func TestInstallIntoGOBINWithCondaBuild(t *testing.T) {
++	tg := testgo(t)
++	defer tg.cleanup()
++	tg.setenv("CONDA_GO_COMPILER", "1")
++	tg.setenv("CONDA_BUILD", "1")
++	prefix := filepath.Join(tg.pwd(), "testdata", "conda_build_prefix")
++	tg.creatingTemp(prefix)
++	tg.setenv("PREFIX", prefix)
++	tg.setenv("SRC_DIR", filepath.Join(tg.pwd(), "testdata"))
++	tg.run("install", "go-cmd-test")
++	tg.wantExecutable("testdata/conda_build_prefix/bin/go-cmd-test"+exeSuffix, "go install go-cmd-test did not write to testdata/conda_build_prefix/bin/go-cmd-test")
++}
++
+ // Issue 11065
+ func TestInstallToCurrentDirectoryCreatesExecutable(t *testing.T) {
+ 	tg := testgo(t)
+diff --git a/src/cmd/go/internal/cfg/cfg.go b/src/cmd/go/internal/cfg/cfg.go
+index a3277a6c3f..3c0ec4b0bf 100644
+--- a/src/cmd/go/internal/cfg/cfg.go
++++ b/src/cmd/go/internal/cfg/cfg.go
+@@ -227,7 +227,7 @@ func CanGetenv(key string) bool {
+ 
+ var (
+ 	GOROOT       = BuildContext.GOROOT
+-	GOBIN        = Getenv("GOBIN")
++	GOBIN        = envOr("GOBIN", defaultCondaGOBIN())
+ 	GOROOTbin    = filepath.Join(GOROOT, "bin")
+ 	GOROOTpkg    = filepath.Join(GOROOT, "pkg")
+ 	GOROOTsrc    = filepath.Join(GOROOT, "src")
+@@ -359,3 +359,30 @@ func isGOROOT(path string) bool {
+ 	}
+ 	return stat.IsDir()
+ }
++
++// defaultCondaGOBIN returns a conda-aware GOBIN path if CONDA_GO_COMPILER
++// is set to 1, otherwise it returns the default empty-string.
++// When CONDA_GO_COMPILER is set to 1, GOBIN's default value is set to:
++//    - $PREFIX/bin if CONDA_BUILD is set to 1 and the PREFIX is set
++//    - $CONDA_PREFIX/bin if CONDA_BUILD is not set to 1 and CONDA_PREFIX is set
++//    - ""  the default value
++func defaultCondaGOBIN() string {
++	if envIsOne("CONDA_GO_COMPILER") {
++		prefixEnv := "CONDA_PREFIX"
++		if envIsOne("CONDA_BUILD") {
++			prefixEnv = "PREFIX"
++		}
++		if prefix, ok := os.LookupEnv(prefixEnv); ok {
++			return filepath.Join(prefix, "bin")
++		}
++	}
++	return ""
++}
++
++// envIsOne returns true if environment variable is set to 1, it
++// it returns false otherwise
++func envIsOne(name string) bool {
++	s := os.Getenv(name)
++	return s == "1"
++}
++
+diff --git a/src/cmd/go/testdata/gocache/src/go-cmd-test/helloworld.go b/src/cmd/go/testdata/gocache/src/go-cmd-test/helloworld.go
+new file mode 100644
+index 0000000000..002a5c740c
+--- /dev/null
++++ b/src/cmd/go/testdata/gocache/src/go-cmd-test/helloworld.go
+@@ -0,0 +1,5 @@
++package main
++
++func main() {
++	println("hello world")
++}
+diff --git a/src/go/build/build.go b/src/go/build/build.go
+index f8547606aa..fee64d5d1b 100644
+--- a/src/go/build/build.go
++++ b/src/go/build/build.go
+@@ -263,6 +263,15 @@ func (ctxt *Context) SrcDirs() []string {
+ // if set, or else the compiled code's GOARCH, GOOS, and GOROOT.
+ var Default Context = defaultContext()
+ 
++func defaultCondaGOPATH() string {
++	if envIsOne("CONDA_GO_COMPILER") && envIsOne("CONDA_BUILD") {
++		if srcDir := os.Getenv("SRC_DIR"); srcDir != "" {
++			return filepath.Join(srcDir, "gopath")
++		}
++		return defaultGOPATH()
++	}
++	return defaultGOPATH()
++}
+ func defaultGOPATH() string {
+ 	env := "HOME"
+ 	if runtime.GOOS == "windows" {
+@@ -290,7 +299,7 @@ func defaultContext() Context {
+ 	c.GOARCH = envOr("GOARCH", runtime.GOARCH)
+ 	c.GOOS = envOr("GOOS", runtime.GOOS)
+ 	c.GOROOT = pathpkg.Clean(runtime.GOROOT())
+-	c.GOPATH = envOr("GOPATH", defaultGOPATH())
++	c.GOPATH = envOr("GOPATH", defaultCondaGOPATH())
+ 	c.Compiler = runtime.Compiler
+ 
+ 	// Each major Go release in the Go 1.x series adds a new
+@@ -335,6 +344,13 @@ func envOr(name, def string) string {
+ 	return s
+ }
+ 
++// envIsOne returns true if environment variable is set to 1, it
++// it returns false otherwise
++func envIsOne(name string) bool {
++	s := os.Getenv(name)
++	return s == "1"
++}
++
+ // An ImportMode controls the behavior of the Import method.
+ type ImportMode uint
+ 
+-- 
+2.26.0
+
