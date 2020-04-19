@@ -1,7 +1,7 @@
 From d93cec2f0a23aec8667c9cc0026eae4b7cc318ef Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 21:13:14 -0400
-Subject: [PATCH 5/5] Inherit CGO_* environment variables
+Subject: [PATCH 5/6] Inherit CGO_* environment variables
 
 ---
  src/cmd/go/internal/work/exec.go | 28 +++++++++++++++++++++++++++-
