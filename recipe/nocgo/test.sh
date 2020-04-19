@@ -45,4 +45,5 @@ case $(uname -s) in
         go tool dist test -v -no-rebuild
         ;;
     esac
+    ;;
 esac
