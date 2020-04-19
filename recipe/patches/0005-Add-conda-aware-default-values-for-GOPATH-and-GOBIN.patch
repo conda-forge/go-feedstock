@@ -1,4 +1,4 @@
-From 4b32ff42cc57d6c6b9c19d346cfbba76feaeae8e Mon Sep 17 00:00:00 2001
+From 76050ee7c744cefeb98f4393c82e0b7f3a218064 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Thu, 9 Apr 2020 21:00:34 -0400
 Subject: [PATCH 5/5] Add conda-aware default values for GOPATH and GOBIN
@@ -30,10 +30,10 @@ maintaining compatibilit with the current case.
 ---
  src/cmd/go/go_test.go                         | 30 +++++++++++++++++++
  src/cmd/go/internal/cfg/cfg.go                | 29 +++++++++++++++++-
- .../gocache/src/go-cmd-test/helloworld.go     |  5 ++++
+ .../gopath/src/go-cmd-test/helloworld.go      |  5 ++++
  src/go/build/build.go                         | 18 ++++++++++-
  4 files changed, 80 insertions(+), 2 deletions(-)
- create mode 100644 src/cmd/go/testdata/gocache/src/go-cmd-test/helloworld.go
+ create mode 100644 src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go
 
 diff --git a/src/cmd/go/go_test.go b/src/cmd/go/go_test.go
 index f6caa01fd2..e687fbaeb7 100644
@@ -120,11 +120,11 @@ index a3277a6c3f..3c0ec4b0bf 100644
 +	return s == "1"
 +}
 +
-diff --git a/src/cmd/go/testdata/gocache/src/go-cmd-test/helloworld.go b/src/cmd/go/testdata/gocache/src/go-cmd-test/helloworld.go
+diff --git a/src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go b/src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go
 new file mode 100644
 index 0000000000..002a5c740c
 --- /dev/null
-+++ b/src/cmd/go/testdata/gocache/src/go-cmd-test/helloworld.go
++++ b/src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go
 @@ -0,0 +1,5 @@
 +package main
 +
