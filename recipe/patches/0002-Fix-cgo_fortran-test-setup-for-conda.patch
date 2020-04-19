@@ -1,0 +1,26 @@
+From f7e9c7941042bb71c368e21cbdb85e98dfb1fbf3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
+Date: Tue, 7 Apr 2020 23:02:19 -0400
+Subject: [PATCH 2/5] Fix cgo_fortran test setup for conda
+
+---
+ misc/cgo/fortran/test.bash | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/misc/cgo/fortran/test.bash b/misc/cgo/fortran/test.bash
+index 1e0d59ea1c..58a8753883 100755
+--- a/misc/cgo/fortran/test.bash
++++ b/misc/cgo/fortran/test.bash
+@@ -18,8 +18,7 @@ fi
+ 
+ case "$FC" in
+ *gfortran*)
+-  libpath=$(dirname $($FC -print-file-name=libgfortran.$libext))
+-  export CGO_LDFLAGS="$CGO_LDFLAGS -Wl,-rpath,$libpath -L $libpath"
++  # CONDA's gfortran + go does not need changes to CGO_LDFLAGS
+   ;;
+ esac
+ 
+-- 
+2.26.0
+

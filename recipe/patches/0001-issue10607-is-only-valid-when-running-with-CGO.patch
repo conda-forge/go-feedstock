@@ -1,7 +1,7 @@
 From 5cd324dddc950321e38e948700a1a79d5f10c483 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Wed, 8 Apr 2020 23:52:24 -0400
-Subject: [PATCH 1/6] issue10607 is only valid when running with CGO
+Subject: [PATCH 1/5] issue10607 is only valid when running with CGO
 
 ---
  test/fixedbugs/issue10607.go | 2 +-
