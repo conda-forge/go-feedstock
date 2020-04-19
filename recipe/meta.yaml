@@ -17,10 +17,10 @@ source:
       - patches/0004-Inherit-CGO_-environment-variables.patch
       - patches/0005-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
   - folder: go-bootstrap  # [aarch64 or ppc64le]
-    url: https://dl.google.com/go/go{{ version }}.linux-arm64.tar.gz          # [aarch64]
-    sha256: 9d0819cce1451abdb090071880fe8771f16a3bcee71d6f6906023d17799574e2  # [aarch64]
-    url: https://dl.google.com/go/go{{ version }}.linux-ppc64le.tar.gz        # [ppc64le]
-    sha256: dca4df132da7579c352bccd9d6f4ecb8d8d61893a84b0feffcee2bb4246114a3  # [ppc64le]
+    url: https://dl.google.com/go/go1.11.13.linux-arm64.tar.gz                # [aarch64]
+    sha256: e94329c97b38b5bffe9c18e84e9f521dc995e02df7696897a7626293da9ac593  # [aarch64]
+    url: https://dl.google.com/go/go1.11.13.linux-ppc64le.tar.gz              # [ppc64le]
+    sha256: ad3c7397ddd41a5af9d9bf3c560d3d0f8c1bdef4ac4d21819a021ea88e25efca  # [ppc64le]
 
 build:
   binary_relocation: False
