@@ -16,6 +16,7 @@ source:
       - patches/0003-Fix-cgo_fortran-test-setup-for-conda.patch
       - patches/0004-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
       - patches/0005-Inherit-CGO_-environment-variables.patch
+      - patches/0006-Change-default-GOPATH-to-SRC_DIR-gopath.patch
 
 build:
   binary_relocation: False
