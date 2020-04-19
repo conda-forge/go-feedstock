@@ -12,10 +12,10 @@ source:
     patches:
       # Please see patches/README.md for more details
       - patches/0001-issue10607-is-only-valid-when-running-with-CGO.patch
-      - patches/0002-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
-      - patches/0003-Fix-cgo_fortran-test-setup-for-conda.patch
-      - patches/0004-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
-      - patches/0005-Inherit-CGO_-environment-variables.patch
+      - patches/0002-Fix-cgo_fortran-test-setup-for-conda.patch
+      - patches/0003-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
+      - patches/0004-Inherit-CGO_-environment-variables.patch
+      - patches/0005-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
 
 build:
   binary_relocation: False
@@ -29,7 +29,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 0
+  number: 1
 
 requirements:
   run:
@@ -57,9 +57,11 @@ outputs:
         - {{ compiler('m2w64_cxx') }}      # [win and cgo]
         - {{ compiler('m2w64_fortran') }}  # [win and cgo]
       run:
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
         - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
       run_constrained:
+        # TODO: Move to run section once conda/conda#9845 is fixed
+        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
+
         - {{ pin_compatible(compiler('c')) }}        # [unix and cgo]
         - {{ pin_compatible(compiler('cxx')) }}      # [unix and cgo]
         - {{ pin_compatible(compiler('fortran')) }}  # [unix and cgo]
@@ -87,15 +89,13 @@ outputs:
     requirements:
       run:
         - {{ pin_subpackage(name, exact=True) }}
-    run_exports:  # [osx]
-      strong:  # [osx]
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
+    #TODO: Re-enable once conda/conda#9845 if fixed.
+    #run_exports:                                  # [osx]
+    #  strong:                                     # [osx]
+    #    - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
     test:
       script:  compiler/test.sh   # [unix]
       script:  compiler/test.bat  # [win]
-      commands:
-        # Environment checks
-        - go env
     about:
       home: http://golang.org
       license: BSD-3-Clause
