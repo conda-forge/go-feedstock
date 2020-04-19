@@ -27,7 +27,12 @@ case $(uname -s) in
     # Expect FAIL
     ;;
   Linux)
-     case $ARCH in
+    # Fix issue where go tests find a .git/config file in the
+    # feedstock root.
+    # c.f.: https://github.com/conda-forge/go-feedstock/pull/75#issuecomment-612568766
+    pushd $GOROOT; git init; git add --all .; popd
+
+    case $ARCH in
       ppc64le)
         # Expect PASS
         go tool dist test -v -no-rebuild -run='!^go_test:runtime$'
