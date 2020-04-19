@@ -10,7 +10,7 @@ test "$(go env GOBIN)" == "$PREFIX/bin"
 
 
 # Test GOPATH is set to $SRC_DIR
-test "$(go env GOPATH)" == "$SRC_DIR"
+test "$(go env GOPATH)" == "$SRC_DIR/gopath"
 
 
 # Print diagnostics
