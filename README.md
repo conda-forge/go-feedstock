@@ -15,7 +15,21 @@ Current build status
 ====================
 
 
-<table>
+<table><tr>
+    <td>Travis</td>
+    <td>
+      <a href="https://travis-ci.com/conda-forge/go-feedstock">
+        <img alt="macOS" src="https://img.shields.io/travis/com/conda-forge/go-feedstock/master.svg?label=macOS">
+      </a>
+    </td>
+  </tr><tr>
+    <td>Drone</td>
+    <td>
+      <a href="https://cloud.drone.io/conda-forge/go-feedstock">
+        <img alt="linux" src="https://img.shields.io/drone/build/conda-forge/master.svg?label=Linux">
+      </a>
+    </td>
+  </tr>
     
   <tr>
     <td>Azure</td>
@@ -29,6 +43,20 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
+              <td>linux_aarch64_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformlinux-aarch64</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_aarch64_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformlinux-aarch64" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformlinux-aarch64</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_aarch64_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformlinux-aarch64" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
               <td>linux_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformlinux-64</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
@@ -40,6 +68,20 @@ Current build status
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformlinux-64" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformlinux-ppc64le</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_ppc64le_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformlinux-ppc64le" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformlinux-ppc64le</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_ppc64le_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformlinux-ppc64le" alt="variant">
                 </a>
               </td>
             </tr><tr>
@@ -74,12 +116,6 @@ Current build status
           </tbody>
         </table>
       </details>
-    </td>
-  </tr>
-  <tr>
-    <td>Linux_ppc64le</td>
-    <td>
-      <img src="https://img.shields.io/badge/ppc64le-disabled-lightgrey.svg" alt="ppc64le disabled">
     </td>
   </tr>
 </table>
