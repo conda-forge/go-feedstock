@@ -34,7 +34,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 1
+  number: 2
 
 requirements:
   run:
@@ -106,7 +106,7 @@ outputs:
       license: BSD-3-Clause
       license_family: BSD
       license_file: go/LICENSE
-      summary: 'The Go ({{go_variant_str}}) compiler activation scripts for conda-build.'
+      summary: 'The Go ({{ go_variant_str }}) compiler activation scripts for conda-build.'
       description: |
           This package enables the CONDA_GO_COMPILER environment variable. 
           This variable is used by conda-forge's patched GoLang compiler to 
