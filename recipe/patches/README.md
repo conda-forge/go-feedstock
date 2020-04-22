@@ -12,7 +12,57 @@ The patches in this folder were created as follows:
 
 Then each patch is added to the the patches section in meta.yaml.
 
+## feedstock-go1.14.1
+This branch is a rebase of the patches created for [feedstock-go1.12](#feedstock-go1.13.10).
+This time we use a different approach that does not require access to sodre/go.
+The steps are 1) clone, 2) reapply old patches, 3) rebase, 4) regenerate maibox patch.
 
+  1. Clone golang/go
+     ```shell script
+     hub clone golang/go
+     cd go
+     ```
+     
+  1. Reapply previous patches and delete them
+     ```shell script
+     git checkout -b feedstock-go1.13.10 go1.13.10
+     git am ../*.patch
+     cd ..; git rm *.patch; cd go
+     ```
+     
+  1. Rebase the feedstock branch onto 1.14.1
+     ```shell script
+     git checkout -b feedstock-go1.14.1 feedstock-go1.13.10
+     git rebase --onto go1.14.1 go1.13.10 feedstock-go1.14.1 
+     # use 🧠 to solve merge conflicts
+     ```
+     
+  1.  (🧠) `i-nocgo-issue10607` had merge conflict.
+  
+      We kept `cgo` as a +build requirement
+      
+  1.  (🧠🧠) `f-conda-default-gobin-and-gopath` had a merge conflict
+  
+      Upstream deleted four tests which caused our patch to not find its starting location.
+      Here is the list of deleted tests, they are still deleted.
+        - `TestInstallIntoGOBIN`
+        - `TestInstallToCurrentDirectoryCreatesExecutable`
+        - `TestInstallWithoutDestinationFails`
+        - `TestInstallToGOBINCommandLinePackage`
+        
+      Here are the tests we wrote, and kept in the unit-tests:
+    - pytest tests/functional
+    g
+        - `TestInstallIntoGOBINWithCondaCompiler`
+        - `TestInstallIntoGOBINWithCondaBuild`
+  
+  1. Regenerate the mailbox patches and add them to the feedstock
+     ```shell script
+     git format-patch go1.14.1 -o ..
+     cd ..
+     git add *.patch
+     ```
+  
 ## <a name="feedstock-go1.13.10"></a>feedstock-go1.13.10
 This branch is a rebase of the patches created for [feedstock-go1.12](#feedstock-go1.12).
 Here are the steps we took to create it:

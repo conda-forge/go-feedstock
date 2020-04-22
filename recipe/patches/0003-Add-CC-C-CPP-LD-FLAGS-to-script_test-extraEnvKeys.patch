@@ -1,4 +1,4 @@
-From 97b85857fd99ebb0e23d850e22c9cc5c32cc60e4 Mon Sep 17 00:00:00 2001
+From df074b83f3c4eeb9f08c2b730ccece446385e300 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 21:20:31 -0400
 Subject: [PATCH 3/5] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
@@ -8,10 +8,10 @@ Subject: [PATCH 3/5] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
  1 file changed, 5 insertions(+)
 
 diff --git a/src/cmd/go/script_test.go b/src/cmd/go/script_test.go
-index 5e50dd14c7..ba844cc642 100644
+index ec498bbcd7..d42d9d1569 100644
 --- a/src/cmd/go/script_test.go
 +++ b/src/cmd/go/script_test.go
-@@ -89,9 +89,14 @@ var extraEnvKeys = []string{
+@@ -90,9 +90,14 @@ var extraEnvKeys = []string{
  	"WINDIR",             // must be preserved on Windows to be able to run PowerShell command; golang.org/issue/30711
  	"LD_LIBRARY_PATH",    // must be preserved on Unix systems to find shared libraries
  	"CC",                 // don't lose user settings when invoking cgo
@@ -27,5 +27,5 @@ index 5e50dd14c7..ba844cc642 100644
  
  // setup sets up the test execution temporary directory and environment.
 -- 
-2.26.0
+2.26.2
 
