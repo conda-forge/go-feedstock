@@ -40,7 +40,7 @@ build:
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
   number: 0
-  skip: True  # [cgo]
+  skip: True  # [not win]
 
 requirements:
   run:
