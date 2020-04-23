@@ -37,6 +37,21 @@ popd $SRC_DIR
 export GOROOT=$SRC_DIR/go
 
 
+#
+# Impersonate GO BUILDER
+# Run go's built-in test
+GO_BUILDER_NAME=$(go env GOOS)-$(go env GOARCH)
+case $(uname -s) in
+  Darwin)
+    GO_BUILDER_NAME=${GO_BUILDER_NAME}-${MACOSX_DEPLOYMENT_TARGET/./_}
+    ;;
+  Linux)
+    GO_BUILDER_NAME=${GO_BUILDER_NAME}-condaforge
+    ;;
+esac
+export GO_BUILDER_NAME
+
+
 # Print diagnostics before building
 env | sort
 
