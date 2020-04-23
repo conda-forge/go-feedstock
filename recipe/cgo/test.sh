@@ -17,10 +17,13 @@ go env
 case $(uname -s) in
   Darwin)
     # Impersonate a GO BUILDER
-    export GO_BUILDER_NAME=$(go env GOOS)-$(go env GOARCH)-${MACOSX_DEPLOYMENT_TARGET/./_}
+    go_builder_name=$(go env GOOS)-$(go env GOARCH)-${MACOSX_DEPLOYMENT_TARGET/./_}
 
     # Expect PASS when run independently
     go tool dist test -v -no-rebuild -run='!^go_test:net/http|go_test:runtime$'
+    go tool dist test -v -no-rebuild -race -run='^go_test:runtime/race$'
+    GO_BUILDER_NAME=$go_builder_name go tool dist test -run='^testcshared|testcarchive$'
+
     # Occasionally FAILS
     go tool dist test -v -no-rebuild -run='^go_test:net/http$' || true
     go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
@@ -28,7 +31,7 @@ case $(uname -s) in
     ;;
   Linux)
     # Impersonate a GO BUILDER
-    export GO_BUILDER_NAME=$(go env GOOS)-$(go env GOARCH)-condaforge
+    go_builder_name=$(go env GOOS)-$(go env GOARCH)-condaforge
 
     # Fix issue where go tests find a .git/config file in the
     # feedstock root.
@@ -39,6 +42,8 @@ case $(uname -s) in
       ppc64le)
         # Expect PASS
         go tool dist test -v -no-rebuild -run='!^go_test:runtime$'
+        go tool dist test -v -no-rebuild -race -run='^go_test:runtime/race$'
+        GO_BUILDER_NAME=$go_builder_name go tool dist test -run='^testcshared|testcarchive$'
         # Occasionally FAILS
         go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
         # Expect FAIL
@@ -46,6 +51,8 @@ case $(uname -s) in
       *)
         # Expect PASS
         go tool dist test -v -no-rebuild
+        go tool dist test -v -no-rebuild -race -run='^go_test:runtime/race$'
+        GO_BUILDER_NAME=$go_builder_name go tool dist test -run='^testcshared|testcarchive$'
         ;;
     esac
     ;;
