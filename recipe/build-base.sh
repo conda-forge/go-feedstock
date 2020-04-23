@@ -55,6 +55,12 @@ rm -fr ${GOROOT}/pkg/obj
 cp -a ${GOROOT} ${PREFIX}/go
 
 
+# Remove Invalid UTF-8 Filename and conflict with libarchive
+# c.f. https://github.com/conda-forge/staged-recipes/pull/9535#discussion_r403512142
+# c.f. https://github.com/conda-forge/go-feedstock/issues/83
+rm -f "${PREFIX}"/go/test/fixedbugs/issue27836.go
+rm -rf "${PREFIX}"/go/test/fixedbugs/issue27836.dir
+
 # Right now, it's just go and gofmt, but might be more in the future!
 # We don't move files, and instead rely on soft-links
 mkdir -p ${PREFIX}/bin && pushd $_
