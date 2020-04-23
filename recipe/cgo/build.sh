@@ -1,5 +1,12 @@
 set -euf
 
+#
+# Use precompiled bootstrap if it exists
+if [ -d "${SRC_DIR}"/go-bootstrap ]; then
+  export GOROOT_BOOTSTRAP=${SRC_DIR}/go-bootstrap
+fi
+
+
 # Enable CGO, and set compiler flags to match conda-forge settings
 export CGO_ENABLED=1
 export CGO_CFLAGS=${CFLAGS}

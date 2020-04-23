@@ -1,4 +1,12 @@
 set -euf
+
+#
+# Use precompiled bootstrap if it exists
+if [ -d "${SRC_DIR}"/go-bootstrap ]; then
+  export GOROOT_BOOTSTRAP=${SRC_DIR}/go-bootstrap
+fi
+
+
 # Set goos and goarch variables
 goos=$(GOROOT=$GOROOT_BOOTSTRAP $GOROOT_BOOTSTRAP/bin/go env GOOS)
 goarch=$(GOROOT=$GOROOT_BOOTSTRAP $GOROOT_BOOTSTRAP/bin/go env GOARCH)
