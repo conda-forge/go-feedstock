@@ -1,7 +1,7 @@
 From df074b83f3c4eeb9f08c2b730ccece446385e300 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 21:20:31 -0400
-Subject: [PATCH 3/5] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
+Subject: [PATCH 3/6] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
 
 ---
  src/cmd/go/script_test.go | 5 +++++
@@ -27,5 +27,5 @@ index ec498bbcd7..d42d9d1569 100644
  
  // setup sets up the test execution temporary directory and environment.
 -- 
-2.26.2
+2.24.2 (Apple Git-127)
 

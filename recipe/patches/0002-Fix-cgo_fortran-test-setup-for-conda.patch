@@ -1,7 +1,7 @@
 From 5161a2033acc5d95d561f83ec5c1046d74262ff7 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 23:02:19 -0400
-Subject: [PATCH 2/5] Fix cgo_fortran test setup for conda
+Subject: [PATCH 2/6] Fix cgo_fortran test setup for conda
 
 ---
  misc/cgo/fortran/test.bash | 6 +-----
@@ -25,5 +25,5 @@ index 2b61730815..9e8948bae7 100755
  esac
  
 -- 
-2.26.2
+2.24.2 (Apple Git-127)
 

@@ -1,7 +1,7 @@
 From d75df9a62e40f233cca537d58aa750a39f790c56 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 21:13:14 -0400
-Subject: [PATCH 4/5] Inherit CGO_* environment variables
+Subject: [PATCH 4/6] Inherit CGO_* environment variables
 
 ---
  src/cmd/go/internal/work/exec.go | 28 +++++++++++++++++++++++++++-
@@ -54,5 +54,5 @@ index 25d15079e4..676fe74325 100644
  
  var cgoRe = lazyregexp.New(`[/\\:]`)
 -- 
-2.26.2
+2.24.2 (Apple Git-127)
 
