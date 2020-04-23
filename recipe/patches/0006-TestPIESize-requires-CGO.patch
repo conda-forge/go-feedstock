@@ -1,7 +1,7 @@
 From b0bf3d54f0b7a29b6a13b6e7e5bbc86a43517189 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Thu, 23 Apr 2020 14:37:47 -0400
-Subject: [PATCH 6/6] TestPIESize requires CGO
+Subject: [PATCH 6/8] TestPIESize requires CGO
 
 ---
  src/cmd/link/elf_test.go | 1 +

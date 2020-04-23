@@ -1,0 +1,24 @@
+From 3a04f39d86b2e1729218d82dc63c50e9bfb32bf8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
+Date: Thu, 23 Apr 2020 16:49:23 -0400
+Subject: [PATCH 8/8] TestVectoredHandlerDontCrashOnLibrary requires CGO
+
+---
+ src/runtime/signal_windows_test.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/runtime/signal_windows_test.go b/src/runtime/signal_windows_test.go
+index 9748403412..70e55638d7 100644
+--- a/src/runtime/signal_windows_test.go
++++ b/src/runtime/signal_windows_test.go
+@@ -21,6 +21,7 @@ func TestVectoredHandlerDontCrashOnLibrary(t *testing.T) {
+ 		t.Skip("this test can only run on windows/amd64")
+ 	}
+ 	testenv.MustHaveGoBuild(t)
++	testenv.MustHaveCGO(t)
+ 	testenv.MustHaveExecPath(t, "gcc")
+ 	testprog.Lock()
+ 	defer testprog.Unlock()
+-- 
+2.24.2 (Apple Git-127)
+
