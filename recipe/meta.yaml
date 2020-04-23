@@ -1,6 +1,6 @@
 {% set name = "go" %}
 {% set version = "1.14.1" %}
-{% set llvm_ver = "10.0.0" %}
+{% set llvm_ver = "10.0.0" %}  # [cgo]
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -22,9 +22,9 @@ source:
     sha256: e94329c97b38b5bffe9c18e84e9f521dc995e02df7696897a7626293da9ac593  # [aarch64]
     url: https://dl.google.com/go/go1.11.13.linux-ppc64le.tar.gz              # [ppc64le]
     sha256: ad3c7397ddd41a5af9d9bf3c560d3d0f8c1bdef4ac4d21819a021ea88e25efca  # [ppc64le]
-  - folder: compiler-rt
-    url: https://github.com/llvm/llvm-project/releases/download/llvmorg-{{ llvm_ver }}/compiler-rt-{{ llvm_ver }}.src.tar.xz
-    sha256: 6a7da64d3a0a7320577b68b9ca4933bdcab676e898b759850e827333c3282c75
+  - folder: compiler-rt  # [cgo]
+    url: https://github.com/llvm/llvm-project/releases/download/llvmorg-{{ llvm_ver }}/compiler-rt-{{ llvm_ver }}.src.tar.xz  # [cgo]
+    sha256: 6a7da64d3a0a7320577b68b9ca4933bdcab676e898b759850e827333c3282c75  # [cgo]
 
 build:
   binary_relocation: False

@@ -30,6 +30,17 @@ esac
 export CC=$(basename ${CC})
 export CXX=$(basename ${CXX})
 
+
+#
+# This a fix for https://github.com/golang/go/issues/37485
+pushd $SRC_DIR/compiler-rt/lib/tsan/go
+goos=$(GOROOT=$GOROOT_BOOTSTRAP $GOROOT_BOOTSTRAP/bin/go env GOOS)
+goarch=$(GOROOT=$GOROOT_BOOTSTRAP $GOROOT_BOOTSTRAP/bin/go env GOARCH)
+./buildgo.sh
+cp race_${goos}_${goarch}.syso $SRC_DIR/go/src/runtime/race
+popd $SRC_DIR
+
+
 #
 # continue with the rest of the build
 source $RECIPE_DIR/build-base.sh

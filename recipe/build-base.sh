@@ -17,18 +17,6 @@ case $ARCH in
 esac
 
 
-#
-# This a fix for https://github.com/golang/go/issues/37485
-pushd $SRC_DIR/compiler-rt/lib/tsan/go
-set -x
-goos=$(GOROOT=$GOROOT_BOOTSTRAP $GOROOT_BOOTSTRAP/bin/go env GOOS)
-goarch=$(GOROOT=$GOROOT_BOOTSTRAP $GOROOT_BOOTSTRAP/bin/go env GOARCH)
-./buildgo.sh
-cp race_${goos}_${goarch}.syso $SRC_DIR/go/src/runtime/race
-set +x
-popd $SRC_DIR
-
-
 # Do not use GOROOT_FINAL. Otherwise, every conda environment would
 # need its own non-hardlinked copy of the go (+100MB per env).
 # It is better to rely on setting GOROOT during environment activation.
