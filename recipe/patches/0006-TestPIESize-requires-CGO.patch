@@ -1,0 +1,24 @@
+From b0bf3d54f0b7a29b6a13b6e7e5bbc86a43517189 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
+Date: Thu, 23 Apr 2020 14:37:47 -0400
+Subject: [PATCH 6/6] TestPIESize requires CGO
+
+---
+ src/cmd/link/elf_test.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/cmd/link/elf_test.go b/src/cmd/link/elf_test.go
+index 88048ed2c5..087932d682 100644
+--- a/src/cmd/link/elf_test.go
++++ b/src/cmd/link/elf_test.go
+@@ -226,6 +226,7 @@ func main() {
+ 
+ func TestPIESize(t *testing.T) {
+ 	testenv.MustHaveGoBuild(t)
++	testenv.MustHaveCGO(t)
+ 	if !sys.BuildModeSupported(runtime.Compiler, "pie", runtime.GOOS, runtime.GOARCH) {
+ 		t.Skip("-buildmode=pie not supported")
+ 	}
+-- 
+2.24.2 (Apple Git-127)
+
