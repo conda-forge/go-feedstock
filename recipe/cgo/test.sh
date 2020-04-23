@@ -16,6 +16,9 @@ go env
 # Run go's built-in test
 case $(uname -s) in
   Darwin)
+    # Impersonate a GO BUILDER
+    export GO_BUILDER_NAME=$(go env GOOS)-$(go env GOARCH)-${MACOSX_DEPLOYMENT_TARGET/./_}
+
     # Expect PASS when run independently
     go tool dist test -v -no-rebuild -run='!^go_test:net/http|go_test:runtime$'
     # Occasionally FAILS
@@ -24,6 +27,9 @@ case $(uname -s) in
     # Expect FAIL
     ;;
   Linux)
+    # Impersonate a GO BUILDER
+    export GO_BUILDER_NAME=$(go env GOOS)-$(go env GOARCH)-condaforge
+
     # Fix issue where go tests find a .git/config file in the
     # feedstock root.
     # c.f.: https://github.com/conda-forge/go-feedstock/pull/75#issuecomment-612568766
