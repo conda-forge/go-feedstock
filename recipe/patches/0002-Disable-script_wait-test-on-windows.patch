@@ -1,0 +1,24 @@
+From 5cb2e467442fc6fcf52df994b5f8637128b8f39c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
+Date: Thu, 23 Apr 2020 16:41:04 -0400
+Subject: [PATCH 2/6] Disable script_wait test on windows
+
+---
+ src/cmd/go/testdata/script/script_wait.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/cmd/go/testdata/script/script_wait.txt b/src/cmd/go/testdata/script/script_wait.txt
+index 3cd4ded9dd..80f109f2ba 100644
+--- a/src/cmd/go/testdata/script/script_wait.txt
++++ b/src/cmd/go/testdata/script/script_wait.txt
+@@ -1,5 +1,7 @@
+ env GO111MODULE=off
+ 
++[windows] skip
++
+ [!exec:echo] skip
+ [!exec:false] skip
+ 
+-- 
+2.24.2 (Apple Git-127)
+
