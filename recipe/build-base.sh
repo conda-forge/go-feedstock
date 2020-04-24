@@ -15,7 +15,6 @@ export GOROOT=$SRC_DIR/go
 
 #
 # Impersonate GO BUILDER
-# Run go's built-in test
 GO_BUILDER_NAME=${goos}-${goarch}
 case $(uname -s) in
   Darwin)
