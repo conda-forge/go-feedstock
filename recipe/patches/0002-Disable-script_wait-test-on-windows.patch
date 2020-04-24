@@ -1,7 +1,7 @@
 From 5cb2e467442fc6fcf52df994b5f8637128b8f39c Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Thu, 23 Apr 2020 16:41:04 -0400
-Subject: [PATCH 2/6] Disable script_wait test on windows
+Subject: [PATCH 2/7] Disable script_wait test on windows
 
 ---
  src/cmd/go/testdata/script/script_wait.txt | 2 ++

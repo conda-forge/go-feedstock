@@ -1,0 +1,27 @@
+From 879475731e957c91099885edbf03eabe88070b6f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
+Date: Fri, 24 Apr 2020 12:15:29 -0400
+Subject: [PATCH 7/7] Disable link_syso_issue33139.txt on darwin and nocgo
+
+---
+ src/cmd/go/testdata/script/link_syso_issue33139.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/cmd/go/testdata/script/link_syso_issue33139.txt b/src/cmd/go/testdata/script/link_syso_issue33139.txt
+index 03169bf5e9..6bc87fcf4f 100644
+--- a/src/cmd/go/testdata/script/link_syso_issue33139.txt
++++ b/src/cmd/go/testdata/script/link_syso_issue33139.txt
+@@ -16,6 +16,10 @@
+ # See: https://github.com/golang/go/issues/31751
+ [darwin] [386] skip
+ 
++# Disable on darwin if not using cgo, in conda we don't have
++# a compiler
++[darwin] [cgo] skip
++
+ cc -c -o syso/objTestImpl.syso syso/src/objTestImpl.c
+ go build -ldflags='-linkmode=external' ./cmd/main.go
+ 
+-- 
+2.24.2 (Apple Git-127)
+

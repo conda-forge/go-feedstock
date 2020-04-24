@@ -1,7 +1,7 @@
 From 044210c5296d294ce7ff9f888e343b9dfd612395 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Wed, 8 Apr 2020 23:52:24 -0400
-Subject: [PATCH 1/6] Mark CGO tests with DependsOnCGO
+Subject: [PATCH 1/7] Mark CGO tests with DependsOnCGO
 
   - issue10607 is only valid when running with CGO
   - TestPIESize requires CGO

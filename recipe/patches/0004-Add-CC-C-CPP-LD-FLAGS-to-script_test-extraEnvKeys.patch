@@ -1,7 +1,7 @@
 From b6c114674c4842acf2a3b73ffdc5825a19025a4a Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 21:20:31 -0400
-Subject: [PATCH 4/6] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
+Subject: [PATCH 4/7] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
 
 ---
  src/cmd/go/script_test.go | 5 +++++
