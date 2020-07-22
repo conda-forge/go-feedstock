@@ -5,7 +5,7 @@ Home: http://golang.org
 
 Package license: BSD-3-Clause
 
-Feedstock license: BSD 3-Clause
+Feedstock license: BSD-3-Clause
 
 Summary: The Go Programming Language
 
