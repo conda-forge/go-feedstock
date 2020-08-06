@@ -8,11 +8,11 @@ jobs:
     vmImage: macOS-10.14
   strategy:
     matrix:
-      osx_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformosx-64:
-        CONFIG: osx_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformosx-64
+      osx_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformosx-64:
+        CONFIG: osx_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformosx-64
         UPLOAD_PACKAGES: 'True'
-      osx_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformosx-64:
-        CONFIG: osx_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformosx-64
+      osx_64_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformosx-64:
+        CONFIG: osx_64_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformosx-64
         UPLOAD_PACKAGES: 'True'
     maxParallel: 8
   timeoutInMinutes: 360
