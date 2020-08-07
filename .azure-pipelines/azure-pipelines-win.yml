@@ -8,11 +8,11 @@ jobs:
     vmImage: vs2017-win2016
   strategy:
     matrix:
-      win_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformwin-64:
-        CONFIG: win_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformwin-64
+      win_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformwin-64:
+        CONFIG: win_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformwin-64
         UPLOAD_PACKAGES: 'True'
-      win_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformwin-64:
-        CONFIG: win_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformwin-64
+      win_64_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformwin-64:
+        CONFIG: win_64_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformwin-64
         UPLOAD_PACKAGES: 'True'
     maxParallel: 4
   timeoutInMinutes: 360
