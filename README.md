@@ -5,11 +5,9 @@ Home: http://golang.org
 
 Package license: BSD-3-Clause
 
-Feedstock license: BSD-3-Clause
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/go-feedstock/blob/master/LICENSE.txt)
 
 Summary: The Go Programming Language
-
-
 
 Current build status
 ====================
