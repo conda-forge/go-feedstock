@@ -1,39 +1,44 @@
-MACOSX_DEPLOYMENT_TARGET:
-- '10.11'
+BUILD:
+- aarch64-conda_cos7-linux-gnu
 c_compiler:
-- clang
+- gcc
 c_compiler_version:
-- '10'
+- '7'
+cdt_arch:
+- aarch64
+cdt_name:
+- cos7
 cgo:
-- 'true'
+- 'false'
 channel_sources:
-- conda-forge,defaults
+- conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
-- clangxx
+- gxx
 cxx_compiler_version:
-- '10'
+- '7'
+docker_image:
+- quay.io/condaforge/linux-anvil-aarch64
 fortran_compiler:
 - gfortran
 fortran_compiler_version:
-- '7.5'
-go14_compiler:
-- go1.4-bootstrap
+- '7'
 go_variant_str:
-- cgo
+- nocgo
 go_variant_ver:
-- 2.3.0
-macos_machine:
-- x86_64-apple-darwin13.4.0
+- 2.2.0
 perl:
 - 5.26.2
 pin_run_as_build:
   perl:
     max_pin: x.x.x
 target_platform:
-- osx-64
+- linux-aarch64
 zip_keys:
+- - c_compiler_version
+  - cxx_compiler_version
+  - fortran_compiler_version
 - - go_variant_str
   - go_variant_ver
   - cgo
