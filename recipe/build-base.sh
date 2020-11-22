@@ -5,24 +5,26 @@ export USER="${USER:-conda}"
 export HOME="${HOME:-$(cd $SRC_DIR/..;pwd)}"
 
 
-#
-# Use precompiled bootstrap
-case $ARCH in
-  aarch64|ppc64le)
-    export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
-    ;;
-  *)
-    export GOCACHE=off
-    ;;
-esac
-
-
 # Do not use GOROOT_FINAL. Otherwise, every conda environment would
 # need its own non-hardlinked copy of the go (+100MB per env).
 # It is better to rely on setting GOROOT during environment activation.
 #
 # c.f. https://github.com/conda-forge/go-feedstock/pull/21#discussion_r202513916
 export GOROOT=$SRC_DIR/go
+
+
+#
+# Impersonate GO BUILDER
+GO_BUILDER_NAME=${goos}-${goarch}
+case $(uname -s) in
+  Darwin)
+    GO_BUILDER_NAME=${GO_BUILDER_NAME}-${MACOSX_DEPLOYMENT_TARGET/./_}
+    ;;
+  Linux)
+    GO_BUILDER_NAME=${GO_BUILDER_NAME}-condaforge
+    ;;
+esac
+export GO_BUILDER_NAME
 
 
 # Print diagnostics before building

@@ -1,5 +1,6 @@
 {% set name = "go" %}
-{% set version = "1.13.15" %}
+{% set version = "1.14.1" %}
+{% set llvm_ver = "10.0.0" %}  # [cgo]
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,19 +9,23 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 5fb43171046cf8784325e67913d55f88a683435071eef8e9da1aa8a1588fcf5d
+    sha256: 2ad2572115b0d1b4cb4c138e6b3a31cee6294cb48af75ee86bec3dca04507676
     patches:
       # Please see patches/README.md for more details
-      - patches/0001-issue10607-is-only-valid-when-running-with-CGO.patch
-      - patches/0002-Fix-cgo_fortran-test-setup-for-conda.patch
-      - patches/0003-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
-      - patches/0004-Inherit-CGO_-environment-variables.patch
-      - patches/0005-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
+      - patches/0001-Mark-CGO-tests-with-DependsOnCGO.patch
+      - patches/0002-Disable-script_wait-test-on-windows.patch
+      - patches/0003-Fix-cgo_fortran-test-setup-for-conda.patch
+      - patches/0004-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
+      - patches/0005-Inherit-CGO_-environment-variables.patch
+      - patches/0006-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
   - folder: go-bootstrap  # [aarch64 or ppc64le]
     url: https://dl.google.com/go/go1.11.13.linux-arm64.tar.gz  # [aarch64]
     sha256: e94329c97b38b5bffe9c18e84e9f521dc995e02df7696897a7626293da9ac593  # [aarch64]
     url: https://dl.google.com/go/go1.11.13.linux-ppc64le.tar.gz  # [ppc64le]
     sha256: ad3c7397ddd41a5af9d9bf3c560d3d0f8c1bdef4ac4d21819a021ea88e25efca  # [ppc64le]
+  - folder: compiler-rt  # [cgo]
+    url: https://github.com/llvm/llvm-project/releases/download/llvmorg-{{ llvm_ver }}/compiler-rt-{{ llvm_ver }}.src.tar.xz  # [cgo]
+    sha256: 6a7da64d3a0a7320577b68b9ca4933bdcab676e898b759850e827333c3282c75  # [cgo]
 
 build:
   binary_relocation: false
@@ -109,10 +114,10 @@ outputs:
       license_file: go/LICENSE
       summary: The Go ({{ go_variant_str }}) compiler activation scripts for conda-build.
       description: |
-        This package enables the CONDA_GO_COMPILER environment variable. 
-        This variable is used by conda-forge's patched GoLang compiler to 
-        set conda-aware GOBIN and GOPATH default values. These default 
-        values are ignored if GOBIN and GOPATH environment variables 
+        This package enables the CONDA_GO_COMPILER environment variable.
+        This variable is used by conda-forge's patched GoLang compiler to
+        set conda-aware GOBIN and GOPATH default values. These default
+        values are ignored if GOBIN and GOPATH environment variables
         are set independently by the user.
 
         For more details, please see the go-feedstock recipe.
