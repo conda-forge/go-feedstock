@@ -83,7 +83,8 @@ outputs:
       requires:
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('m2w64_c') }}  # [win and cgo]
-        - git  # [linux]
+        - git     # [not win]
+        - m2-git  # [win]
         - perl
       script: {{ go_variant_str }}/test.sh  # [unix]
       script: {{ go_variant_str }}/test.bat  # [win]
