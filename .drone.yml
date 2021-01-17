@@ -1,6 +1,6 @@
 ---
 kind: pipeline
-name: linux_aarch64_cgofalsego_variant_st_h7830b3362b
+name: linux_aarch64_cgofalsego_variant_st_h6088e8cd74
 
 platform:
   os: linux
@@ -8,9 +8,9 @@ platform:
 
 steps:
 - name: Install and build
-  image: condaforge/linux-anvil-aarch64
+  image: quay.io/condaforge/linux-anvil-aarch64
   environment:
-    CONFIG: linux_aarch64_cgofalsego_variant_strnocgogo_variant_ver2.2.0target_platformlinux-aarch64
+    CONFIG: linux_aarch64_cgofalsego_variant_strnocgogo_variant_ver2.2.0
     UPLOAD_PACKAGES: True
     PLATFORM: linux-aarch64
     BINSTAR_TOKEN:
@@ -31,7 +31,7 @@ steps:
 
 ---
 kind: pipeline
-name: linux_aarch64_cgotruego_variant_str_h019bd7da5b
+name: linux_aarch64_cgotruego_variant_str_ha9d0eb7339
 
 platform:
   os: linux
@@ -39,9 +39,9 @@ platform:
 
 steps:
 - name: Install and build
-  image: condaforge/linux-anvil-aarch64
+  image: quay.io/condaforge/linux-anvil-aarch64
   environment:
-    CONFIG: linux_aarch64_cgotruego_variant_strcgogo_variant_ver2.3.0target_platformlinux-aarch64
+    CONFIG: linux_aarch64_cgotruego_variant_strcgogo_variant_ver2.3.0
     UPLOAD_PACKAGES: True
     PLATFORM: linux-aarch64
     BINSTAR_TOKEN:
