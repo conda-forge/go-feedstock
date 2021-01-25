@@ -1,4 +1,4 @@
-From 2138e46f86bef3072cb052aa28dbc40cf2431bec Mon Sep 17 00:00:00 2001
+From d2a097cf49b6a2c09c25603a8025b7b266518634 Mon Sep 17 00:00:00 2001
 From: Nehal J Wani <nehaljw.kkd1@gmail.com>
 Date: Mon, 25 Jan 2021 11:28:34 -0500
 Subject: [PATCH 7/7] Disable TestPIESize if CGO isn't enabled
@@ -8,7 +8,7 @@ Subject: [PATCH 7/7] Disable TestPIESize if CGO isn't enabled
  1 file changed, 2 insertions(+)
 
 diff --git a/src/cmd/link/elf_test.go b/src/cmd/link/elf_test.go
-index 88048ed2c5..4a57668271 100644
+index 2fb4dd8aaf..3c64554749 100644
 --- a/src/cmd/link/elf_test.go
 +++ b/src/cmd/link/elf_test.go
 @@ -226,6 +226,8 @@ func main() {
