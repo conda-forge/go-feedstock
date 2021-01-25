@@ -1,7 +1,7 @@
-From 30f7fc9e468849e25e38a2b0e16ad3a4ca6ca5f3 Mon Sep 17 00:00:00 2001
+From 547bb8972ff05a4c8c10ae5d798fc7945a3c3b1d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Sun, 24 Jan 2021 23:52:48 -0500
-Subject: [PATCH 5/6] Add conda-aware default values for GOPATH and GOBIN
+Subject: [PATCH 5/7] Add conda-aware default values for GOPATH and GOBIN
 
 These new defaults are to make integration with conda-build easier and
 are only in effect if the environment variable CONDA_GO_COMPILER is
@@ -28,18 +28,18 @@ scripts for unix and windows. It also means, that the end-users can
 override these defaults, which was not possible before while still
 maintaining compatibilit with the current case.
 ---
- src/cmd/go/go_test.go                         | 31 +++++++++++++++++++
- src/cmd/go/internal/cfg/cfg.go                | 28 ++++++++++++++++-
+ src/cmd/go/go_test.go                         | 33 +++++++++++++++++++
+ src/cmd/go/internal/cfg/cfg.go                | 28 +++++++++++++++-
  .../gopath/src/go-cmd-test/helloworld.go      |  5 +++
- src/go/build/build.go                         | 19 +++++++++++-
- 4 files changed, 81 insertions(+), 2 deletions(-)
+ src/go/build/build.go                         | 19 ++++++++++-
+ 4 files changed, 83 insertions(+), 2 deletions(-)
  create mode 100644 src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go
 
 diff --git a/src/cmd/go/go_test.go b/src/cmd/go/go_test.go
-index de0f5957e0..eb5224d985 100644
+index 021930a8a8..88e902b210 100644
 --- a/src/cmd/go/go_test.go
 +++ b/src/cmd/go/go_test.go
-@@ -5044,3 +5044,34 @@ func TestCoverpkgTestOnly(t *testing.T) {
+@@ -2789,3 +2789,36 @@ func TestCoverpkgTestOnly(t *testing.T) {
  	tg.grepStderrNot("no packages being tested depend on matches", "bad match message")
  	tg.grepStdout("coverage: 100", "no coverage")
  }
@@ -51,12 +51,13 @@ index de0f5957e0..eb5224d985 100644
 +	defer tg.cleanup()
 +	tg.setenv("CONDA_GO_COMPILER", "1")
 +	tg.setenv("CONDA_BUILD", "")
-+	prefix := filepath.Join(tg.pwd(), "testdata", "conda_prefix")
++	tg.makeTempdir()
++	prefix := filepath.Join(tg.tempdir, "testdata", "conda_prefix")
 +	tg.creatingTemp(prefix)
 +	tg.setenv("CONDA_PREFIX", prefix)
 +	tg.setenv("GOPATH", filepath.Join(tg.pwd(), "testdata", "gopath"))
 +	tg.run("install", "go-cmd-test")
-+	tg.wantExecutable("testdata/conda_prefix/bin/go-cmd-test"+exeSuffix, "go install go-cmd-test did not write to testdata/conda_prefix/bin/go-cmd-test")
++	tg.wantExecutable(filepath.Join(prefix, "bin/go-cmd-test"+exeSuffix), "go install go-cmd-test did not write to testdata/conda_prefix/bin/go-cmd-test")
 +}
 +
 +// Test that without $GOBIN set, binaries get installed
@@ -66,16 +67,17 @@ index de0f5957e0..eb5224d985 100644
 +	defer tg.cleanup()
 +	tg.setenv("CONDA_GO_COMPILER", "1")
 +	tg.setenv("CONDA_BUILD", "1")
-+	prefix := filepath.Join(tg.pwd(), "testdata", "conda_build_prefix")
++	tg.makeTempdir()
++	prefix := filepath.Join(tg.tempdir, "testdata", "conda_build_prefix")
 +	tg.creatingTemp(prefix)
 +	tg.setenv("PREFIX", prefix)
 +	tg.setenv("SRC_DIR", filepath.Join(tg.pwd(), "testdata"))
 +	tg.run("install", "go-cmd-test")
-+	tg.wantExecutable("testdata/conda_build_prefix/bin/go-cmd-test"+exeSuffix, "go install go-cmd-test did not write to testdata/conda_build_prefix/bin/go-cmd-test")
++	tg.wantExecutable(filepath.Join(prefix, "bin/go-cmd-test"+exeSuffix), "go install go-cmd-test did not write to testdata/conda_build_prefix/bin/go-cmd-test")
 +}
 +
 diff --git a/src/cmd/go/internal/cfg/cfg.go b/src/cmd/go/internal/cfg/cfg.go
-index 61dc6bdda6..d5cd512b0c 100644
+index 7f8f8e92be..74e625e7ff 100644
 --- a/src/cmd/go/internal/cfg/cfg.go
 +++ b/src/cmd/go/internal/cfg/cfg.go
 @@ -231,7 +231,7 @@ func CanGetenv(key string) bool {
@@ -87,9 +89,9 @@ index 61dc6bdda6..d5cd512b0c 100644
  	GOROOTbin    = filepath.Join(GOROOT, "bin")
  	GOROOTpkg    = filepath.Join(GOROOT, "pkg")
  	GOROOTsrc    = filepath.Join(GOROOT, "src")
-@@ -253,6 +253,32 @@ var (
- 	GOINSECURE = Getenv("GOINSECURE")
- )
+@@ -256,6 +256,32 @@ var (
+ 
+ var SumdbDir = gopathDir("pkg/sumdb")
  
 +// defaultCondaGOBIN returns a conda-aware GOBIN path if CONDA_GO_COMPILER
 +// is set to 1, otherwise it returns the default empty-string.
@@ -132,10 +134,10 @@ index 0000000000..002a5c740c
 +	println("hello world")
 +}
 diff --git a/src/go/build/build.go b/src/go/build/build.go
-index 9136319ad9..f8a713078f 100644
+index 9050d070f8..3b7c08e7dd 100644
 --- a/src/go/build/build.go
 +++ b/src/go/build/build.go
-@@ -272,6 +272,16 @@ func (ctxt *Context) SrcDirs() []string {
+@@ -271,6 +271,16 @@ func (ctxt *Context) SrcDirs() []string {
  // if set, or else the compiled code's GOARCH, GOOS, and GOROOT.
  var Default Context = defaultContext()
  
@@ -152,7 +154,7 @@ index 9136319ad9..f8a713078f 100644
  func defaultGOPATH() string {
  	env := "HOME"
  	if runtime.GOOS == "windows" {
-@@ -299,7 +309,7 @@ func defaultContext() Context {
+@@ -298,7 +308,7 @@ func defaultContext() Context {
  	c.GOARCH = envOr("GOARCH", runtime.GOARCH)
  	c.GOOS = envOr("GOOS", runtime.GOOS)
  	c.GOROOT = pathpkg.Clean(runtime.GOROOT())
@@ -161,7 +163,7 @@ index 9136319ad9..f8a713078f 100644
  	c.Compiler = runtime.Compiler
  
  	// Each major Go release in the Go 1.x series adds a new
-@@ -344,6 +354,13 @@ func envOr(name, def string) string {
+@@ -343,6 +353,13 @@ func envOr(name, def string) string {
  	return s
  }
  
