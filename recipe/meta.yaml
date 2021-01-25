@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.13.10" %}
+{% set version = "1.13.15" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: eb9ccc8bf59ed068e7eff73e154e4f5ee7eec0a47a610fb864e3332a2fdc8b8c
+    sha256: 5fb43171046cf8784325e67913d55f88a683435071eef8e9da1aa8a1588fcf5d
     patches:
       # Please see patches/README.md for more details
       - patches/0001-issue10607-is-only-valid-when-running-with-CGO.patch
@@ -17,15 +17,15 @@ source:
       - patches/0004-Inherit-CGO_-environment-variables.patch
       - patches/0005-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
   - folder: go-bootstrap  # [aarch64 or ppc64le]
-    url: https://dl.google.com/go/go1.11.13.linux-arm64.tar.gz                # [aarch64]
+    url: https://dl.google.com/go/go1.11.13.linux-arm64.tar.gz  # [aarch64]
     sha256: e94329c97b38b5bffe9c18e84e9f521dc995e02df7696897a7626293da9ac593  # [aarch64]
-    url: https://dl.google.com/go/go1.11.13.linux-ppc64le.tar.gz              # [ppc64le]
+    url: https://dl.google.com/go/go1.11.13.linux-ppc64le.tar.gz  # [ppc64le]
     sha256: ad3c7397ddd41a5af9d9bf3c560d3d0f8c1bdef4ac4d21819a021ea88e25efca  # [ppc64le]
 
 build:
-  binary_relocation: False
-  detect_binary_files_with_prefix: False
-  force_ignore_keys:    # [win]
+  binary_relocation: false
+  detect_binary_files_with_prefix: false
+  force_ignore_keys:   # [win]
     - c_compiler        # [win]
     - cxx_compiler      # [win]
     - fortran_compiler  # [win]
@@ -34,7 +34,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 3
+  number: 1
 
 requirements:
   run:
@@ -48,7 +48,7 @@ test:
 
 outputs:
   - name: {{ name }}
-    script: {{ go_variant_str }}/build.sh   # [unix]
+    script: {{ go_variant_str }}/build.sh  # [unix]
     script: {{ go_variant_str }}/build.bat  # [win]
     requirements:
       build:
@@ -80,42 +80,42 @@ outputs:
         - {{ compiler('m2w64_c') }}  # [win and cgo]
         - git  # [linux]
         - perl
-      script:  {{ go_variant_str }}/test.sh   # [unix]
-      script:  {{ go_variant_str }}/test.bat  # [win]
+      script: {{ go_variant_str }}/test.sh  # [unix]
+      script: {{ go_variant_str }}/test.bat  # [win]
     about:
       home: http://golang.org
       license: BSD-3-Clause
       license_family: BSD
       license_file: go/LICENSE
-      summary: 'The Go Programming Language'
+      summary: The Go Programming Language
 
   - name: {{ name }}-{{ go_variant_str }}_{{ target_platform }}
-    script: compiler/build.sh   # [unix]
+    script: compiler/build.sh  # [unix]
     script: compiler/build.bat  # [win]
     requirements:
       run:
         - {{ pin_subpackage(name, exact=True) }}
     #TODO: Re-enable once conda/conda#9845 if fixed.
-    #run_exports:                                  # [osx]
+    #run_exports:   # [osx]
     #  strong:                                     # [osx]
     #    - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
     test:
-      script:  compiler/test.sh   # [unix]
-      script:  compiler/test.bat  # [win]
+      script: compiler/test.sh  # [unix]
+      script: compiler/test.bat  # [win]
     about:
       home: http://golang.org
       license: BSD-3-Clause
       license_family: BSD
       license_file: go/LICENSE
-      summary: 'The Go ({{ go_variant_str }}) compiler activation scripts for conda-build.'
+      summary: The Go ({{ go_variant_str }}) compiler activation scripts for conda-build.
       description: |
-          This package enables the CONDA_GO_COMPILER environment variable. 
-          This variable is used by conda-forge's patched GoLang compiler to 
-          set conda-aware GOBIN and GOPATH default values. These default 
-          values are ignored if GOBIN and GOPATH environment variables 
-          are set independently by the user.
+        This package enables the CONDA_GO_COMPILER environment variable. 
+        This variable is used by conda-forge's patched GoLang compiler to 
+        set conda-aware GOBIN and GOPATH default values. These default 
+        values are ignored if GOBIN and GOPATH environment variables 
+        are set independently by the user.
 
-          For more details, please see the go-feedstock recipe.
+        For more details, please see the go-feedstock recipe.
       dev_url: https://github.com/conda-forge/go-feedstock
 
 about:
@@ -123,7 +123,7 @@ about:
   license: BSD-3-Clause
   license_family: BSD
   license_file: go/LICENSE
-  summary: 'The Go Programming Language ({{ go_variant_str }})'
+  summary: The Go Programming Language ({{ go_variant_str }})
   description: |
     Go is expressive, concise, clean, and efficient. Its concurrency mechanisms
     make it easy to write programs that get the most out of multicore and
