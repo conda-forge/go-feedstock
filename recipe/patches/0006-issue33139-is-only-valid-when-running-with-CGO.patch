@@ -1,0 +1,24 @@
+From a69be5a9301a20e96c73306389337ddfc94ce1b3 Mon Sep 17 00:00:00 2001
+From: Nehal J Wani <nehaljw.kkd1@gmail.com>
+Date: Mon, 25 Jan 2021 10:19:25 -0500
+Subject: [PATCH 6/6] issue33139 is only valid when running with CGO
+
+---
+ src/cmd/go/testdata/script/link_syso_issue33139.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/cmd/go/testdata/script/link_syso_issue33139.txt b/src/cmd/go/testdata/script/link_syso_issue33139.txt
+index 03169bf5e9..70ed5d4bae 100644
+--- a/src/cmd/go/testdata/script/link_syso_issue33139.txt
++++ b/src/cmd/go/testdata/script/link_syso_issue33139.txt
+@@ -3,6 +3,7 @@
+ # See issue 33139.
+ [!gc] skip
+ [!exec:cc] skip
++[!cgo] skip
+ 
+ # External linking is not supported on linux/ppc64.
+ # See: https://github.com/golang/go/issues/8912
+-- 
+2.30.0
+

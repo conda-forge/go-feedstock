@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.13.15" %}
+{% set version = "1.14.14" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 5fb43171046cf8784325e67913d55f88a683435071eef8e9da1aa8a1588fcf5d
+    sha256: 6204bf32f58fae0853f47f1bd0c51d9e0ac11f1ffb406bed07a0a8b016c8a76f
     patches:
       # Please see patches/README.md for more details
       - patches/0001-issue10607-is-only-valid-when-running-with-CGO.patch
@@ -16,6 +16,8 @@ source:
       - patches/0003-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
       - patches/0004-Inherit-CGO_-environment-variables.patch
       - patches/0005-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
+      - patches/0006-issue33139-is-only-valid-when-running-with-CGO.patch
+      - patches/0007-Disable-TestPIESize-if-CGO-isn-t-enabled.patch
   - folder: go-bootstrap  # [aarch64 or ppc64le]
     url: https://dl.google.com/go/go1.11.13.linux-arm64.tar.gz  # [aarch64]
     sha256: e94329c97b38b5bffe9c18e84e9f521dc995e02df7696897a7626293da9ac593  # [aarch64]
@@ -34,7 +36,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 1
+  number: 0
 
 requirements:
   run:

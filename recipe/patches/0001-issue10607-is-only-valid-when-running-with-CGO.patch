@@ -1,22 +1,22 @@
-From 7c92bb3c8d8476ac219f1639fe2b6775332fda05 Mon Sep 17 00:00:00 2001
+From 33bde9b5ef7c4d9a7ad90b7df658fd25f559bf6b Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Wed, 8 Apr 2020 23:52:24 -0400
-Subject: [PATCH 1/5] issue10607 is only valid when running with CGO
+Subject: [PATCH 1/6] issue10607 is only valid when running with CGO
 
 ---
  test/fixedbugs/issue10607.go | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/test/fixedbugs/issue10607.go b/test/fixedbugs/issue10607.go
-index 8831547da8..2d2bf9c621 100644
+index 6f4717d820..1f2edc8c3b 100644
 --- a/test/fixedbugs/issue10607.go
 +++ b/test/fixedbugs/issue10607.go
 @@ -1,4 +1,4 @@
--// +build linux,!ppc64
-+// +build linux,!ppc64,cgo
+-// +build linux,!ppc64,!riscv64
++// +build linux,!ppc64,!riscv64,cgo
  // run
  
  // Copyright 2015 The Go Authors. All rights reserved.
 -- 
-2.26.0
+2.30.0
 
