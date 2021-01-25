@@ -1,14 +1,14 @@
-From e2ecca02249836fd63db8223c906b436c7d9883b Mon Sep 17 00:00:00 2001
+From 507dc2a7e1a21c17929deea62d1021c2827ea0f0 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 23:02:19 -0400
-Subject: [PATCH 2/5] Fix cgo_fortran test setup for conda
+Subject: [PATCH 2/6] Fix cgo_fortran test setup for conda
 
 ---
  misc/cgo/fortran/test.bash | 6 +-----
  1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/misc/cgo/fortran/test.bash b/misc/cgo/fortran/test.bash
-index 9498da0208..15ae1e93ce 100755
+index 2b61730815..9e8948bae7 100755
 --- a/misc/cgo/fortran/test.bash
 +++ b/misc/cgo/fortran/test.bash
 @@ -20,11 +20,7 @@ fi
@@ -25,5 +25,5 @@ index 9498da0208..15ae1e93ce 100755
  esac
  
 -- 
-2.26.0
+2.30.0
 
