@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.15.11" %}
+{% set version = "1.16.3" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: f25b2441d4c76cf63cde94d59bab237cc33e8a2a139040d904c8630f46d061e5
+    sha256: b298d29de9236ca47a023e382313bcc2d2eed31dfa706b60a04103ce83a71a25
     patches:
       # Please see patches/README.md for more details
       - patches/0001-issue10607-is-only-valid-when-running-with-CGO.patch
@@ -16,8 +16,7 @@ source:
       - patches/0003-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
       - patches/0004-Inherit-CGO_-environment-variables.patch
       - patches/0005-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
-      - patches/0006-issue33139-is-only-valid-when-running-with-CGO.patch
-      - patches/0007-Disable-TestPIESize-if-CGO-isn-t-enabled.patch
+      - patches/0006-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
   - folder: go-bootstrap  # [aarch64 or ppc64le]
     url: https://dl.google.com/go/go1.11.13.linux-arm64.tar.gz  # [aarch64]
     sha256: e94329c97b38b5bffe9c18e84e9f521dc995e02df7696897a7626293da9ac593  # [aarch64]

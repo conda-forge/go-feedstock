@@ -1,17 +1,17 @@
-From 23a375c80e01f69ef27b9af1195b755704823296 Mon Sep 17 00:00:00 2001
+From 2824ed6d261991eab5e9aaabf6c12eda11133301 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 21:13:14 -0400
-Subject: [PATCH 4/7] Inherit CGO_* environment variables
+Subject: [PATCH 4/6] Inherit CGO_* environment variables
 
 ---
  src/cmd/go/internal/work/exec.go | 28 +++++++++++++++++++++++++++-
  1 file changed, 27 insertions(+), 1 deletion(-)
 
 diff --git a/src/cmd/go/internal/work/exec.go b/src/cmd/go/internal/work/exec.go
-index f5f9951afa..3158978946 100644
+index 422e83c224..7dc3e6ff19 100644
 --- a/src/cmd/go/internal/work/exec.go
 +++ b/src/cmd/go/internal/work/exec.go
-@@ -2518,6 +2518,32 @@ func (b *Builder) gccArchArgs() []string {
+@@ -2609,6 +2609,32 @@ func (b *Builder) gccArchArgs() []string {
  	return nil
  }
  
@@ -44,7 +44,7 @@ index f5f9951afa..3158978946 100644
  // envList returns the value of the given environment variable broken
  // into fields, using the default value when the variable is empty.
  func envList(key, def string) []string {
-@@ -2555,7 +2581,7 @@ func buildFlags(name, defaults string, fromPackage []string, check func(string,
+@@ -2646,7 +2672,7 @@ func buildFlags(name, defaults string, fromPackage []string, check func(string,
  	if err := check(name, "#cgo "+name, fromPackage); err != nil {
  		return nil, err
  	}
@@ -54,5 +54,5 @@ index f5f9951afa..3158978946 100644
  
  var cgoRe = lazyregexp.New(`[/\\:]`)
 -- 
-2.30.0
+2.30.2
 
