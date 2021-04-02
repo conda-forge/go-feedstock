@@ -1,7 +1,7 @@
-From 547bb8972ff05a4c8c10ae5d798fc7945a3c3b1d Mon Sep 17 00:00:00 2001
+From 721265e3c70d288c08e463344ef3fe94ded44aec Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Sun, 24 Jan 2021 23:52:48 -0500
-Subject: [PATCH 5/7] Add conda-aware default values for GOPATH and GOBIN
+Subject: [PATCH 5/5] Add conda-aware default values for GOPATH and GOBIN
 
 These new defaults are to make integration with conda-build easier and
 are only in effect if the environment variable CONDA_GO_COMPILER is
@@ -36,10 +36,10 @@ maintaining compatibilit with the current case.
  create mode 100644 src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go
 
 diff --git a/src/cmd/go/go_test.go b/src/cmd/go/go_test.go
-index 021930a8a8..88e902b210 100644
+index 3ce32388d0..35d1507b26 100644
 --- a/src/cmd/go/go_test.go
 +++ b/src/cmd/go/go_test.go
-@@ -2789,3 +2789,36 @@ func TestCoverpkgTestOnly(t *testing.T) {
+@@ -2830,3 +2830,36 @@ func TestCoverpkgTestOnly(t *testing.T) {
  	tg.grepStderrNot("no packages being tested depend on matches", "bad match message")
  	tg.grepStdout("coverage: 100", "no coverage")
  }
@@ -77,10 +77,10 @@ index 021930a8a8..88e902b210 100644
 +}
 +
 diff --git a/src/cmd/go/internal/cfg/cfg.go b/src/cmd/go/internal/cfg/cfg.go
-index 7f8f8e92be..74e625e7ff 100644
+index c48904eacc..d7e97cbc47 100644
 --- a/src/cmd/go/internal/cfg/cfg.go
 +++ b/src/cmd/go/internal/cfg/cfg.go
-@@ -231,7 +231,7 @@ func CanGetenv(key string) bool {
+@@ -246,7 +246,7 @@ func CanGetenv(key string) bool {
  
  var (
  	GOROOT       = BuildContext.GOROOT
@@ -89,7 +89,7 @@ index 7f8f8e92be..74e625e7ff 100644
  	GOROOTbin    = filepath.Join(GOROOT, "bin")
  	GOROOTpkg    = filepath.Join(GOROOT, "pkg")
  	GOROOTsrc    = filepath.Join(GOROOT, "src")
-@@ -256,6 +256,32 @@ var (
+@@ -272,6 +272,32 @@ var (
  
  var SumdbDir = gopathDir("pkg/sumdb")
  
@@ -134,7 +134,7 @@ index 0000000000..002a5c740c
 +	println("hello world")
 +}
 diff --git a/src/go/build/build.go b/src/go/build/build.go
-index 9050d070f8..3b7c08e7dd 100644
+index 217fadf5bd..55e13746f5 100644
 --- a/src/go/build/build.go
 +++ b/src/go/build/build.go
 @@ -271,6 +271,16 @@ func (ctxt *Context) SrcDirs() []string {
@@ -178,5 +178,5 @@ index 9050d070f8..3b7c08e7dd 100644
  type ImportMode uint
  
 -- 
-2.30.0
+2.30.2
 
