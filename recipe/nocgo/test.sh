@@ -20,10 +20,11 @@ go env
 case $(uname -s) in
   Darwin)
     # Expect PASS
-    go tool dist test -v -no-rebuild -run='!^go_test:net/http|go_test:runtime$'
+    go tool dist test -v -no-rebuild -run='!^go_test:net/http|go_test:runtime|go_test:time$'
     # Occasionally FAILS
     go tool dist test -v -no-rebuild -run='^go_test:net/http$' || true
     go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
+    go tool dist test -v -no-rebuild -run='^go_test:time$' || true
     # Expect FAIL
     ;;
   Linux)
