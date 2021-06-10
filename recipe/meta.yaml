@@ -1,102 +1,130 @@
 {% set name = "go" %}
-{% set version = "1.11.4" %}
-{% set n = 'm2w64-' if win else '' %}
+{% set version = "1.16.5" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}-{{ go_variant_str }}
   version: {{ version }}
 
 source:
-  - url: https://storage.googleapis.com/golang/go{{ version }}.src.tar.gz
-    sha256: 4cfd42720a6b1e79a8024895fa6607b69972e8e32446df76d6ce79801bbadb15
-    folder: go
-  - url: https://storage.googleapis.com/golang/go1.4-bootstrap-20171003.tar.gz
-    sha256: f4ff5b5eb3a3cae1c993723f3eab519c5bae18866b5e5f96fe1102f0cb5c3e52
-    folder: go-bootstrap
+  - folder: go
+    url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
+    sha256: 7bfa7e5908c7cc9e75da5ddf3066d7cbcf3fd9fa51945851325eebc17f50ba80
+    patches:
+      # Please see patches/README.md for more details
+      - patches/0001-issue10607-is-only-valid-when-running-with-CGO.patch
+      - patches/0002-Fix-cgo_fortran-test-setup-for-conda.patch
+      - patches/0003-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
+      - patches/0004-Inherit-CGO_-environment-variables.patch
+      - patches/0005-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
+      - patches/0006-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
+  - folder: go-bootstrap  # [aarch64 or ppc64le]
+    url: https://dl.google.com/go/go1.11.13.linux-arm64.tar.gz                # [aarch64]
+    sha256: e94329c97b38b5bffe9c18e84e9f521dc995e02df7696897a7626293da9ac593  # [aarch64]
+    url: https://dl.google.com/go/go1.11.13.linux-ppc64le.tar.gz              # [ppc64le]
+    sha256: ad3c7397ddd41a5af9d9bf3c560d3d0f8c1bdef4ac4d21819a021ea88e25efca  # [ppc64le]
 
 build:
-  number: 0
-  skip: True  # [ppc64le]
-  binary_relocation: False
-  detect_binary_files_with_prefix: False
-  force_ignore_keys:  # [win]
-    - c_compiler      # [win]
-    - cxx_compiler    # [win]
+  binary_relocation: false
+  detect_binary_files_with_prefix: false
+  force_ignore_keys:    # [win]
+    - c_compiler        # [win]
+    - cxx_compiler      # [win]
+    - fortran_compiler  # [win]
   # test data links to these DSOs
   missing_dso_whitelist:
-    - /usr/lib/libSystem.B.dylib
-    - /usr/lib/libgcc_s.1.dylib
-    - libc.so.6
+    - $RPATH/libc.so.6             # [linux and not cgo]
+    - /usr/lib/libSystem.B.dylib   # [osx]
+    - $SYSROOT\System32\winmm.dll  # [win]
+  number: 0
 
 requirements:
   run:
-    - {{ pin_subpackage(name.lower()+"_linux-64", exact=True) }}  # [linux64]
-    - {{ pin_subpackage(name.lower()+"_linux-32", exact=True) }}  # [linux32]
-    - {{ pin_subpackage(name.lower()+"_osx-64", exact=True) }}    # [osx]
-    - {{ pin_subpackage(name.lower()+"_win-64", exact=True) }}    # [win64]
-    - {{ pin_subpackage(name.lower()+"_win-32", exact=True) }}    # [win32]
+    - {{ pin_subpackage(name, exact=true) }}
+    - {{ compiler('c') }}         # [unix and cgo]
+    - {{ compiler('m2w64_c') }}   # [win and cgo]
 
 test:
   commands:
     - go help
-    - go version
 
 outputs:
-  - name: {{ name|lower }}-core
-    script: build-core.sh   # [not win]
-    script: build-core.bat  # [win]
+  - name: {{ name }}
+    script: {{ go_variant_str }}/build.sh  # [unix]
+    script: {{ go_variant_str }}/build.bat  # [win]
     requirements:
       build:
-        {% if not win %}
-        - {{ compiler('c') }}
-        - {{ compiler('cxx') }}
-        - {{ compiler('fortran') }}
-        {% else %}
-        - {{ n }}toolchain
-        {% endif %}
+        - {{ compiler('go14') }}  # [not (aarch64 or ppc64le)]
 
-        - perl  # [not win]
-    test:
-      files:
-        - hello.go
-      commands:
-        - go env
-        - go run hello.go
-        - cmd /c echo x%GOROOT% NEQ x%CONDA_PREFIX%\go        # [win]
-        - cmd /c if x%GOROOT% NEQ x%CONDA_PREFIX%\go exit 1   # [win]
+        - {{ compiler('c') }}        # [unix and cgo]
+        - {{ compiler('cxx') }}      # [unix and cgo]
+        - {{ compiler('fortran') }}  # [unix and cgo]
 
-  - name: {{ name|lower }}_{{ conda_goplatform }}
-    script: build-platform.sh   # [not win]
-    script: build-platform.bat  # [win]
-    requirements:
-      build:
-        - m2-sed   # [win]
-        - m2-file  # [win]
-        - m2-grep  # [win]
-      host:
-        - {{ pin_subpackage("go-core", exact=True) }}
+        - {{ compiler('m2w64_c') }}        # [win and cgo]
+        - {{ compiler('m2w64_cxx') }}      # [win and cgo]
+        - {{ compiler('m2w64_fortran') }}  # [win and cgo]
       run:
-        - {{ pin_subpackage("go-core", exact=True) }}
-    test:
-      files:
-        - hello.go
-      requires:
-        - posix  # [win]
-      commands:
-        - go env
-        - go build hello.go
-        # Check that the file types match what is expected for each platform
-        ## https://stackoverflow.com/questions/2768608/batch-equivalent-of-bash-backticks#2768660
-        - file hello`go env GOEXE` | grep '{{ conda_gofile }}'  # [unix]
-        - for /f "usebackq tokens=*" %%a in (`go env GOEXE`) do file hello%%a | grep '{{ conda_gofile }}'  # [win]
+        - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
+      run_constrained:
+        # TODO: Move to run section once conda/conda#9845 is fixed
+        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
 
+        - {{ pin_compatible(compiler('c')) }}        # [unix and cgo]
+        - {{ pin_compatible(compiler('cxx')) }}      # [unix and cgo]
+        - {{ pin_compatible(compiler('fortran')) }}  # [unix and cgo]
+
+        - {{ pin_compatible(compiler('m2w64_c')) }}        # [win and cgo]
+        - {{ pin_compatible(compiler('m2w64_cxx')) }}      # [win and cgo]
+        - {{ pin_compatible(compiler('m2w64_fortran')) }}  # [win and cgo]
+    test:
+      requires:
+        - {{ compiler('c') }}         # [unix and cgo]
+        - {{ compiler('m2w64_c') }}   # [win and cgo]
+        - git  # [linux]
+        - perl
+      script: {{ go_variant_str }}/test.sh  # [unix]
+      script: {{ go_variant_str }}/test.bat  # [win]
+    about:
+      home: http://golang.org
+      license: BSD-3-Clause
+      license_family: BSD
+      license_file: go/LICENSE
+      summary: The Go Programming Language
+
+  - name: {{ name }}-{{ go_variant_str }}_{{ target_platform }}
+    script: compiler/build.sh  # [unix]
+    script: compiler/build.bat  # [win]
+    requirements:
+      run:
+        - {{ pin_subpackage(name, exact=True) }}
+    #TODO: Re-enable once conda/conda#9845 if fixed.
+    #run_exports:   # [osx]
+    #  strong:                                     # [osx]
+    #    - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
+    test:
+      script: compiler/test.sh  # [unix]
+      script: compiler/test.bat  # [win]
+    about:
+      home: http://golang.org
+      license: BSD-3-Clause
+      license_family: BSD
+      license_file: go/LICENSE
+      summary: The Go ({{ go_variant_str }}) compiler activation scripts for conda-build.
+      description: |
+        This package enables the CONDA_GO_COMPILER environment variable. 
+        This variable is used by conda-forge's patched GoLang compiler to 
+        set conda-aware GOBIN and GOPATH default values. These default 
+        values are ignored if GOBIN and GOPATH environment variables 
+        are set independently by the user.
+
+        For more details, please see the go-feedstock recipe.
+      dev_url: https://github.com/conda-forge/go-feedstock
 
 about:
   home: http://golang.org
-  license: BSD-Style
+  license: BSD-3-Clause
   license_family: BSD
   license_file: go/LICENSE
-  summary: 'The Go Programming Language'
+  summary: The Go Programming Language ({{ go_variant_str }})
   description: |
     Go is expressive, concise, clean, and efficient. Its concurrency mechanisms
     make it easy to write programs that get the most out of multicore and
@@ -113,3 +141,4 @@ extra:
     - nehaljwani
     - scopatz
     - sodre
+    - stuarteberg

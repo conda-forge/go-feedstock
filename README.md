@@ -1,29 +1,122 @@
-About go
-========
+About go-cgo
+============
 
 Home: http://golang.org
 
-Package license: BSD-Style
+Package license: BSD-3-Clause
 
-Feedstock license: BSD 3-Clause
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/go-feedstock/blob/master/LICENSE.txt)
 
 Summary: The Go Programming Language
-
-Go is expressive, concise, clean, and efficient. Its concurrency mechanisms
-make it easy to write programs that get the most out of multicore and
-networked machines, while its novel type system enables flexible and
-modular program construction. Go compiles quickly to machine code yet has
-the convenience of garbage collection and the power of run-time reflection.
-It's a fast, statically typed, compiled language that feels like a
-dynamically typed, interpreted language.
-
 
 Current build status
 ====================
 
-[![Linux](https://img.shields.io/circleci/project/github/conda-forge/go-feedstock/master.svg?label=Linux)](https://circleci.com/gh/conda-forge/go-feedstock)
-[![OSX](https://img.shields.io/travis/conda-forge/go-feedstock/master.svg?label=macOS)](https://travis-ci.org/conda-forge/go-feedstock)
-[![Windows](https://img.shields.io/appveyor/ci/conda-forge/go-feedstock/master.svg?label=Windows)](https://ci.appveyor.com/project/conda-forge/go-feedstock/branch/master)
+
+<table><tr>
+    <td>Travis</td>
+    <td>
+      <a href="https://travis-ci.com/conda-forge/go-feedstock">
+        <img alt="macOS" src="https://img.shields.io/travis/com/conda-forge/go-feedstock/master.svg?label=macOS">
+      </a>
+    </td>
+  </tr><tr>
+    <td>Drone</td>
+    <td>
+      <a href="https://cloud.drone.io/conda-forge/go-feedstock">
+        <img alt="linux" src="https://img.shields.io/drone/build/conda-forge/go-feedstock/master.svg?label=Linux">
+      </a>
+    </td>
+  </tr>
+    
+  <tr>
+    <td>Azure</td>
+    <td>
+      <details>
+        <summary>
+          <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+            <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master">
+          </a>
+        </summary>
+        <table>
+          <thead><tr><th>Variant</th><th>Status</th></tr></thead>
+          <tbody><tr>
+              <td>linux_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_64_cgotruego_variant_strcgogo_variant_ver2.3.0</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_cgofalsego_variant_strnocgogo_variant_ver2.2.0</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_aarch64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_aarch64_cgotruego_variant_strcgogo_variant_ver2.3.0</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_aarch64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_cgofalsego_variant_strnocgogo_variant_ver2.2.0</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_ppc64le_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>linux_ppc64le_cgotruego_variant_strcgogo_variant_ver2.3.0</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_ppc64le_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=osx&configuration=osx_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_64_cgotruego_variant_strcgogo_variant_ver2.3.0</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=osx&configuration=osx_64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>win_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=win&configuration=win_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>win_64_cgotruego_variant_strcgogo_variant_ver2.3.0</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=win&configuration=win_64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </details>
+    </td>
+  </tr>
+</table>
 
 Current release info
 ====================
@@ -31,24 +124,25 @@ Current release info
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-go-green.svg)](https://anaconda.org/conda-forge/go) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go.svg)](https://anaconda.org/conda-forge/go) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go.svg)](https://anaconda.org/conda-forge/go) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go.svg)](https://anaconda.org/conda-forge/go) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-go--core-green.svg)](https://anaconda.org/conda-forge/go-core) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-core.svg)](https://anaconda.org/conda-forge/go-core) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-core.svg)](https://anaconda.org/conda-forge/go-core) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-core.svg)](https://anaconda.org/conda-forge/go-core) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-go_linux--64-green.svg)](https://anaconda.org/conda-forge/go_linux-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go_linux-64.svg)](https://anaconda.org/conda-forge/go_linux-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go_linux-64.svg)](https://anaconda.org/conda-forge/go_linux-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go_linux-64.svg)](https://anaconda.org/conda-forge/go_linux-64) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-go_osx--64-green.svg)](https://anaconda.org/conda-forge/go_osx-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go_osx-64.svg)](https://anaconda.org/conda-forge/go_osx-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go_osx-64.svg)](https://anaconda.org/conda-forge/go_osx-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go_osx-64.svg)](https://anaconda.org/conda-forge/go_osx-64) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-go_win--64-green.svg)](https://anaconda.org/conda-forge/go_win-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go_win-64.svg)](https://anaconda.org/conda-forge/go_win-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go_win-64.svg)](https://anaconda.org/conda-forge/go_win-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go_win-64.svg)](https://anaconda.org/conda-forge/go_win-64) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-go--cgo-green.svg)](https://anaconda.org/conda-forge/go-cgo) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-cgo.svg)](https://anaconda.org/conda-forge/go-cgo) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-cgo.svg)](https://anaconda.org/conda-forge/go-cgo) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-cgo.svg)](https://anaconda.org/conda-forge/go-cgo) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-go--cgo_linux--64-green.svg)](https://anaconda.org/conda-forge/go-cgo_linux-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-cgo_linux-64.svg)](https://anaconda.org/conda-forge/go-cgo_linux-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-cgo_linux-64.svg)](https://anaconda.org/conda-forge/go-cgo_linux-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-cgo_linux-64.svg)](https://anaconda.org/conda-forge/go-cgo_linux-64) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-go--nocgo-green.svg)](https://anaconda.org/conda-forge/go-nocgo) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-nocgo.svg)](https://anaconda.org/conda-forge/go-nocgo) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-nocgo.svg)](https://anaconda.org/conda-forge/go-nocgo) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-nocgo.svg)](https://anaconda.org/conda-forge/go-nocgo) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-go--nocgo_linux--64-green.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-nocgo_linux-64.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-nocgo_linux-64.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-nocgo_linux-64.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) |
 
-Installing go
-=============
+Installing go-cgo
+=================
 
-Installing `go` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
+Installing `go-cgo` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
 
 ```
 conda config --add channels conda-forge
+conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `go, go-core, go_linux-64, go_osx-64, go_win-64` can be installed with:
+Once the `conda-forge` channel has been enabled, `go, go-cgo, go-cgo_linux-64, go-nocgo, go-nocgo_linux-64` can be installed with:
 
 ```
-conda install go go-core go_linux-64 go_osx-64 go_win-64
+conda install go go-cgo go-cgo_linux-64 go-nocgo go-nocgo_linux-64
 ```
 
 It is possible to list all of the versions of `go` available on your platform with:
@@ -61,6 +155,8 @@ conda search go --channel conda-forge
 About conda-forge
 =================
 
+[![Powered by NumFOCUS](https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](http://numfocus.org)
+
 conda-forge is a community-led conda channel of installable packages.
 In order to provide high-quality builds, the process has been automated into the
 conda-forge GitHub organization. The conda-forge organization contains one repository
@@ -70,7 +166,7 @@ A feedstock is made up of a conda recipe (the instructions on what and how to bu
 the package) and the necessary configurations for automatic building using freely
 available continuous integration services. Thanks to the awesome service provided by
 [CircleCI](https://circleci.com/), [AppVeyor](https://www.appveyor.com/)
-and [TravisCI](https://travis-ci.org/) it is possible to build and upload installable
+and [TravisCI](https://travis-ci.com/) it is possible to build and upload installable
 packages to the [conda-forge](https://anaconda.org/conda-forge)
 [Anaconda-Cloud](https://anaconda.org/) channel for Linux, Windows and OSX respectively.
 
@@ -94,24 +190,33 @@ Terminology
                   produce the finished article (built conda distributions)
 
 
-Updating go-feedstock
-=====================
+Updating go-cgo-feedstock
+=========================
 
-If you would like to improve the go recipe or build a new
+If you would like to improve the go-cgo recipe or build a new
 package version, please fork this repository and submit a PR. Upon submission,
 your changes will be run on the appropriate platforms to give the reviewer an
 opportunity to confirm that the changes result in a successful build. Once
 merged, the recipe will be re-built and uploaded automatically to the
 `conda-forge` channel, whereupon the built conda packages will be available for
 everybody to install and use from the `conda-forge` channel.
-Note that all branches in the conda-forge/go-feedstock are
+Note that all branches in the conda-forge/go-cgo-feedstock are
 immediately built and any created packages are uploaded, so PRs should be based
 on branches in forks and branches in the main repository should only be used to
 build distinct package versions.
 
 In order to produce a uniquely identifiable distribution:
  * If the version of a package **is not** being increased, please add or increase
-   the [``build/number``](https://conda.io/docs/user-guide/tasks/build-packages/define-metadata.html#build-number-and-string).
+   the [``build/number``](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#build-number-and-string).
  * If the version of a package **is** being increased, please remember to return
-   the [``build/number``](https://conda.io/docs/user-guide/tasks/build-packages/define-metadata.html#build-number-and-string)
+   the [``build/number``](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#build-number-and-string)
    back to 0.
+
+Feedstock Maintainers
+=====================
+
+* [@nehaljwani](https://github.com/nehaljwani/)
+* [@scopatz](https://github.com/scopatz/)
+* [@sodre](https://github.com/sodre/)
+* [@stuarteberg](https://github.com/stuarteberg/)
+
