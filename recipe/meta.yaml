@@ -17,13 +17,29 @@ source:
       - patches/0004-Inherit-CGO_-environment-variables.patch
       - patches/0005-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
       - patches/0006-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
-  - folder: go-bootstrap  # [aarch64 or ppc64le]
-    url: https://dl.google.com/go/go1.11.13.linux-arm64.tar.gz                # [aarch64]
-    sha256: e94329c97b38b5bffe9c18e84e9f521dc995e02df7696897a7626293da9ac593  # [aarch64]
-    url: https://dl.google.com/go/go1.11.13.linux-ppc64le.tar.gz              # [ppc64le]
-    sha256: ad3c7397ddd41a5af9d9bf3c560d3d0f8c1bdef4ac4d21819a021ea88e25efca  # [ppc64le]
+      - patches/1000-gh46145-fix-TestSetuidEtc-in-containers.patch
+      # Skip certain tests that fail when run on the build workers used for the
+      # Anaconda "defaults" channels; these tests pass when `conda build`-ing
+      # this recipe in other contexts, so we're reasonably confident that it's
+      # due to configuration quirks in the build workers themselves, rather
+      # than any flaw in the recipe or the upstream code.  NOTE: These patches
+      # should be re-evaluated when re-building and/or updating this recipe.
+      - patches/1100-skip-tests-on-defaults-osx64-workers.patch                   # [osx]
+      - patches/1100-skip-tests-on-defaults-win64-workers.patch                   # [win]
+  - folder: go-bootstrap
+    url: https://dl.google.com/go/go{{ go_bootstrap_ver }}.linux-amd64.tar.gz     # [x86_64 and linux]
+    sha256: 50fe8e13592f8cf22304b9c4adfc11849a2c3d281b1d7e09c924ae24874c6daa      # [x86_64 and linux]
+    url: https://dl.google.com/go/go{{ go_bootstrap_ver }}.darwin-amd64.tar.gz    # [x86_64 and osx]
+    sha256: 43b7b4a4c7f1729132dafbc2452e7838e1808ee759bd11f4f0359c82182589bc      # [x86_64 and osx]
+    url: https://dl.google.com/go/go{{ go_bootstrap_ver }}.windows-amd64.zip      # [x86_64 and win]
+    sha256: 55752de84439d0ed744ad681ae0915314516e69091fb86cab9701628ce3a65ff      # [x86_64 and win]
+    url: https://dl.google.com/go/go{{ go_bootstrap_ver }}.linux-arm64.tar.gz     # [aarch64]
+    sha256: e94329c97b38b5bffe9c18e84e9f521dc995e02df7696897a7626293da9ac593      # [aarch64]
+    url: https://dl.google.com/go/go{{ go_bootstrap_ver }}.linux-ppc64le.tar.gz   # [ppc64le]
+    sha256: ad3c7397ddd41a5af9d9bf3c560d3d0f8c1bdef4ac4d21819a021ea88e25efca      # [ppc64le]
 
 build:
+  skip: True    # [win32 or linux32]
   binary_relocation: false
   detect_binary_files_with_prefix: false
   force_ignore_keys:    # [win]
@@ -32,12 +48,15 @@ build:
     - fortran_compiler  # [win]
   # test data links to these DSOs
   missing_dso_whitelist:
-    - $RPATH/libc.so.6             # [linux and not cgo]
+    - '**/libc.so.6'               # [linux]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
   number: 0
 
 requirements:
+  build:
+    - patch     # [unix]
+    - m2-patch  # [win]
   run:
     - {{ pin_subpackage(name, exact=true) }}
     - {{ compiler('c') }}         # [unix and cgo]
@@ -53,8 +72,6 @@ outputs:
     script: {{ go_variant_str }}/build.bat  # [win]
     requirements:
       build:
-        - {{ compiler('go14') }}  # [not (aarch64 or ppc64le)]
-
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('cxx') }}      # [unix and cgo]
         - {{ compiler('fortran') }}  # [unix and cgo]
@@ -95,7 +112,14 @@ outputs:
     script: compiler/build.bat  # [win]
     requirements:
       run:
-        - {{ pin_subpackage(name, exact=True) }}
+        # Do this rather than `pin_subpackage(name, exact=True)` so targeting
+        # CGO to more than one version of a platform's C/C++/Fortran compilers
+        # is possible; an exact subpackage pin would (arbitrarily) select one
+        # version of the C/C++/Fortran compilers, and attempting to use other
+        # versions would result in unresolvable environment errors.  This would
+        # (likely) not be an issue if we addressed conda/conda-build#4142.
+        - {{ pin_subpackage(name, max_pin='x.x.x.x') }}
+        - _go_select  =={{ go_variant_ver }}={{ go_variant_str }}
     #TODO: Re-enable once conda/conda#9845 if fixed.
     #run_exports:   # [osx]
     #  strong:                                     # [osx]
@@ -142,3 +166,4 @@ extra:
     - scopatz
     - sodre
     - stuarteberg
+    - chenghlee

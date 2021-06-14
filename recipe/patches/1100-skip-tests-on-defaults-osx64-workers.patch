@@ -1,0 +1,14 @@
+* `TestFallocate`: possibly a known issue, dependent on macOS version and
+  filesystem configuration; see https://github.com/golang/go/issues/41127.
+
+--- ./src/cmd/link/internal/ld/fallocate_test.go
++++ ./src/cmd/link/internal/ld/fallocate_test.go
+@@ -15,6 +15,7 @@
+ )
+ 
+ func TestFallocate(t *testing.T) {
++	t.Skip("skipping test on Anaconda build network")
+ 	dir, err := ioutil.TempDir("", "TestFallocate")
+ 	if err != nil {
+ 		t.Fatal(err)
+

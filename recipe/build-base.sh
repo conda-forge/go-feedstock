@@ -7,14 +7,8 @@ export HOME="${HOME:-$(cd $SRC_DIR/..;pwd)}"
 
 #
 # Use precompiled bootstrap
-case $ARCH in
-  aarch64|ppc64le)
-    export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
-    ;;
-  *)
-    export GOCACHE=off
-    ;;
-esac
+export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
+export GOCACHE=off
 
 
 # Do not use GOROOT_FINAL. Otherwise, every conda environment would
