@@ -5,16 +5,12 @@ export USER="${USER:-conda}"
 export HOME="${HOME:-$(cd $SRC_DIR/..;pwd)}"
 
 
-#
 # Use precompiled bootstrap
-case $ARCH in
-  aarch64|ppc64le)
-    export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
-    ;;
-  *)
-    export GOCACHE=off
-    ;;
-esac
+if [[ ${target_platform} != "linux-64" ]]; then
+  export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
+else
+  export GOCACHE=off
+fi
 
 
 # Do not use GOROOT_FINAL. Otherwise, every conda environment would
@@ -24,6 +20,14 @@ esac
 # c.f. https://github.com/conda-forge/go-feedstock/pull/21#discussion_r202513916
 export GOROOT=$SRC_DIR/go
 
+
+if [[ "${target_platform}" == "osx-64" ]]; then
+  export GOOS=darwin
+  export GOARCH=amd64
+elif [[ "${target_platform}" == "osx-arm64" ]]; then
+  export GOOS=darwin
+  export GOARCH=arm64
+fi
 
 # Print diagnostics before building
 env | sort
