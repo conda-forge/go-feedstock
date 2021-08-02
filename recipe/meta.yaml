@@ -98,6 +98,8 @@ outputs:
     script: compiler/build.sh  # [unix]
     script: compiler/build.bat  # [win]
     requirements:
+      build:
+        - sed  # [osx]
       run:
         - {{ pin_subpackage(name, exact=True) }}
     #TODO: Re-enable once conda/conda#9845 if fixed.

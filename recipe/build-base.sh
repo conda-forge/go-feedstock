@@ -1,4 +1,6 @@
-set -euf
+#!/bin/bash
+
+set -euxo pipefail
 
 # This is a fix for user.Current issue
 export USER="${USER:-conda}"
@@ -11,7 +13,6 @@ if [[ ${target_platform} != "linux-64" ]]; then
 else
   export GOCACHE=off
 fi
-
 
 # Do not use GOROOT_FINAL. Otherwise, every conda environment would
 # need its own non-hardlinked copy of the go (+100MB per env).
@@ -56,4 +57,9 @@ rm -rf "${PREFIX}"/go/test/fixedbugs/issue27836.dir
 # Right now, it's just go and gofmt, but might be more in the future!
 # We don't move files, and instead rely on soft-links
 mkdir -p ${PREFIX}/bin && pushd $_
-find ../go/bin -type f -exec ln -s {} . \;
+
+if [[ "${build_platform}" != "${target_platform}" ]]; then
+  find ../go/bin/${GOOS}_${GOARCH} -type f -exec ln -s {} . \;
+else
+  find ../go/bin -type f -exec ln -s {} . \;
+fi
