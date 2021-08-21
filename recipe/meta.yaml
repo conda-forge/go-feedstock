@@ -17,11 +17,15 @@ source:
       - patches/0004-Inherit-CGO_-environment-variables.patch
       - patches/0005-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
       - patches/0006-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
-  - folder: go-bootstrap  # [aarch64 or ppc64le]
-    url: https://dl.google.com/go/go1.11.13.linux-arm64.tar.gz  # [aarch64]
+  - folder: go-bootstrap  # [aarch64 or ppc64le or osx]
+    url: https://dl.google.com/go/go1.11.13.linux-arm64.tar.gz                # [aarch64]
     sha256: e94329c97b38b5bffe9c18e84e9f521dc995e02df7696897a7626293da9ac593  # [aarch64]
-    url: https://dl.google.com/go/go1.11.13.linux-ppc64le.tar.gz  # [ppc64le]
+    url: https://dl.google.com/go/go1.11.13.linux-ppc64le.tar.gz              # [ppc64le]
     sha256: ad3c7397ddd41a5af9d9bf3c560d3d0f8c1bdef4ac4d21819a021ea88e25efca  # [ppc64le]
+    url: https://storage.googleapis.com/golang/go1.16.darwin-arm64.tar.gz     # [osx and build_platform == "osx-arm64"]
+    sha256: 4dac57c00168d30bbd02d95131d5de9ca88e04f2c5a29a404576f30ae9b54810  # [osx and build_platform == "osx-arm64"]
+    url: https://storage.googleapis.com/golang/go1.16.darwin-amd64.tar.gz     # [osx and build_platform == "osx-64"]
+    sha256: 6000a9522975d116bf76044967d7e69e04e982e9625330d9a539a8b45395f9a8  # [osx and build_platform == "osx-64"]
 
 build:
   binary_relocation: false
@@ -53,7 +57,7 @@ outputs:
     script: {{ go_variant_str }}/build.bat  # [win]
     requirements:
       build:
-        - {{ compiler('go14') }}  # [not (aarch64 or ppc64le)]
+        - {{ compiler('go14') }}  # [not (aarch64 or ppc64le or osx)]
 
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('cxx') }}      # [unix and cgo]
@@ -94,6 +98,8 @@ outputs:
     script: compiler/build.sh  # [unix]
     script: compiler/build.bat  # [win]
     requirements:
+      build:
+        - sed  # [osx]
       run:
         - {{ pin_subpackage(name, exact=True) }}
     #TODO: Re-enable once conda/conda#9845 if fixed.
@@ -142,3 +148,4 @@ extra:
     - scopatz
     - sodre
     - stuarteberg
+    - xhochy

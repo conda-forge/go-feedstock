@@ -14,6 +14,12 @@ jobs:
       osx_64_cgotruego_variant_strcgogo_variant_ver2.3.0:
         CONFIG: osx_64_cgotruego_variant_strcgogo_variant_ver2.3.0
         UPLOAD_PACKAGES: 'True'
+      osx_arm64_cgofalsego_variant_strnocgogo_variant_ver2.2.0:
+        CONFIG: osx_arm64_cgofalsego_variant_strnocgogo_variant_ver2.2.0
+        UPLOAD_PACKAGES: 'True'
+      osx_arm64_cgotruego_variant_strcgogo_variant_ver2.3.0:
+        CONFIG: osx_arm64_cgotruego_variant_strcgogo_variant_ver2.3.0
+        UPLOAD_PACKAGES: 'True'
   timeoutInMinutes: 360
 
   steps:
