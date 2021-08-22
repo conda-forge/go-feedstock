@@ -39,7 +39,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 0
+  number: 1
 
 requirements:
   run:
@@ -94,37 +94,6 @@ outputs:
       license_file: go/LICENSE
       summary: The Go Programming Language
 
-  - name: {{ name }}-{{ go_variant_str }}_{{ target_platform }}
-    script: compiler/build.sh  # [unix]
-    script: compiler/build.bat  # [win]
-    requirements:
-      build:
-        - sed  # [osx]
-      run:
-        - {{ pin_subpackage(name, exact=True) }}
-    #TODO: Re-enable once conda/conda#9845 if fixed.
-    #run_exports:   # [osx]
-    #  strong:                                     # [osx]
-    #    - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
-    test:
-      script: compiler/test.sh  # [unix]
-      script: compiler/test.bat  # [win]
-    about:
-      home: http://golang.org
-      license: BSD-3-Clause
-      license_family: BSD
-      license_file: go/LICENSE
-      summary: The Go ({{ go_variant_str }}) compiler activation scripts for conda-build.
-      description: |
-        This package enables the CONDA_GO_COMPILER environment variable. 
-        This variable is used by conda-forge's patched GoLang compiler to 
-        set conda-aware GOBIN and GOPATH default values. These default 
-        values are ignored if GOBIN and GOPATH environment variables 
-        are set independently by the user.
-
-        For more details, please see the go-feedstock recipe.
-      dev_url: https://github.com/conda-forge/go-feedstock
-
 about:
   home: http://golang.org
   license: BSD-3-Clause
@@ -143,6 +112,7 @@ about:
   dev_url: https://go.googlesource.com/go
 
 extra:
+  feedstock-name: go
   recipe-maintainers:
     - nehaljwani
     - scopatz
