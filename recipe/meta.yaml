@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.16.7" %}
+{% set version = "1.16.8" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 1a9f2894d3d878729f7045072f30becebe243524cf2fce4e0a7b248b1e0654ac
+    sha256: 8f2a8c24b793375b3243df82fdb0c8387486dcc8a892ca1c991aa99ace086b98
     patches:
       # Please see patches/README.md for more details
       - patches/0001-issue10607-is-only-valid-when-running-with-CGO.patch
@@ -39,7 +39,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 1
+  number: 0
 
 requirements:
   run:
