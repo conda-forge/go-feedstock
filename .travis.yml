@@ -10,10 +10,12 @@ matrix:
     - env: CONFIG=linux_ppc64le_cgofalsego_variant_strnocgogo_variant_ver2.2.0 UPLOAD_PACKAGES=True PLATFORM=linux-ppc64le DOCKER_IMAGE=quay.io/condaforge/linux-anvil-ppc64le
       os: linux
       arch: ppc64le
+      dist: focal
 
     - env: CONFIG=linux_ppc64le_cgotruego_variant_strcgogo_variant_ver2.3.0 UPLOAD_PACKAGES=True PLATFORM=linux-ppc64le DOCKER_IMAGE=quay.io/condaforge/linux-anvil-ppc64le
       os: linux
       arch: ppc64le
+      dist: focal
 
 script:
   - export CI=travis

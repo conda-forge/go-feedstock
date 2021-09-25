@@ -125,9 +125,9 @@ Current release info
 | --- | --- | --- | --- |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-go-green.svg)](https://anaconda.org/conda-forge/go) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go.svg)](https://anaconda.org/conda-forge/go) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go.svg)](https://anaconda.org/conda-forge/go) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go.svg)](https://anaconda.org/conda-forge/go) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-go--cgo-green.svg)](https://anaconda.org/conda-forge/go-cgo) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-cgo.svg)](https://anaconda.org/conda-forge/go-cgo) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-cgo.svg)](https://anaconda.org/conda-forge/go-cgo) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-cgo.svg)](https://anaconda.org/conda-forge/go-cgo) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-go--cgo_osx--64-green.svg)](https://anaconda.org/conda-forge/go-cgo_osx-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-cgo_osx-64.svg)](https://anaconda.org/conda-forge/go-cgo_osx-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-cgo_osx-64.svg)](https://anaconda.org/conda-forge/go-cgo_osx-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-cgo_osx-64.svg)](https://anaconda.org/conda-forge/go-cgo_osx-64) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-go--cgo_linux--64-green.svg)](https://anaconda.org/conda-forge/go-cgo_linux-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-cgo_linux-64.svg)](https://anaconda.org/conda-forge/go-cgo_linux-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-cgo_linux-64.svg)](https://anaconda.org/conda-forge/go-cgo_linux-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-cgo_linux-64.svg)](https://anaconda.org/conda-forge/go-cgo_linux-64) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-go--nocgo-green.svg)](https://anaconda.org/conda-forge/go-nocgo) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-nocgo.svg)](https://anaconda.org/conda-forge/go-nocgo) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-nocgo.svg)](https://anaconda.org/conda-forge/go-nocgo) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-nocgo.svg)](https://anaconda.org/conda-forge/go-nocgo) |
-| [![Conda Recipe](https://img.shields.io/badge/recipe-go--nocgo_osx--64-green.svg)](https://anaconda.org/conda-forge/go-nocgo_osx-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-nocgo_osx-64.svg)](https://anaconda.org/conda-forge/go-nocgo_osx-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-nocgo_osx-64.svg)](https://anaconda.org/conda-forge/go-nocgo_osx-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-nocgo_osx-64.svg)](https://anaconda.org/conda-forge/go-nocgo_osx-64) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-go--nocgo_linux--64-green.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/go-nocgo_linux-64.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/go-nocgo_linux-64.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/go-nocgo_linux-64.svg)](https://anaconda.org/conda-forge/go-nocgo_linux-64) |
 
 Installing go-cgo
 =================
@@ -136,12 +136,13 @@ Installing `go-cgo` from the `conda-forge` channel can be achieved by adding `co
 
 ```
 conda config --add channels conda-forge
+conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `go, go-cgo, go-cgo_osx-64, go-nocgo, go-nocgo_osx-64` can be installed with:
+Once the `conda-forge` channel has been enabled, `go, go-cgo, go-cgo_linux-64, go-nocgo, go-nocgo_linux-64` can be installed with:
 
 ```
-conda install go go-cgo go-cgo_osx-64 go-nocgo go-nocgo_osx-64
+conda install go go-cgo go-cgo_linux-64 go-nocgo go-nocgo_linux-64
 ```
 
 It is possible to list all of the versions of `go` available on your platform with:
@@ -206,9 +207,9 @@ build distinct package versions.
 
 In order to produce a uniquely identifiable distribution:
  * If the version of a package **is not** being increased, please add or increase
-   the [``build/number``](https://conda.io/docs/user-guide/tasks/build-packages/define-metadata.html#build-number-and-string).
+   the [``build/number``](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#build-number-and-string).
  * If the version of a package **is** being increased, please remember to return
-   the [``build/number``](https://conda.io/docs/user-guide/tasks/build-packages/define-metadata.html#build-number-and-string)
+   the [``build/number``](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#build-number-and-string)
    back to 0.
 
 Feedstock Maintainers
