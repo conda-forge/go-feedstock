@@ -7,7 +7,7 @@ c_compiler_version:
 cgo:
 - 'true'
 channel_sources:
-- conda-forge,defaults
+- conda-forge
 channel_targets:
 - conda-forge main
 cxx_compiler:
