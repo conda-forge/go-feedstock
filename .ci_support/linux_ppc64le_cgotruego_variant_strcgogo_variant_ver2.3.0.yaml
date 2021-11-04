@@ -25,10 +25,7 @@ go_variant_str:
 go_variant_ver:
 - 2.3.0
 perl:
-- 5.26.2
-pin_run_as_build:
-  perl:
-    max_pin: x.x.x
+- 5.32.1
 target_platform:
 - linux-ppc64le
 zip_keys:

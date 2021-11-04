@@ -25,10 +25,7 @@ go_variant_ver:
 macos_machine:
 - arm64-apple-darwin20.0.0
 perl:
-- 5.32.0
-pin_run_as_build:
-  perl:
-    max_pin: x.x.x
+- 5.32.1
 target_platform:
 - osx-arm64
 zip_keys:
