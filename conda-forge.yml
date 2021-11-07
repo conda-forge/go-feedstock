@@ -6,3 +6,4 @@ bot:
   abi_migration_branches:
     - 1.15.x
     - 1.14.x
+build_with_mambabuild: false
