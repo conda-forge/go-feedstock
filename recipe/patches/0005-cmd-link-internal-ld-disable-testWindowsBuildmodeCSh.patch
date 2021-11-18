@@ -1,0 +1,30 @@
+From 77bbc0cdbae1f99e0aebed732456b7ec274e7c63 Mon Sep 17 00:00:00 2001
+From: Nehal J Wani <nehaljw.kkd1@gmail.com>
+Date: Fri, 2 Apr 2021 12:55:53 -0400
+Subject: [PATCH 5/5] cmd/link/internal/ld: disable
+ testWindowsBuildmodeCSharedASLR if CGO isn't enabled
+
+With CGO disabled, the test throws the following error:
+
+ld_test.go:215: build failure: exit status 2
+   # command-line-arguments
+   loadinternal: cannot find runtime/cgo
+---
+ src/cmd/link/internal/ld/ld_test.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/cmd/link/internal/ld/ld_test.go b/src/cmd/link/internal/ld/ld_test.go
+index 3702a4d08f..c741a830d7 100644
+--- a/src/cmd/link/internal/ld/ld_test.go
++++ b/src/cmd/link/internal/ld/ld_test.go
+@@ -187,6 +187,7 @@ func TestWindowsBuildmodeCSharedASLR(t *testing.T) {
+ func testWindowsBuildmodeCSharedASLR(t *testing.T, useASLR bool) {
+ 	t.Parallel()
+ 	testenv.MustHaveGoBuild(t)
++	testenv.MustHaveCGO(t)
+ 
+ 	dir := t.TempDir()
+ 
+-- 
+2.31.1
+
