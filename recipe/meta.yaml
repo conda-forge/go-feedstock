@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.16.10" %}
+{% set version = "1.16.11" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: a905472011585e403d00d2a41de7ced29b8884309d73482a307f689fd0f320b5
+    sha256: 58041edcd81463b4cf1bc28b86dc0c17f4d9568d63c5afc85367dd8fae7befe7
     patches:
       # Please see patches/README.md for more details
       - patches/0001-issue10607-is-only-valid-when-running-with-CGO.patch
