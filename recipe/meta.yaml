@@ -32,7 +32,7 @@ source:
     sha256: da4e3e3c194bf9eed081de8842a157120ef44a7a8d7c820201adae7b0e28b20b  # [osx and build_platform == "osx-arm64"]
 
     url: https://go.dev/dl/go1.17.darwin-amd64.tar.gz                         # [osx and build_platform == "osx-64"]
-    sha256: 8b6c8c0cccc8b685f857c50a511adb497a3a5cdd5b8970f03f95aa3f02bce404  # [osx and build_platform == "osx-64"]
+    sha256: 355bd544ce08d7d484d9d7de05a71b5c6f5bc10aa4b316688c2192aeb3dacfd1  # [osx and build_platform == "osx-64"]
 
 build:
   binary_relocation: false
