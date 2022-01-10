@@ -4,7 +4,6 @@ rem It is better to rely on setting GOROOT during environment activation.
 rem
 rem c.f. https://github.com/conda-forge/go-feedstock/pull/21#discussion_r202513916
 set "GOROOT=%SRC_DIR%\go"
-set "GOCACHE=off"
 
 
 rem Print diagnostics before starting the build
