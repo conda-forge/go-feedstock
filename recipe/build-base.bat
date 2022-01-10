@@ -10,6 +10,8 @@ set "GOCACHE=off"
 rem Print diagnostics before starting the build
 set
 
+rem Set go bootstrap for windows sources
+set "GOROOT_BOOTSTRAP=%SRC_DIR%\go-bootstrap"
 
 pushd "%GOROOT%\src"
 call make.bat
