@@ -1,7 +1,7 @@
-From 4558a416e723fbfc213dd1504d689695c24403cb Mon Sep 17 00:00:00 2001
+From 0cc384cd05617b8c56d4fa927a11236a98bb88f4 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Sun, 24 Jan 2021 23:52:48 -0500
-Subject: [PATCH 4/5] Add conda-aware default values for GOPATH and GOBIN
+Subject: [PATCH 4/6] Add conda-aware default values for GOPATH and GOBIN
 
 These new defaults are to make integration with conda-build easier and
 are only in effect if the environment variable CONDA_GO_COMPILER is
@@ -178,5 +178,5 @@ index 8afa9d5240..745c52aed0 100644
  type ImportMode uint
  
 -- 
-2.31.1
+2.34.1
 

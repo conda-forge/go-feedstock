@@ -1,7 +1,7 @@
-From 77bbc0cdbae1f99e0aebed732456b7ec274e7c63 Mon Sep 17 00:00:00 2001
+From 0f650304787c7f4f3c527368c77bef1d352f636e Mon Sep 17 00:00:00 2001
 From: Nehal J Wani <nehaljw.kkd1@gmail.com>
 Date: Fri, 2 Apr 2021 12:55:53 -0400
-Subject: [PATCH 5/5] cmd/link/internal/ld: disable
+Subject: [PATCH 5/6] cmd/link/internal/ld: disable
  testWindowsBuildmodeCSharedASLR if CGO isn't enabled
 
 With CGO disabled, the test throws the following error:
@@ -26,5 +26,5 @@ index 3702a4d08f..c741a830d7 100644
  	dir := t.TempDir()
  
 -- 
-2.31.1
+2.34.1
 

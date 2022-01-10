@@ -1,4 +1,4 @@
-From 54592a85a248262bf47919204612b06c388122a9 Mon Sep 17 00:00:00 2001
+From f1b8bd719f76fb2eb9a42e8f87156e13dda86ea5 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Wed, 8 Apr 2020 23:52:24 -0400
 Subject: [PATCH 6/6] issue10607 is only valid when running with CGO
@@ -18,5 +18,5 @@ index 8a04bc9def..310d126fcc 100644
  
  // Copyright 2015 The Go Authors. All rights reserved.
 -- 
-2.31.1
+2.34.1
 

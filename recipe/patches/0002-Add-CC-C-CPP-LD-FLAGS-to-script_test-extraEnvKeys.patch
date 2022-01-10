@@ -1,17 +1,17 @@
-From d8490faf29e872e47adb33b372a93adb44ce77b4 Mon Sep 17 00:00:00 2001
+From 4764b70de7eac03263839d27bb9c602026a5e9df Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 21:20:31 -0400
-Subject: [PATCH 2/5] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
+Subject: [PATCH 2/6] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
 
 ---
  src/cmd/go/script_test.go | 5 +++++
  1 file changed, 5 insertions(+)
 
 diff --git a/src/cmd/go/script_test.go b/src/cmd/go/script_test.go
-index 639e907db0..4b74301e56 100644
+index c0156d0262..e364746a3e 100644
 --- a/src/cmd/go/script_test.go
 +++ b/src/cmd/go/script_test.go
-@@ -139,9 +139,14 @@ var extraEnvKeys = []string{
+@@ -139,10 +139,15 @@ var extraEnvKeys = []string{
  	"WINDIR",             // must be preserved on Windows to be able to run PowerShell command; golang.org/issue/30711
  	"LD_LIBRARY_PATH",    // must be preserved on Unix systems to find shared libraries
  	"CC",                 // don't lose user settings when invoking cgo
@@ -21,11 +21,12 @@ index 639e907db0..4b74301e56 100644
  	"GO_TESTING_GOTOOLS", // for gccgo testing
  	"GCCGO",              // for gccgo testing
  	"GCCGOTOOLDIR",       // for gccgo testing
+ 	"MallocNanoZone",     // Needed to work around an apparent kernel bug in macOS 12; see https://golang.org/issue/49138.
 +	"LDFLAGS",            // conda: don't lose compiler settings when invoking cgo
 +	"MACOSX_DEPLOYMENT_TARGET",  // conda: don't lose the deployment target when invoking cgo
  }
  
  // setup sets up the test execution temporary directory and environment.
 -- 
-2.31.1
+2.34.1
 
