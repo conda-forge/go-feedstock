@@ -4,8 +4,6 @@ channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
-go14_compiler:
-- go1.4-bootstrap
 go_variant_str:
 - nocgo
 go_variant_ver:
