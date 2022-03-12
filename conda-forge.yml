@@ -4,6 +4,9 @@ provider: {linux_aarch64: default, linux_ppc64le: default, win: azure}
 test: native
 bot:
   abi_migration_branches:
-    - 1.16.x
-    - 1.15.x
+  - 1.16.x
+  - 1.15.x
 build_with_mambabuild: false
+github:
+  branch_name: main
+  tooling_branch_name: main
