@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: bd70080d73304f0e6adc6ac7b0e21c610aa625803d2d75bd3120419a9e5037ad
+    sha256: 38f423db4cc834883f2b52344282fa7a39fbb93650dc62a11fdf0be6409bdad6
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
