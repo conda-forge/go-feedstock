@@ -23,7 +23,7 @@ export GOROOT=$SRC_DIR/go
 
 # xref: https://github.com/golang/go/commit/4739c0db47edf99be9ac1f4beab9ea990570dd5f
 if [[ ${CONDA_BUILD_CROSS_COMPILATION:-} == 1 ]]; then
-  if [[ "${go_variant}" == "cgo" ]]; then
+  if [[ "${go_variant_str}" == "cgo" ]]; then
     if [[ "${build_platform}" == "linux-64" ]]; then
       export CC_FOR_linux_amd64=$(basename $CC_FOR_BUILD)
       export CXX_FOR_linux_amd64=$(basename $CXX_FOR_BUILD)
