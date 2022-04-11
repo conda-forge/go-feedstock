@@ -23,15 +23,17 @@ export GOROOT=$SRC_DIR/go
 
 # xref: https://github.com/golang/go/commit/4739c0db47edf99be9ac1f4beab9ea990570dd5f
 if [[ ${CONDA_BUILD_CROSS_COMPILATION:-} == 1 ]]; then
-  if [[ "${build_platform}" == "linux-64" ]]; then
-    export CC_FOR_linux_amd64=$(basename $CC_FOR_BUILD)
-    export CXX_FOR_linux_amd64=$(basename $CXX_FOR_BUILD)
-  fi
-  # There is no easy way to drop CGO_CFLAGS when compiling go
-  # for the build platform during the bootstrapping process
-  if [[ "${target_platform}" == "linux-ppc64le" ]]; then
-    export CGO_CFLAGS="${CGO_CFLAGS/-mtune=power8 /}"
-    export CGO_CFLAGS="${CGO_CFLAGS/-mcpu=power8 /}"
+  if [[ "${go_variant_str}" == "cgo" ]]; then
+    if [[ "${build_platform}" == "linux-64" ]]; then
+      export CC_FOR_linux_amd64=$(basename $CC_FOR_BUILD)
+      export CXX_FOR_linux_amd64=$(basename $CXX_FOR_BUILD)
+    fi
+    # There is no easy way to drop CGO_CFLAGS when compiling go
+    # for the build platform during the bootstrapping process
+    if [[ "${target_platform}" == "linux-ppc64le" ]]; then
+      export CGO_CFLAGS="${CGO_CFLAGS/-mtune=power8 /}"
+      export CGO_CFLAGS="${CGO_CFLAGS/-mcpu=power8 /}"
+    fi
   fi
 fi
 
