@@ -18,7 +18,8 @@ go14_compiler:
 
 
 # Select the GO variants that we are building
-# The variant names, and versions come from https://bit.ly/conda-go-select
+# The variant names, and versions come from
+# https://github.com/conda-forge/_go_select-feedstock/blob/main/recipe/conda_build_config.yaml
 go_variant_str:
   - cgo
   - nocgo
