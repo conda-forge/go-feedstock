@@ -1,4 +1,4 @@
-From 0cc384cd05617b8c56d4fa927a11236a98bb88f4 Mon Sep 17 00:00:00 2001
+From e74fcad63398a97f2cae3a2f1817c1b770cf0e4c Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Sun, 24 Jan 2021 23:52:48 -0500
 Subject: [PATCH 4/6] Add conda-aware default values for GOPATH and GOBIN
@@ -36,10 +36,10 @@ maintaining compatibilit with the current case.
  create mode 100644 src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go
 
 diff --git a/src/cmd/go/go_test.go b/src/cmd/go/go_test.go
-index 6ce276537b..dd4c0121ed 100644
+index 1ea347ca6e..5723005eac 100644
 --- a/src/cmd/go/go_test.go
 +++ b/src/cmd/go/go_test.go
-@@ -2880,3 +2880,36 @@ func TestMissingCC(t *testing.T) {
+@@ -2888,3 +2888,36 @@ func TestMissingCC(t *testing.T) {
  		t.Error(`clearing "PATH" causes "net" to be stale`)
  	}
  }
@@ -77,10 +77,10 @@ index 6ce276537b..dd4c0121ed 100644
 +}
 +
 diff --git a/src/cmd/go/internal/cfg/cfg.go b/src/cmd/go/internal/cfg/cfg.go
-index 57a3c1ff6f..753367db17 100644
+index 7d1d1f379f..22c7c37096 100644
 --- a/src/cmd/go/internal/cfg/cfg.go
 +++ b/src/cmd/go/internal/cfg/cfg.go
-@@ -251,7 +251,7 @@ func CanGetenv(key string) bool {
+@@ -260,7 +260,7 @@ func CanGetenv(key string) bool {
  
  var (
  	GOROOT       = BuildContext.GOROOT
@@ -89,7 +89,7 @@ index 57a3c1ff6f..753367db17 100644
  	GOROOTbin    = filepath.Join(GOROOT, "bin")
  	GOROOTpkg    = filepath.Join(GOROOT, "pkg")
  	GOROOTsrc    = filepath.Join(GOROOT, "src")
-@@ -277,6 +277,32 @@ var (
+@@ -287,6 +287,32 @@ var (
  
  var SumdbDir = gopathDir("pkg/sumdb")
  
@@ -134,7 +134,7 @@ index 0000000000..002a5c740c
 +	println("hello world")
 +}
 diff --git a/src/go/build/build.go b/src/go/build/build.go
-index 8afa9d5240..745c52aed0 100644
+index dce0304ba4..012b4b60dc 100644
 --- a/src/go/build/build.go
 +++ b/src/go/build/build.go
 @@ -276,6 +276,16 @@ func (ctxt *Context) SrcDirs() []string {
