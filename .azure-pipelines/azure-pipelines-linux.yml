@@ -24,6 +24,14 @@ jobs:
         CONFIG: linux_aarch64_cgotruego_variant_strcgogo_variant_ver2.3.0
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: quay.io/condaforge/linux-anvil-cos7-x86_64
+      linux_ppc64le_cgofalsego_variant_strnocgogo_variant_ver2.2.0:
+        CONFIG: linux_ppc64le_cgofalsego_variant_strnocgogo_variant_ver2.2.0
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-ppc64le
+      linux_ppc64le_cgotruego_variant_strcgogo_variant_ver2.3.0:
+        CONFIG: linux_ppc64le_cgotruego_variant_strcgogo_variant_ver2.3.0
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-ppc64le
   timeoutInMinutes: 360
 
   steps:
