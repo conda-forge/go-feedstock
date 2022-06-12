@@ -22,8 +22,8 @@ source:
     url: https://go.dev/dl/go1.17.linux-arm64.tar.gz  # [aarch64]
     sha256: 01a9af009ada22122d3fcb9816049c1d21842524b38ef5d5a0e2ee4b26d7c3e7  # [aarch64]
 
-    url: https://go.dev/dl/go1.17.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: ee84350114d532bf15f096198c675aafae9ff091dc4cc69eb49e1817ff94dbd7  # [ppc64le]
+    url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
+    sha256: 5d42bd252e7af9f854df92e46bb2e88be7b2fb310cc937c0fe091afd8c4f2016  # [ppc64le]
 
     url: https://go.dev/dl/go1.17.windows-amd64.zip  # [win64]
     sha256: 2a18bd65583e221be8b9b7c2fbe3696c40f6e27c2df689bbdcc939d49651d151  # [win64]
