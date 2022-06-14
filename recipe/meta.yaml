@@ -17,8 +17,8 @@ source:
       - patches/0004-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
       - patches/0005-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
       - patches/0006-issue10607-is-only-valid-when-running-with-CGO.patch
-      # This will likely be enabled by default in 1.18.4 or 1.19.0
-      - patches/enable_internal_linker_in_more_cases_for_ppc64le_2c4f389c.patch
+      # https://github.com/conda-forge/go-feedstock/pull/150#issuecomment-1153458502
+      - patches/0007-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
     url: https://go.dev/dl/go{{ version }} .linux-arm64.tar.gz  # [aarch64]
