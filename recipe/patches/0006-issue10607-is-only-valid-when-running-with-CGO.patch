@@ -1,4 +1,4 @@
-From f1b8bd719f76fb2eb9a42e8f87156e13dda86ea5 Mon Sep 17 00:00:00 2001
+From 095e59d341a3a16f5253eac4e0ebcd8df1c12a3d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Wed, 8 Apr 2020 23:52:24 -0400
 Subject: [PATCH 6/6] issue10607 is only valid when running with CGO

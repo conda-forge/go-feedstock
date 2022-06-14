@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.17.8" %}
+{% set version = "1.18.3" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 2effcd898140da79a061f3784ca4f8d8b13d811fb2abe9dad2404442dabbdf7a
+    sha256: 0012386ddcbb5f3350e407c679923811dbd283fcdc421724931614a842ecbc2d
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -17,22 +17,24 @@ source:
       - patches/0004-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
       - patches/0005-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
       - patches/0006-issue10607-is-only-valid-when-running-with-CGO.patch
+      # https://github.com/conda-forge/go-feedstock/pull/150#issuecomment-1153458502
+      - patches/0007-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
-    url: https://go.dev/dl/go1.17.linux-arm64.tar.gz  # [aarch64]
-    sha256: 01a9af009ada22122d3fcb9816049c1d21842524b38ef5d5a0e2ee4b26d7c3e7  # [aarch64]
+    url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
+    sha256: beacbe1441bee4d7978b900136d1d6a71d150f0a9bb77e9d50c822065623a35a  # [aarch64]
 
-    url: https://go.dev/dl/go1.17.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: ee84350114d532bf15f096198c675aafae9ff091dc4cc69eb49e1817ff94dbd7  # [ppc64le]
+    url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
+    sha256: 5d42bd252e7af9f854df92e46bb2e88be7b2fb310cc937c0fe091afd8c4f2016  # [ppc64le]
 
-    url: https://go.dev/dl/go1.17.windows-amd64.zip  # [win64]
-    sha256: 2a18bd65583e221be8b9b7c2fbe3696c40f6e27c2df689bbdcc939d49651d151  # [win64]
+    url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
+    sha256: 9c46023f3ad0300fcfd1e62f2b6c2dfd9667b1f2f5c7a720b14b792af831f071  # [win64]
 
-    url: https://go.dev/dl/go1.17.darwin-arm64.tar.gz  # [osx and build_platform == "osx-arm64"]
-    sha256: da4e3e3c194bf9eed081de8842a157120ef44a7a8d7c820201adae7b0e28b20b  # [osx and build_platform == "osx-arm64"]
+    url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and build_platform == "osx-arm64"]
+    sha256: 40ecd383c941cc9f0682e6a6f2a333539d58c7dea15c842434d03afafe2f7242  # [osx and build_platform == "osx-arm64"]
 
-    url: https://go.dev/dl/go1.17.darwin-amd64.tar.gz  # [osx and build_platform == "osx-64"]
-    sha256: 355bd544ce08d7d484d9d7de05a71b5c6f5bc10aa4b316688c2192aeb3dacfd1  # [osx and build_platform == "osx-64"]
+    url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx and build_platform == "osx-64"]
+    sha256: d9dcf8fc35da54c6f259be41954783a9f4984945a855d03a003a7fd6ea4c5ca1  # [osx and build_platform == "osx-64"]
 
 build:
   binary_relocation: false
