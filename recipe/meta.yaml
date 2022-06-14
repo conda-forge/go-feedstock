@@ -21,7 +21,7 @@ source:
       - patches/0007-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
-    url: https://go.dev/dl/go{{ version }} .linux-arm64.tar.gz  # [aarch64]
+    url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
     sha256: beacbe1441bee4d7978b900136d1d6a71d150f0a9bb77e9d50c822065623a35a  # [aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
