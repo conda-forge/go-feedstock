@@ -1,5 +1,6 @@
 bot:
   abi_migration_branches:
+  - 1.17.x
   - 1.16.x
   - 1.15.x
 build_platform:
