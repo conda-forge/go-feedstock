@@ -1,5 +1,6 @@
 bot:
   abi_migration_branches:
+  - 1.17.x
   - 1.16.x
   - 1.15.x
 build_platform:
@@ -11,4 +12,4 @@ conda_forge_output_validation: true
 github:
   branch_name: main
   tooling_branch_name: main
-test: native_and_emulated
+test: native
