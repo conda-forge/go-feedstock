@@ -1,5 +1,6 @@
 bot:
   abi_migration_branches:
+  - 1.17.x
   - 1.16.x
   - 1.15.x
 build_platform:
@@ -7,6 +8,9 @@ build_platform:
   linux_aarch64: linux_64
   linux_ppc64le: linux_64
 build_with_mambabuild: false
+provider:
+  linux_aarch64: default
+  linux_ppc64le: default
 conda_forge_output_validation: true
 github:
   branch_name: main
