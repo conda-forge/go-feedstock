@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.18.3" %}
+{% set version = "1.18.5" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 0012386ddcbb5f3350e407c679923811dbd283fcdc421724931614a842ecbc2d
+    sha256: 9920d3306a1ac536cdd2c796d6cb3c54bc559c226fc3cc39c32f1e0bd7f50d2a
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -22,19 +22,19 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: beacbe1441bee4d7978b900136d1d6a71d150f0a9bb77e9d50c822065623a35a  # [aarch64]
+    sha256: 006f6622718212363fa1ff004a6ab4d87bbbe772ec5631bab7cac10be346e4f1  # [aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 5d42bd252e7af9f854df92e46bb2e88be7b2fb310cc937c0fe091afd8c4f2016  # [ppc64le]
+    sha256: 2e37fb9c7cbaedd4e729492d658aa4cde821fc94117391a8105c13b25ca1c84b  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: 9c46023f3ad0300fcfd1e62f2b6c2dfd9667b1f2f5c7a720b14b792af831f071  # [win64]
+    sha256: 73753620602d4b4469770040c53db55e5dd6af2ad07ecc18f71f164c3224eaad  # [win64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and build_platform == "osx-arm64"]
-    sha256: 40ecd383c941cc9f0682e6a6f2a333539d58c7dea15c842434d03afafe2f7242  # [osx and build_platform == "osx-arm64"]
+    sha256: 923a377c6fc9a2c789f5db61c24b8f64133f7889056897449891f256af34065f  # [osx and build_platform == "osx-arm64"]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx and build_platform == "osx-64"]
-    sha256: d9dcf8fc35da54c6f259be41954783a9f4984945a855d03a003a7fd6ea4c5ca1  # [osx and build_platform == "osx-64"]
+    sha256: 828eeca8b5abea3e56921df8fa4b1101380a5ebcfee10acbc8ffe7ec0bf5876b  # [osx and build_platform == "osx-64"]
 
 build:
   binary_relocation: false
