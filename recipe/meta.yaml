@@ -19,6 +19,9 @@ source:
       - patches/0006-issue10607-is-only-valid-when-running-with-CGO.patch
       # https://github.com/conda-forge/go-feedstock/pull/150#issuecomment-1153458502
       - patches/0007-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
+      # 0008 has been integrated into 1.19
+      # https://github.com/golang/go/issues/53013
+      - patches/0008-osx-clang14-2cfbef4.diff
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
