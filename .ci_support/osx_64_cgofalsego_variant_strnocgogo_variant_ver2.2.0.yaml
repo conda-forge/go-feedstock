@@ -5,7 +5,7 @@ MACOSX_SDK_VERSION:
 c_compiler:
 - clang
 c_compiler_version:
-- '13'
+- '14'
 cgo:
 - 'false'
 channel_sources:
@@ -15,11 +15,11 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '13'
+- '14'
 fortran_compiler:
 - gfortran
 fortran_compiler_version:
-- '9'
+- '11'
 go_variant_str:
 - nocgo
 go_variant_ver:
