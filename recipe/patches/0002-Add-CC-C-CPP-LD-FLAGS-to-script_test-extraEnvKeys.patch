@@ -1,15 +1,14 @@
-From fcdb04641ce5e7ae4a9f45ed7daf5e25b48244a1 Mon Sep 17 00:00:00 2001
+From c000007b60211a450a41a12bb9f03361776349a4 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Sat, 11 Jun 2022 08:47:11 -0400
-Subject: [PATCH 2/6] [PATCH 2/6] Add CC,{C,CPP,LD}FLAGS to script_test
- extraEnvKeys
+Subject: [PATCH 2/4] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
 
 ---
  src/cmd/go/script_test.go | 5 +++++
  1 file changed, 5 insertions(+)
 
 diff --git a/src/cmd/go/script_test.go b/src/cmd/go/script_test.go
-index 55a88e0e0b..7c23982f33 100644
+index ffdfe12baf..163b429eab 100644
 --- a/src/cmd/go/script_test.go
 +++ b/src/cmd/go/script_test.go
 @@ -145,9 +145,14 @@ var extraEnvKeys = []string{
@@ -28,5 +27,5 @@ index 55a88e0e0b..7c23982f33 100644
  
  // setup sets up the test execution temporary directory and environment.
 -- 
-2.34.1
+2.30.1 (Apple Git-130)
 
