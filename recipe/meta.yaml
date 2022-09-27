@@ -49,6 +49,7 @@ build:
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
   number: 0
+  skip: True  # [linux and s390x]
 
 requirements:
   run:
