@@ -1,0 +1,61 @@
+From deb4e4d169045f80c672ba96e635b1d300a03a29 Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Mon, 13 Jun 2022 22:43:22 -0400
+Subject: [PATCH 7/7] Revert "cmd/link: enable internal linker in more cases
+ for ppc64le"
+
+This reverts commit 2c4f389c0298a37f1f3c000ad8b87e65d46c757f.
+---
+ src/cmd/dist/test.go               |  5 +++++
+ src/cmd/link/internal/ld/config.go | 12 ++++++++----
+ 2 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/src/cmd/dist/test.go b/src/cmd/dist/test.go
+index d9eb9c3862..514edeb159 100644
+--- a/src/cmd/dist/test.go
++++ b/src/cmd/dist/test.go
+@@ -977,6 +977,11 @@ func (t *tester) internalLink() bool {
+ 		// linkmode=internal fails on dragonfly since errno is a TLS relocation.
+ 		return false
+ 	}
++	if gohostarch == "ppc64le" {
++		// linkmode=internal fails on ppc64le because cmd/link doesn't
++		// handle the TOC correctly (issue 15409).
++		return false
++	}
+ 	if goos == "android" {
+ 		return false
+ 	}
+diff --git a/src/cmd/link/internal/ld/config.go b/src/cmd/link/internal/ld/config.go
+index 33ab7c3df3..5f4b4fe746 100644
+--- a/src/cmd/link/internal/ld/config.go
++++ b/src/cmd/link/internal/ld/config.go
+@@ -199,7 +199,8 @@ func mustLinkExternal(ctxt *Link) (res bool, reason string) {
+ 
+ 	// Internally linking cgo is incomplete on some architectures.
+ 	// https://golang.org/issue/14449
+-	if iscgo && ctxt.Arch.InFamily(sys.Loong64, sys.MIPS64, sys.MIPS, sys.RISCV64) {
++	// https://golang.org/issue/21961
++	if iscgo && ctxt.Arch.InFamily(sys.Loong64, sys.MIPS64, sys.MIPS, sys.PPC64, sys.RISCV64) {
+ 		return true, buildcfg.GOARCH + " does not support internal cgo"
+ 	}
+ 	if iscgo && (buildcfg.GOOS == "android" || buildcfg.GOOS == "dragonfly") {
+@@ -212,9 +213,12 @@ func mustLinkExternal(ctxt *Link) (res bool, reason string) {
+ 		// windows/arm64 internal linking is not implemented.
+ 		return true, buildcfg.GOOS + "/" + buildcfg.GOARCH + " does not support internal cgo"
+ 	}
+-	if iscgo && ctxt.Arch == sys.ArchPPC64 {
+-		// Big Endian PPC64 cgo internal linking is not implemented for aix or linux.
+-		return true, buildcfg.GOOS + " does not support internal cgo"
++
++	// When the race flag is set, the LLVM tsan relocatable file is linked
++	// into the final binary, which means external linking is required because
++	// internal linking does not support it.
++	if *flagRace && ctxt.Arch.InFamily(sys.PPC64) {
++		return true, "race on " + buildcfg.GOARCH
+ 	}
+ 
+ 	// Some build modes require work the internal linker cannot do (yet).
+-- 
+2.34.1
+

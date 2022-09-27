@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.16.5" %}
+{% set version = "1.19.1" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,59 +8,53 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 7bfa7e5908c7cc9e75da5ddf3066d7cbcf3fd9fa51945851325eebc17f50ba80
+    sha256: 27871baa490f3401414ad793fba49086f6c855b1c584385ed7771e1204c7e179
     patches:
       # Please see patches/README.md for more details
-      - patches/0001-issue10607-is-only-valid-when-running-with-CGO.patch
-      - patches/0002-Fix-cgo_fortran-test-setup-for-conda.patch
-      - patches/0003-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
-      - patches/0004-Inherit-CGO_-environment-variables.patch
-      - patches/0005-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
-      - patches/0006-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
-      - patches/1000-gh46145-fix-TestSetuidEtc-in-containers.patch
-      # Skip certain tests that fail when run on the build workers used for the
-      # Anaconda "defaults" channels; these tests pass when `conda build`-ing
-      # this recipe in other contexts, so we're reasonably confident that it's
-      # due to configuration quirks in the build workers themselves, rather
-      # than any flaw in the recipe or the upstream code.  NOTE: These patches
-      # should be re-evaluated when re-building and/or updating this recipe.
-      - patches/1100-skip-tests-on-defaults-osx64-workers.patch                   # [osx]
-      - patches/1100-skip-tests-on-defaults-win64-workers.patch                   # [win]
-  - folder: go-bootstrap
-    url: https://dl.google.com/go/go{{ go_bootstrap_ver }}.linux-amd64.tar.gz     # [x86_64 and linux]
-    sha256: 50fe8e13592f8cf22304b9c4adfc11849a2c3d281b1d7e09c924ae24874c6daa      # [x86_64 and linux]
-    url: https://dl.google.com/go/go{{ go_bootstrap_ver }}.darwin-amd64.tar.gz    # [x86_64 and osx]
-    sha256: 43b7b4a4c7f1729132dafbc2452e7838e1808ee759bd11f4f0359c82182589bc      # [x86_64 and osx]
-    url: https://dl.google.com/go/go{{ go_bootstrap_ver }}.windows-amd64.zip      # [x86_64 and win]
-    sha256: 55752de84439d0ed744ad681ae0915314516e69091fb86cab9701628ce3a65ff      # [x86_64 and win]
-    url: https://dl.google.com/go/go{{ go_bootstrap_ver }}.linux-arm64.tar.gz     # [aarch64]
-    sha256: e94329c97b38b5bffe9c18e84e9f521dc995e02df7696897a7626293da9ac593      # [aarch64]
-    url: https://dl.google.com/go/go{{ go_bootstrap_ver }}.linux-ppc64le.tar.gz   # [ppc64le]
-    sha256: ad3c7397ddd41a5af9d9bf3c560d3d0f8c1bdef4ac4d21819a021ea88e25efca      # [ppc64le]
+      - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
+      - patches/0002-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
+      - patches/0003-Inherit-CGO_-environment-variables.patch
+      - patches/0004-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
+      - patches/0005-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
+      - patches/0006-issue10607-is-only-valid-when-running-with-CGO.patch
+      # https://github.com/conda-forge/go-feedstock/pull/150#issuecomment-1153458502
+      - patches/0007-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
+  # Update this with a release from https://go.dev/dl/
+  - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
+    url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
+    sha256: 49960821948b9c6b14041430890eccee58c76b52e2dbaafce971c3c38d43df9f  # [aarch64]
+
+    url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
+    sha256: 4137984aa353de9c5ec1bd8fb3cd00a0624b75eafa3d4ec13d2f3f48261dba2e  # [ppc64le]
+
+    url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
+    sha256: b33584c1d93b0e9c783de876b7aa99d3018bdeccd396aeb6d516a74e9d88d55f  # [win64]
+
+    url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
+    sha256: e46aecce83a9289be16ce4ba9b8478a5b89b8aa0230171d5c6adbc0c66640548  # [osx and arm64]
+
+    url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx and x86_64]
+    sha256: b2828a2b05f0d2169afc74c11ed010775bf7cf0061822b275697b2f470495fb7  # [osx and x86_64]
 
 build:
-  skip: True    # [win32 or linux32]
   binary_relocation: false
   detect_binary_files_with_prefix: false
-  force_ignore_keys:    # [win]
+  force_ignore_keys:   # [win]
     - c_compiler        # [win]
     - cxx_compiler      # [win]
     - fortran_compiler  # [win]
   # test data links to these DSOs
   missing_dso_whitelist:
-    - '**/libc.so.6'               # [linux]
+    - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 0
+  number: 1
 
 requirements:
-  build:
-    - patch     # [unix]
-    - m2-patch  # [win]
   run:
     - {{ pin_subpackage(name, exact=true) }}
-    - {{ compiler('c') }}         # [unix and cgo]
-    - {{ compiler('m2w64_c') }}   # [win and cgo]
+    - {{ compiler('c') }}  # [unix and cgo]
+    - {{ compiler('m2w64_c') }}  # [win and cgo]
 
 test:
   commands:
@@ -72,6 +66,8 @@ outputs:
     script: {{ go_variant_str }}/build.bat  # [win]
     requirements:
       build:
+        - {{ compiler('go14') }}  # [not (aarch64 or ppc64le or osx or win64)]
+
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('cxx') }}      # [unix and cgo]
         - {{ compiler('fortran') }}  # [unix and cgo]
@@ -94,8 +90,8 @@ outputs:
         - {{ pin_compatible(compiler('m2w64_fortran')) }}  # [win and cgo]
     test:
       requires:
-        - {{ compiler('c') }}         # [unix and cgo]
-        - {{ compiler('m2w64_c') }}   # [win and cgo]
+        - {{ compiler('c') }}        # [unix and cgo]
+        - {{ compiler('m2w64_c') }}  # [win and cgo]
         - git  # [linux]
         - perl
       script: {{ go_variant_str }}/test.sh  # [unix]
@@ -106,42 +102,6 @@ outputs:
       license_family: BSD
       license_file: go/LICENSE
       summary: The Go Programming Language
-
-  - name: {{ name }}-{{ go_variant_str }}_{{ target_platform }}
-    script: compiler/build.sh  # [unix]
-    script: compiler/build.bat  # [win]
-    requirements:
-      run:
-        # Do this rather than `pin_subpackage(name, exact=True)` so targeting
-        # CGO to more than one version of a platform's C/C++/Fortran compilers
-        # is possible; an exact subpackage pin would (arbitrarily) select one
-        # version of the C/C++/Fortran compilers, and attempting to use other
-        # versions would result in unresolvable environment errors.  This would
-        # (likely) not be an issue if we addressed conda/conda-build#4142.
-        - {{ pin_subpackage(name, max_pin='x.x.x.x') }}
-        - _go_select  =={{ go_variant_ver }}={{ go_variant_str }}
-    #TODO: Re-enable once conda/conda#9845 if fixed.
-    #run_exports:   # [osx]
-    #  strong:                                     # [osx]
-    #    - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
-    test:
-      script: compiler/test.sh  # [unix]
-      script: compiler/test.bat  # [win]
-    about:
-      home: http://golang.org
-      license: BSD-3-Clause
-      license_family: BSD
-      license_file: go/LICENSE
-      summary: The Go ({{ go_variant_str }}) compiler activation scripts for conda-build.
-      description: |
-        This package enables the CONDA_GO_COMPILER environment variable. 
-        This variable is used by conda-forge's patched GoLang compiler to 
-        set conda-aware GOBIN and GOPATH default values. These default 
-        values are ignored if GOBIN and GOPATH environment variables 
-        are set independently by the user.
-
-        For more details, please see the go-feedstock recipe.
-      dev_url: https://github.com/conda-forge/go-feedstock
 
 about:
   home: http://golang.org
@@ -161,9 +121,10 @@ about:
   dev_url: https://go.googlesource.com/go
 
 extra:
+  feedstock-name: go
   recipe-maintainers:
     - nehaljwani
     - scopatz
     - sodre
     - stuarteberg
-    - chenghlee
+    - xhochy

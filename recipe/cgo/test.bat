@@ -1,5 +1,8 @@
 @echo on
 
+rem Some of the windows build hosts can be a bit slow.  Allow the tests to run longer on windows under cgo.
+set "GO_TEST_TIMEOUT_SCALE=4"
+
 rem Put TMP on the same drive as the conda prefix (the D drive),
 rem to avoid a known issue in the go test suite:
 rem https://github.com/golang/go/issues/24846#issuecomment-381380628
