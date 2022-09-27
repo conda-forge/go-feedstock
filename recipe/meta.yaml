@@ -20,9 +20,12 @@ source:
       # https://github.com/conda-forge/go-feedstock/pull/150#issuecomment-1153458502
       - patches/0007-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
   # Update this with a release from https://go.dev/dl/
-  - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
+  - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
     sha256: 49960821948b9c6b14041430890eccee58c76b52e2dbaafce971c3c38d43df9f  # [aarch64]
+
+    url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
+    sha256: acc512fbab4f716a8f97a8b3fbaa9ddd39606a28be6c2515ef7c6c6311acffde  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
     sha256: 4137984aa353de9c5ec1bd8fb3cd00a0624b75eafa3d4ec13d2f3f48261dba2e  # [ppc64le]

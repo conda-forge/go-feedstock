@@ -8,11 +8,10 @@ export HOME="${HOME:-$(cd $SRC_DIR/..;pwd)}"
 
 
 # Use precompiled bootstrap
-if [[ ${target_platform} != "linux-64" ]]; then
-  export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
-else
-  export GOCACHE=off
-fi
+export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
+#else
+#  export GOCACHE=off
+#fi
 
 # Do not use GOROOT_FINAL. Otherwise, every conda environment would
 # need its own non-hardlinked copy of the go (+100MB per env).
@@ -49,6 +48,9 @@ elif [[ "${target_platform}" == "linux-aarch64" ]]; then
 elif [[ "${target_platform}" == "linux-ppc64le" ]]; then
   export GOOS=linux
   export GOARCH=ppc64le
+elif [[ "${target_platform}" == "linux-64" ]]; then
+  export GOOS=linux
+  export GOARCH=amd64
 fi
 
 # Print diagnostics before building
