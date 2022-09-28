@@ -99,8 +99,12 @@ outputs:
         - {{ compiler('m2w64_c') }}  # [win and cgo]
         - git  # [linux]
         - perl
-      script: {{ go_variant_str }}/test.sh   # [unix]
-      script: {{ go_variant_str }}/test.bat  # [win]
+      files:
+        - {{ go_variant_str }}
+      commands:
+        - chmod +x {{ go_variant_str }}/test.sh   # [unix]
+        - ./{{ go_variant_str }}/test.sh   # [unix]
+        - {{ go_variant_str }}/test.bat  # [win]
     about:
       home: http://golang.org
       license: BSD-3-Clause
