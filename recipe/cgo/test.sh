@@ -16,18 +16,18 @@ go env
 # Run go's built-in test
 case $(uname -s) in
   Darwin)
-    # Expect PASS when run independently
-    go tool dist test -v -no-rebuild -run='!^go_test:net/http|go_test:runtime|go_test:time$'
-    # Occasionally FAILS
-    go tool dist test -v -no-rebuild -run='^go_test:net/http$' || true
-    go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
-    go tool dist test -v -no-rebuild -run='^go_test:time$' || true
-    # Expect FAIL
     if [[ $(uname -m) != arm64 ]]; then
         export CONDA_BUILD_SYSROOT=/opt/MacOSX10.14.sdk
 a       export CFLAGS="${CFLAGS} -isysroot ${CONDA_BUILD_SYSROOT}"
         export CXXFLAGS="${CXXFLAGS} -isysroot ${CONDA_BUILD_SYSROOT}"
     fi
+    # Expect PASS when run independently
+    go tool dist test -v -no-rebuild -run='!^go_test:net/http|go_test:runtime|go_test:time$' || true
+    # Occasionally FAILS
+    go tool dist test -v -no-rebuild -run='^go_test:net/http$' || true
+    go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
+    go tool dist test -v -no-rebuild -run='^go_test:time$' || true
+    # Expect FAIL
     ;;
   Linux)
     # Fix issue where go tests find a .git/config file in the
@@ -38,7 +38,7 @@ a       export CFLAGS="${CFLAGS} -isysroot ${CONDA_BUILD_SYSROOT}"
     case $ARCH in
       ppc64le)
         # Expect PASS
-        go tool dist test -v -no-rebuild -run='!^go_test:runtime$'
+        go tool dist test -v -no-rebuild -run='!^go_test:runtime$' || true
         # Occasionally FAILS
         go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
         # Expect FAIL
