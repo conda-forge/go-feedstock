@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euf
+set -exuf
 
 # Test we are running GO under $CONDA_PREFIX
 test "$(which go)" == "${CONDA_PREFIX}/bin/go"
@@ -18,8 +18,6 @@ case $(uname -s) in
   Darwin)
     if [[ $(uname -m) != arm64 ]]; then
         export CONDA_BUILD_SYSROOT=/opt/MacOSX10.14.sdk
-a       export CFLAGS="${CFLAGS} -isysroot ${CONDA_BUILD_SYSROOT}"
-        export CXXFLAGS="${CXXFLAGS} -isysroot ${CONDA_BUILD_SYSROOT}"
     fi
     # Expect PASS when run independently
     go tool dist test -v -no-rebuild -run='!^go_test:net/http|go_test:runtime|go_test:time$' || true
