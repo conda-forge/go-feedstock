@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -exuf
+set -euf
 
 # Test we are running GO under $CONDA_PREFIX
 test "$(which go)" == "${CONDA_PREFIX}/bin/go"
