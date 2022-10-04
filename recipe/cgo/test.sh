@@ -33,6 +33,7 @@ case $(uname -s) in
     # c.f.: https://github.com/conda-forge/go-feedstock/pull/75#issuecomment-612568766
     pushd $GOROOT; git init; git add --all .; popd
 
+    echo "current architecture is: ${ARCH}"
     case $ARCH in
       ppc64le)
         # Expect PASS
