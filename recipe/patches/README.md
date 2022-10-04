@@ -1,4 +1,24 @@
-# go-feedstock patches
+# The initial patches - which were created as described below - were manually ported to newer version.
+The following steps need to be regarded:
+ 1. : disable backported patches already in new version available
+ 2. : rebase patches to new source version. On failure evaluate if
+      patches need to be reworked for new sources.
+ 3. : CGO_LDFLAGS does not need to be adjusted for CONDA's gfortran
+ 4. : CFLAGS, CPPFLAGS, and LDFLAGS need to be passed through from CONDA's
+      compiler settings.
+ 5. : CONDA_BUILD_SYSROOT, and MACOSX_DEPLOYMENT_TARGET need to be passed
+      THROUGH in go's context (cgo).
+ 6. : For Linux architectures the '-gc-sections' features needs to be turned
+      off.
+ 7. : Conda's MacOSX SDK needs to be provided to go's LDFLAGS.
+ 8. : Make sure GOBIN uses CONDA's bin directory of current environment
+ 9. : GOPATH needs to point to CONDA's prefix.
+ 10.: PPC64LE needs some additional adjustments to be correctly supported by
+      go.
+
+===== Historical information =====
+
+# The initial go-feedstock patches were created by the following description:
 
 ## <a name="regenerate"></a>Regenerating the patches
 The patches in this folder were created as follows:
