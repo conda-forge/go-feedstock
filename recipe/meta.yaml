@@ -113,7 +113,7 @@ outputs:
       summary: The Go Programming Language
 
 about:
-  home: http://golang.org
+  home: http://go.dev/
   license: BSD-3-Clause
   license_family: BSD
   license_file: go/LICENSE
@@ -126,8 +126,8 @@ about:
     the convenience of garbage collection and the power of run-time reflection.
     It's a fast, statically typed, compiled language that feels like a
     dynamically typed, interpreted language.
-  doc_url: https://golang.org/doc
-  dev_url: https://go.googlesource.com/go
+  doc_url: https://go.dev/doc
+  dev_url: https://github.com/golang/
 
 extra:
   feedstock-name: go
