@@ -53,6 +53,7 @@ build:
     - $SYSROOT\System32\winmm.dll  # [win]
   number: 0
   skip: True  # [linux and s390x]
+  # trigger: 0
 
 requirements:
   run:
