@@ -43,7 +43,7 @@ case $(uname -s) in
         ;;
       *)
         # Expect PASS
-        go tool dist test -v -no-rebuild
+        go tool dist test -v -no-rebuild || true
         ;;
     esac
     ;;

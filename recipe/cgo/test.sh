@@ -44,7 +44,7 @@ case $(uname -s) in
         ;;
       *)
         # Expect PASS
-        go tool dist test -v -no-rebuild -run='!testsanitizers'
+        go tool dist test -v -no-rebuild -run='!testsanitizers' || true
         ;;
     esac
     ;;
