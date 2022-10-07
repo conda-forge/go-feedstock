@@ -105,14 +105,14 @@ outputs:
         - ./{{ go_variant_str }}/test.sh   # [unix]
         - {{ go_variant_str }}/test.bat  # [win]
     about:
-      home: http://golang.org
+      home: https://go.dev/
       license: BSD-3-Clause
       license_family: BSD
       license_file: go/LICENSE
       summary: The Go Programming Language
 
 about:
-  home: http://go.dev/
+  home: https://go.dev/
   license: BSD-3-Clause
   license_family: BSD
   license_file: go/LICENSE
