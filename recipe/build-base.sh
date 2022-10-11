@@ -1,15 +1,17 @@
-set -euf
+#!/bin/bash
+
+set -euxo pipefail
 
 # This is a fix for user.Current issue
 export USER="${USER:-conda}"
 export HOME="${HOME:-$(cd $SRC_DIR/..;pwd)}"
 
 
-#
 # Use precompiled bootstrap
 export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
-export GOCACHE=off
-
+#else
+#  export GOCACHE=off
+#fi
 
 # Do not use GOROOT_FINAL. Otherwise, every conda environment would
 # need its own non-hardlinked copy of the go (+100MB per env).
@@ -18,6 +20,38 @@ export GOCACHE=off
 # c.f. https://github.com/conda-forge/go-feedstock/pull/21#discussion_r202513916
 export GOROOT=$SRC_DIR/go
 
+# xref: https://github.com/golang/go/commit/4739c0db47edf99be9ac1f4beab9ea990570dd5f
+if [[ ${CGO_ENABLED} == 1 ]]; then
+  if [[ ${CONDA_BUILD_CROSS_COMPILATION:-} == 1 ]]; then
+    if [[ "${target_platform}" == "linux-64" ]]; then
+      export CC_FOR_linux_amd64=$(basename $CC_FOR_BUILD)
+      export CXX_FOR_linux_amd64=$(basename $CXX_FOR_BUILD)
+    fi
+    # There is no easy way to drop CGO_CFLAGS when compiling go
+    # for the build platform during the bootstrapping process
+    if [[ "${target_platform}" == "linux-ppc64le" ]]; then
+      export CGO_CFLAGS="${CGO_CFLAGS/-mtune=power8 /}"
+      export CGO_CFLAGS="${CGO_CFLAGS/-mcpu=power8 /}"
+    fi
+  fi
+fi
+
+if [[ "${target_platform}" == "osx-64" ]]; then
+  export GOOS=darwin
+  export GOARCH=amd64
+elif [[ "${target_platform}" == "osx-arm64" ]]; then
+  export GOOS=darwin
+  export GOARCH=arm64
+elif [[ "${target_platform}" == "linux-aarch64" ]]; then
+  export GOOS=linux
+  export GOARCH=arm64
+elif [[ "${target_platform}" == "linux-ppc64le" ]]; then
+  export GOOS=linux
+  export GOARCH=ppc64le
+elif [[ "${target_platform}" == "linux-64" ]]; then
+  export GOOS=linux
+  export GOARCH=amd64
+fi
 
 # Print diagnostics before building
 env | sort
@@ -46,4 +80,5 @@ rm -rf "${PREFIX}"/go/test/fixedbugs/issue27836.dir
 # Right now, it's just go and gofmt, but might be more in the future!
 # We don't move files, and instead rely on soft-links
 mkdir -p ${PREFIX}/bin && pushd $_
+
 find ../go/bin -type f -exec ln -s {} . \;

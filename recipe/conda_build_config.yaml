@@ -8,20 +8,16 @@
 # This will change depending on the version of go
 # For the correct deployment target, please see go's Release notes
 # c.f.: https://golang.org/doc/go1.16#darwin
-macos_min_version:         # [osx]
-  - '10.12'                # [osx]
-MACOSX_DEPLOYMENT_TARGET:  # [osx]
-  - '10.12'                # [osx]
-CONDA_BUILD_SYSROOT:       # [osx]
-  - /opt/MacOSX10.12.sdk   # [osx]
-
-
-# Static build downloaded for use as our bootstrap compiler
-go_bootstrap_ver: 1.11.13
-
+MACOSX_SDK_VERSION:        # [osx and x86_64]
+  - '10.14'                # [osx and x86_64]
+MACOSX_DEPLOYMENT_TARGET:  # [osx and x86_64]
+  - '10.14'                # [osx and x86_64]
+CONDA_BUILD_SYSROOT:      # [osx and x86_64]
+  - /opt/MacOSX10.14.sdk  # [osx and x86_64]
 
 # Select the GO variants that we are building
-# The variant names, and versions come from https://bit.ly/conda-go-select
+# The variant names, and versions come from
+# https://github.com/conda-forge/_go_select-feedstock/blob/main/recipe/conda_build_config.yaml
 go_variant_str:
   - cgo
   - nocgo
@@ -41,23 +37,3 @@ zip_keys:
     - go_variant_str
     - go_variant_ver
     - cgo
-  -                             # [linux and x86_64]
-    - c_compiler_version        # [linux and x86_64]
-    - cxx_compiler_version      # [linux and x86_64]
-    - fortran_compiler_version  # [linux and x86_64]
-
-
-# Build using updated toolchains that use a CentOS 7-based sysroot; this
-# section can be removed once the top-level cbc.yaml for defaults has been
-# transitioned over to these newer toolchains.
-c_compiler_version:         # [linux and x86_64]
-  - 8.4                     # [linux and x86_64]
-  - 9.3                     # [linux and x86_64]
-
-cxx_compiler_version:       # [linux and x86_64]
-  - 8.4                     # [linux and x86_64]
-  - 9.3                     # [linux and x86_64]
-
-fortran_compiler_version:   # [linux and x86_64]
-  - 8.4                     # [linux and x86_64]
-  - 9.3                     # [linux and x86_64]
