@@ -25,11 +25,11 @@ go_variant_str:
 go_variant_ver:
 - 2.2.0
 macos_machine:
-- x86_64-apple-darwin13.4.0
+- arm64-apple-darwin20.0.0
 perl:
 - 5.32.1
 target_platform:
-- osx-64
+- osx-arm64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version

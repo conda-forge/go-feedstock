@@ -5,7 +5,7 @@
 jobs:
 - job: osx
   pool:
-    vmImage: macOS-10.15
+    vmImage: macOS-11
   strategy:
     matrix:
       osx_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0:
@@ -13,6 +13,12 @@ jobs:
         UPLOAD_PACKAGES: 'True'
       osx_64_cgotruego_variant_strcgogo_variant_ver2.3.0:
         CONFIG: osx_64_cgotruego_variant_strcgogo_variant_ver2.3.0
+        UPLOAD_PACKAGES: 'True'
+      osx_arm64_cgofalsego_variant_strnocgogo_variant_ver2.2.0:
+        CONFIG: osx_arm64_cgofalsego_variant_strnocgogo_variant_ver2.2.0
+        UPLOAD_PACKAGES: 'True'
+      osx_arm64_cgotruego_variant_strcgogo_variant_ver2.3.0:
+        CONFIG: osx_arm64_cgotruego_variant_strcgogo_variant_ver2.3.0
         UPLOAD_PACKAGES: 'True'
   timeoutInMinutes: 360
 
@@ -23,6 +29,11 @@ jobs:
       export OSX_FORCE_SDK_DOWNLOAD="1"
       export GIT_BRANCH=$BUILD_SOURCEBRANCHNAME
       export FEEDSTOCK_NAME=$(basename ${BUILD_REPOSITORY_NAME})
+      if [[ "${BUILD_REASON:-}" == "PullRequest" ]]; then
+        export IS_PR_BUILD="True"
+      else
+        export IS_PR_BUILD="False"
+      fi
       ./.scripts/run_osx_build.sh
     displayName: Run OSX build
     env:
