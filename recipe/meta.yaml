@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.18.5" %}
+{% set version = "1.19.4" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 9920d3306a1ac536cdd2c796d6cb3c54bc559c226fc3cc39c32f1e0bd7f50d2a
+    sha256: eda74db4ac494800a3e66ee784e495bfbb9b8e535df924a8b01b1a8028b7f368
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -25,19 +25,19 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: 006f6622718212363fa1ff004a6ab4d87bbbe772ec5631bab7cac10be346e4f1  # [aarch64]
+    sha256: 9df122d6baf6f2275270306b92af3b09d7973fb1259257e284dba33c0db14f1b  # [aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 2e37fb9c7cbaedd4e729492d658aa4cde821fc94117391a8105c13b25ca1c84b  # [ppc64le]
+    sha256: fbc6c7d1d169bbdc82223d861d2fadc6add01c126533d3efbba3fdca9b362035  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: 73753620602d4b4469770040c53db55e5dd6af2ad07ecc18f71f164c3224eaad  # [win64]
+    sha256: ada490e188bfb57c7388da7c5eba7565390992b6496204d30e710d37755956b0  # [win64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and build_platform == "osx-arm64"]
-    sha256: 923a377c6fc9a2c789f5db61c24b8f64133f7889056897449891f256af34065f  # [osx and build_platform == "osx-arm64"]
+    sha256: bb3bc5d7655b9637cfe2b5e90055dee93b0ead50e2ffd091df320d1af1ca853f  # [osx and build_platform == "osx-arm64"]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx and build_platform == "osx-64"]
-    sha256: 828eeca8b5abea3e56921df8fa4b1101380a5ebcfee10acbc8ffe7ec0bf5876b  # [osx and build_platform == "osx-64"]
+    sha256: 44894862d996eec96ef2a39878e4e1fce4d05423fc18bdc1cbba745ebfa41253  # [osx and build_platform == "osx-64"]
 
 build:
   binary_relocation: false
@@ -51,7 +51,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 2
+  number: 0
 
 requirements:
   run:
