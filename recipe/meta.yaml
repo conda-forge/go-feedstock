@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.19.1" %}
+{% set version = "1.19.3" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
