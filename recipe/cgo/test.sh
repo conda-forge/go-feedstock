@@ -16,9 +16,6 @@ go env
 # Run go's built-in test
 case $(uname -s) in
   Darwin)
-    if [[ $(uname -m) != arm64 ]]; then
-        export CONDA_BUILD_SYSROOT=/opt/MacOSX10.14.sdk
-    fi
     # Expect PASS when run independently
     go tool dist test -v -no-rebuild -run='!^go_test:net/http|go_test:runtime|go_test:time$' || true
     # Occasionally FAILS
@@ -37,15 +34,14 @@ case $(uname -s) in
     case $ARCH in
       ppc64le)
         # Expect PASS
-        go tool dist test -v -no-rebuild -run='!^go_test:runtime$' || true
+        go tool dist test -v -no-rebuild -run='!^go_test:runtime$'
         # Occasionally FAILS
         go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
         # Expect FAIL
         ;;
       *)
         # Expect PASS
-        # go tool dist test -v -no-rebuild -run='!testsanitizers'
-        go tool dist test -v -no-rebuild -run='!testsanitizers' || true
+        go tool dist test -v -no-rebuild -run='!testsanitizers'
         ;;
     esac
     ;;

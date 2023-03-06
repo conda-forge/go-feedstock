@@ -36,14 +36,14 @@ case $(uname -s) in
     case $ARCH in
       ppc64le)
         # Expect PASS
-        go tool dist test -v -no-rebuild -run='!^go_test:runtime$' || true
+        go tool dist test -v -no-rebuild -run='!^go_test:runtime$'
         # Occasionally FAILS
         go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
         # Expect FAIL
         ;;
       *)
         # Expect PASS
-        go tool dist test -v -no-rebuild || true
+        go tool dist test -v -no-rebuild
         ;;
     esac
     ;;
