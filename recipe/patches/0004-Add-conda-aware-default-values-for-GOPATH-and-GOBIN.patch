@@ -80,15 +80,15 @@ diff --git a/src/cmd/go/internal/cfg/cfg.go b/src/cmd/go/internal/cfg/cfg.go
 index 7d1d1f379f..22c7c37096 100644
 --- a/src/cmd/go/internal/cfg/cfg.go
 +++ b/src/cmd/go/internal/cfg/cfg.go
-@@ -260,7 +260,7 @@ func CanGetenv(key string) bool {
- 
- var (
- 	GOROOT       = BuildContext.GOROOT
+@@ -300,7 +300,7 @@ func CanGetenv(key string) bool {
+ 	GOROOTpkg    string
+ 	GOROOTsrc    string
+ 	GOROOT_FINAL string
 -	GOBIN        = Getenv("GOBIN")
 +	GOBIN        = envOr("GOBIN", defaultCondaGOBIN())
- 	GOROOTbin    = filepath.Join(GOROOT, "bin")
- 	GOROOTpkg    = filepath.Join(GOROOT, "pkg")
- 	GOROOTsrc    = filepath.Join(GOROOT, "src")
+ 	GOMODCACHE   = envOr("GOMODCACHE", gopathDir("pkg/mod"))
+ 
+ 	// Used in envcmd.MkEnv and build ID computations.
 @@ -287,6 +287,32 @@ var (
  
  var SumdbDir = gopathDir("pkg/sumdb")
@@ -155,9 +155,9 @@ index dce0304ba4..012b4b60dc 100644
  	env := "HOME"
  	if runtime.GOOS == "windows" {
 @@ -303,7 +313,7 @@ func defaultContext() Context {
- 	c.GOARCH = buildcfg.GOARCH
- 	c.GOOS = buildcfg.GOOS
- 	c.GOROOT = pathpkg.Clean(runtime.GOROOT())
+ 	if goroot := runtime.GOROOT(); goroot != "" {
+ 		c.GOROOT = filepath.Clean(goroot)
+ 	}
 -	c.GOPATH = envOr("GOPATH", defaultGOPATH())
 +	c.GOPATH = envOr("GOPATH", defaultCondaGOPATH())
  	c.Compiler = runtime.Compiler

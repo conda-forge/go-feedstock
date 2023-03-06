@@ -13,13 +13,9 @@ MACOSX_SDK_VERSION:        # [osx and x86_64]
 MACOSX_DEPLOYMENT_TARGET:  # [osx and x86_64]
   - '10.14'                # [osx and x86_64]
 
-
 # We use go1.4 as our bootstrap compiler
 go14_compiler:
   - go1.4-bootstrap
-
-CONDA_BUILD_SYSROOT:      # [osx and x86_64]
-  - /opt/MacOSX10.14.sdk  # [osx and x86_64]
 
 # Select the GO variants that we are building
 # The variant names, and versions come from
