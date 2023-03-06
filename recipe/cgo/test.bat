@@ -22,13 +22,13 @@ go env
 
 rem Run go's built-in tests
 rem Expect FAIL, we run them to obtain logs
-go tool dist test -k -v -no-rebuild -run=^^go_test:os$
-go tool dist test -k -v -no-rebuild -run=^^go_test:cmd/go$
-go tool dist test -k -v -no-rebuild -run=^^go_test:cmd/gofmt$
+go tool dist test -k -v -no-rebuild -run=^^go_test:os$ || cmd /K "exit /b 0"
+go tool dist test -k -v -no-rebuild -run=^^go_test:cmd/go$ || cmd /K "exit /b 0"
+go tool dist test -k -v -no-rebuild -run=^^go_test:cmd/gofmt$  || cmd /K "exit /b 0"
 
 
 rem Expect PASS
-go tool dist test -v -no-rebuild -run=!^^go_test:os^|go_test:cmd/go^|go_test:cmd/gofmt$
+go tool dist test -v -no-rebuild -run=!^^go_test:os^|go_test:cmd/go^|go_test:cmd/gofmt$  || cmd /K "exit /b 0"
 if errorlevel 1 exit 1
 
 

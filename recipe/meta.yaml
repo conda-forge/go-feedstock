@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.18.5" %}
+{% set version = "1.19.3" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 9920d3306a1ac536cdd2c796d6cb3c54bc559c226fc3cc39c32f1e0bd7f50d2a
+    sha256: 18ac263e39210bcf68d85f4370e97fb1734166995a1f63fb38b4f6e07d90d212
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -19,25 +19,25 @@ source:
       - patches/0006-issue10607-is-only-valid-when-running-with-CGO.patch
       # https://github.com/conda-forge/go-feedstock/pull/150#issuecomment-1153458502
       - patches/0007-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
-      # 0008 has been integrated into 1.19
-      # https://github.com/golang/go/issues/53013
-      - patches/0008-osx-clang14-2cfbef4.diff
   # Update this with a release from https://go.dev/dl/
-  - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
+  - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: 006f6622718212363fa1ff004a6ab4d87bbbe772ec5631bab7cac10be346e4f1  # [aarch64]
+    sha256: 99de2fe112a52ab748fb175edea64b313a0c8d51d6157dba683a6be163fd5eab  # [aarch64]
+
+    url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
+    sha256: 74b9640724fd4e6bb0ed2a1bc44ae813a03f1e72a4c76253e2d5c015494430ba  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 2e37fb9c7cbaedd4e729492d658aa4cde821fc94117391a8105c13b25ca1c84b  # [ppc64le]
+    sha256: 741dad06e7b17fe2c9cd9586b4048cec087ca1f7a317389b14e89b26c25d3542  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: 73753620602d4b4469770040c53db55e5dd6af2ad07ecc18f71f164c3224eaad  # [win64]
+    sha256: b51549a9f21ee053f8a3d8e38e45b1b8b282d976f3b60f1f89b37ac54e272d31  # [win64]
 
-    url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and build_platform == "osx-arm64"]
-    sha256: 923a377c6fc9a2c789f5db61c24b8f64133f7889056897449891f256af34065f  # [osx and build_platform == "osx-arm64"]
+    url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
+    sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
-    url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx and build_platform == "osx-64"]
-    sha256: 828eeca8b5abea3e56921df8fa4b1101380a5ebcfee10acbc8ffe7ec0bf5876b  # [osx and build_platform == "osx-64"]
+    url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx and x86_64]
+    sha256: 7fa09a9a34cb6f794e61e9ada1d6d18796f936a2b35f22724906cad71396e590  # [osx and x86_64]
 
 build:
   binary_relocation: false
@@ -51,7 +51,8 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 2
+  number: 0
+  skip: True  # [linux and s390x]
 
 requirements:
   run:
@@ -65,7 +66,7 @@ test:
 
 outputs:
   - name: {{ name }}
-    script: {{ go_variant_str }}/build.sh  # [unix]
+    script: {{ go_variant_str }}/build.sh   # [unix]
     script: {{ go_variant_str }}/build.bat  # [win]
     requirements:
       build:
@@ -94,20 +95,25 @@ outputs:
     test:
       requires:
         - {{ compiler('c') }}        # [unix and cgo]
+        - binutils                   # [linux and cgp]
         - {{ compiler('m2w64_c') }}  # [win and cgo]
         - git  # [linux]
         - perl
-      script: {{ go_variant_str }}/test.sh  # [unix]
-      script: {{ go_variant_str }}/test.bat  # [win]
+      files:
+        - {{ go_variant_str }}
+      commands:
+        - chmod +x {{ go_variant_str }}/test.sh   # [unix]
+        - ./{{ go_variant_str }}/test.sh   # [unix]
+        - {{ go_variant_str }}/test.bat  # [win]
     about:
-      home: http://golang.org
+      home: https://go.dev/
       license: BSD-3-Clause
       license_family: BSD
       license_file: go/LICENSE
       summary: The Go Programming Language
 
 about:
-  home: http://golang.org
+  home: https://go.dev/
   license: BSD-3-Clause
   license_family: BSD
   license_file: go/LICENSE
@@ -120,8 +126,8 @@ about:
     the convenience of garbage collection and the power of run-time reflection.
     It's a fast, statically typed, compiled language that feels like a
     dynamically typed, interpreted language.
-  doc_url: https://golang.org/doc
-  dev_url: https://go.googlesource.com/go
+  doc_url: https://go.dev/doc
+  dev_url: https://github.com/golang/
 
 extra:
   feedstock-name: go
