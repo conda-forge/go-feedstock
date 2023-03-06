@@ -73,6 +73,7 @@ outputs:
         - {{ compiler('go14') }}  # [not (aarch64 or ppc64le or osx or win64)]
 
         - {{ compiler('c') }}        # [unix and cgo]
+        - sysroot_linux-64 2.17      # [linux64 and cgo]
         - {{ compiler('cxx') }}      # [unix and cgo]
         - {{ compiler('fortran') }}  # [unix and cgo]
 
