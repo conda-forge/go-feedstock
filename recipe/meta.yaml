@@ -95,7 +95,7 @@ outputs:
     test:
       requires:
         - {{ compiler('c') }}        # [unix and cgo]
-        - binutils                   # [linux and cgp]
+        - binutils                   # [linux and cgo]
         - {{ compiler('m2w64_c') }}  # [win and cgo]
         - git  # [linux]
         - perl
