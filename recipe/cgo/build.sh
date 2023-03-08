@@ -14,7 +14,11 @@ case $(uname -s) in
   Linux)
     # We have to disable garbage collection for sections
     export CGO_LDFLAGS="${CGO_LDFLAGS} -lrt -Wl,--no-gc-sections"
-    export GO_LDFLAGS="-extld ${LD} -extldflags \"${LDFLAGS}\""
+    
+    if [[ ${target_platform} == "linux-64" ]]; then
+      # forcibly set the sysroot to the conda-forge sysroot
+      export CGO_CPPFLAGS="${CGO_CPPFLAGS} -isysroot ${CONDA_BUILD_SYSROOT}"
+    fi
     ;;
   *)
     echo "Unknown OS: $(uname -s)"
