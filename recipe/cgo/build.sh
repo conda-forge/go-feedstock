@@ -17,7 +17,9 @@ case $(uname -s) in
     
     if [[ ${target_platform} == "linux-64" ]]; then
       # forcibly set the sysroot to the conda-forge sysroot
-      export CGO_CPPFLAGS="${CGO_CPPFLAGS} -isysroot ${CONDA_BUILD_SYSROOT}"
+      export CGO_CFLAGS="${CGO_CFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
+      export CGO_LDFLAGS="${CGO_LDFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
+      export CGO_CPPFLAGS="${CGO_CPPFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
     fi
     ;;
   *)
