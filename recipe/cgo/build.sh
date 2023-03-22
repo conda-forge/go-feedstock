@@ -1,4 +1,4 @@
-set -euf
+set -eufx
 
 # Enable CGO, and set compiler flags to match conda-forge settings
 export CGO_ENABLED=1

@@ -26,6 +26,11 @@ index ac80f503cd..ba02139c57 100644
 +			if key == "LDFLAGS" {
 +				return value + " -Wl,--no-gc-sections"
 +			}
++			if key == "CPPFLAGS" {
++				if sysroot, ok := os.LookupEnv("CONDA_BUILD_SYSROOT"); ok {
++					return value + " -isysroot " + sysroot
++				}
++			}
 +		case "darwin":
 +			if key == "CPPFLAGS" {
 +				if macosxDefaultTarget, ok := os.LookupEnv("MACOSX_DEFAULT_TARGET"); ok {
