@@ -11,7 +11,7 @@ diff --git a/src/cmd/go/internal/work/exec.go b/src/cmd/go/internal/work/exec.go
 index ac80f503cd..ba02139c57 100644
 --- a/src/cmd/go/internal/work/exec.go
 +++ b/src/cmd/go/internal/work/exec.go
-@@ -2661,6 +2661,32 @@ func (b *Builder) gccArchArgs() []string {
+@@ -2661,6 +2661,37 @@ func (b *Builder) gccArchArgs() []string {
  	return nil
  }
  
