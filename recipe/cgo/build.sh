@@ -16,6 +16,8 @@ case $(uname -s) in
     export CGO_LDFLAGS="${CGO_LDFLAGS} -lrt -Wl,--no-gc-sections"
     
     if [[ ${target_platform} == "linux-64" ]]; then
+      # force using the external linker
+      export GO_EXTLINK_ENABLED=1
       # forcibly set the sysroot to the conda-forge sysroot
       export CGO_CFLAGS="${CGO_CFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
       export CGO_LDFLAGS="${CGO_LDFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
