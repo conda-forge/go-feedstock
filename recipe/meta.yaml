@@ -97,6 +97,7 @@ outputs:
       requires:
         - {{ compiler('c') }}        # [unix and cgo]
         - binutils                   # [linux and cgo]
+        - sysroot_linux-64 2.17      # [linux64 and cgo]
         - {{ compiler('m2w64_c') }}  # [win and cgo]
         - git  # [linux]
         - perl
