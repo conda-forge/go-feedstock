@@ -8,11 +8,7 @@ export HOME="${HOME:-$(cd $SRC_DIR/..;pwd)}"
 
 
 # Use precompiled bootstrap
-if [[ ${target_platform} != "linux-64" ]]; then
-  export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
-else
-  export GOCACHE=off
-fi
+export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
 
 # Do not use GOROOT_FINAL. Otherwise, every conda environment would
 # need its own non-hardlinked copy of the go (+100MB per env).

@@ -70,8 +70,6 @@ outputs:
     script: {{ go_variant_str }}/build.bat  # [win]
     requirements:
       build:
-        - {{ compiler('go14') }}  # [not (aarch64 or ppc64le or osx or win64)]
-
         - {{ compiler('c') }}        # [unix and cgo]
         - sysroot_linux-64 2.17      # [linux64 and cgo]
         - {{ compiler('cxx') }}      # [unix and cgo]
@@ -96,6 +94,7 @@ outputs:
     test:
       requires:
         - {{ compiler('c') }}        # [unix and cgo]
+        - {{ compiler('cxx') }}      # [unix and cgo]
         - binutils                   # [linux and cgo]
         - sysroot_linux-64 2.17      # [linux64 and cgo]
         - {{ compiler('m2w64_c') }}  # [win and cgo]
