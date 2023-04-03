@@ -68,6 +68,10 @@ outputs:
   - name: {{ name }}
     script: {{ go_variant_str }}/build.sh   # [unix]
     script: {{ go_variant_str }}/build.bat  # [win]
+    
+    build:                                  # [linux64 and cgo]
+      run_exports:                          # [linux64 and cgo]
+        - sysroot_linux-64                  # [linux64 and cgo]
     requirements:
       build:
         - {{ compiler('c') }}        # [unix and cgo]
