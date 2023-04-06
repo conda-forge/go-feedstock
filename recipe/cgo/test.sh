@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -euf
+set -x
+
+echo "Running cgo tests"
 
 # Test we are running GO under $CONDA_PREFIX
 test "$(which go)" == "${CONDA_PREFIX}/bin/go"
