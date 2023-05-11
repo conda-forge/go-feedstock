@@ -7,13 +7,11 @@ echo "Running cgo tests"
 # Test we are running GO under $CONDA_PREFIX
 test "$(which go)" == "${CONDA_PREFIX}/bin/go"
 
+# Print diagnostics
+go env
 
 # Ensure CGO_ENABLED=1
 test "$(go env CGO_ENABLED)" == 1
-
-
-# Print diagnostics
-go env
 
 
 # Run go's built-in test
