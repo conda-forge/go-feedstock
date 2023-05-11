@@ -22,6 +22,8 @@ source:
       # 0008 has been integrated into 1.19
       # https://github.com/golang/go/issues/53013
       - patches/0008-osx-clang14-2cfbef4.diff
+      # See https://github.com/golang/go/issues/57044 and https://github.com/golang/go/issues/53000
+      - patches/e6adccb3c56385f8d840165008f2606098e13e56.patch
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
