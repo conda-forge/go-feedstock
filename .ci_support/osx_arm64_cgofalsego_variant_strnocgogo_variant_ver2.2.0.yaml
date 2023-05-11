@@ -3,7 +3,7 @@ MACOSX_DEPLOYMENT_TARGET:
 c_compiler:
 - clang
 c_compiler_version:
-- '14'
+- '15'
 cgo:
 - 'false'
 channel_sources:
@@ -13,11 +13,11 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '14'
+- '15'
 fortran_compiler:
 - gfortran
 fortran_compiler_version:
-- '11'
+- '12'
 go_variant_str:
 - nocgo
 go_variant_ver:
