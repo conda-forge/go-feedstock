@@ -22,6 +22,12 @@ source:
       # 0008 has been integrated into 1.19
       # https://github.com/golang/go/issues/53013
       - patches/0008-osx-clang14-2cfbef4.diff
+      # See https://github.com/golang/go/issues/57044 and https://github.com/golang/go/issues/53000
+      - patches/e6adccb3c56385f8d840165008f2606098e13e56.patch
+      # See https://go-review.googlesource.com/c/go/+/490818
+      - patches/a9a01ea.patch
+      # https://go-review.googlesource.com/c/go/+/472295
+      - patches/bb8f9a6.patch  # [win]
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
@@ -51,7 +57,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 2
+  number: 3
 
 requirements:
   run:

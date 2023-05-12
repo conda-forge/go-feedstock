@@ -24,7 +24,7 @@ source ${MINIFORGE_HOME}/etc/profile.d/conda.sh
 conda activate base
 
 mamba install --update-specs --quiet --yes --channel conda-forge \
-    conda-build pip conda-forge-ci-setup=3 "py-lief<0.12"
+    conda-build pip conda-forge-ci-setup=3
 
 
 

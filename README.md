@@ -1,13 +1,79 @@
+About go-feedstock
+==================
+
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/go-feedstock/blob/main/LICENSE.txt)
+
 About go
-========
+--------
 
 Home: http://golang.org
 
 Package license: BSD-3-Clause
 
-Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/go-feedstock/blob/main/LICENSE.txt)
+Summary: The Go Programming Language ()
+
+Development: https://go.googlesource.com/go
+
+Documentation: https://golang.org/doc
+
+Go is expressive, concise, clean, and efficient. Its concurrency mechanisms
+make it easy to write programs that get the most out of multicore and
+networked machines, while its novel type system enables flexible and
+modular program construction. Go compiles quickly to machine code yet has
+the convenience of garbage collection and the power of run-time reflection.
+It's a fast, statically typed, compiled language that feels like a
+dynamically typed, interpreted language.
+
+About go
+--------
+
+Home: http://golang.org
+
+Package license: BSD-3-Clause
 
 Summary: The Go Programming Language
+About go-nocgo
+--------------
+
+Home: http://golang.org
+
+Package license: BSD-3-Clause
+
+Summary: The Go Programming Language (nocgo)
+
+Development: https://go.googlesource.com/go
+
+Documentation: https://golang.org/doc
+
+Go is expressive, concise, clean, and efficient. Its concurrency mechanisms
+make it easy to write programs that get the most out of multicore and
+networked machines, while its novel type system enables flexible and
+modular program construction. Go compiles quickly to machine code yet has
+the convenience of garbage collection and the power of run-time reflection.
+It's a fast, statically typed, compiled language that feels like a
+dynamically typed, interpreted language.
+
+About go-cgo
+------------
+
+Home: http://golang.org
+
+Package license: BSD-3-Clause
+
+Summary: The Go Programming Language (cgo)
+
+Development: https://go.googlesource.com/go
+
+Documentation: https://golang.org/doc
+
+Go is expressive, concise, clean, and efficient. Its concurrency mechanisms
+make it easy to write programs that get the most out of multicore and
+networked machines, while its novel type system enables flexible and
+modular program construction. Go compiles quickly to machine code yet has
+the convenience of garbage collection and the power of run-time reflection.
+It's a fast, statically typed, compiled language that feels like a
+dynamically typed, interpreted language.
+
 
 Current build status
 ====================

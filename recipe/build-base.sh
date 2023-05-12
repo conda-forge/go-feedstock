@@ -6,7 +6,6 @@ set -euxo pipefail
 export USER="${USER:-conda}"
 export HOME="${HOME:-$(cd $SRC_DIR/..;pwd)}"
 
-
 # Use precompiled bootstrap
 if [[ ${target_platform} != "linux-64" ]]; then
   export GOROOT_BOOTSTRAP=$SRC_DIR/go-bootstrap
