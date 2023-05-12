@@ -73,7 +73,7 @@ outputs:
       binary_relocation: false                # [linux64 and cgo]
       detect_binary_files_with_prefix: false  # [linux64 and cgo]
       run_exports:                            # [linux64 and cgo]
-        - sysroot_linux-64                    # [linux64 and cgo]
+        - sysroot_linux-64 2.17               # [linux64 and cgo]
     requirements:
       build:
         - {{ compiler('c') }}        # [unix and cgo]
@@ -86,6 +86,7 @@ outputs:
         - {{ compiler('m2w64_fortran') }}  # [win and cgo]
       run:
         - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
+        - sysroot_linux-64 2.17      # [linux64 and cgo]
       run_constrained:
         # TODO: Move to run section once conda/conda#9845 is fixed
         - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
@@ -100,9 +101,6 @@ outputs:
     test:
       requires:
         - {{ compiler('c') }}        # [unix and cgo]
-        - {{ compiler('cxx') }}      # [unix and cgo]
-        - binutils                   # [linux and cgo]
-        - sysroot_linux-64 2.17      # [linux64 and cgo]
         - {{ compiler('m2w64_c') }}  # [win and cgo]
         - git  # [linux]
         - perl
