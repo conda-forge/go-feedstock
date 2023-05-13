@@ -73,7 +73,8 @@ outputs:
       binary_relocation: false                # [linux64 and cgo]
       detect_binary_files_with_prefix: false  # [linux64 and cgo]
       run_exports:                            # [linux64 and cgo]
-        - sysroot_linux-64 2.17               # [linux64 and cgo]
+        strong:
+        - __glibc >=2.17               # [linux64 and cgo]
     requirements:
       build:
         - {{ compiler('c') }}        # [unix and cgo]
