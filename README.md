@@ -32,14 +32,14 @@ Home: https://go.dev/
 Package license: BSD-3-Clause
 
 Summary: The Go Programming Language
-About go-cgo
-------------
+About go-nocgo
+--------------
 
 Home: https://go.dev/
 
 Package license: BSD-3-Clause
 
-Summary: The Go Programming Language (cgo)
+Summary: The Go Programming Language (nocgo)
 
 Development: https://github.com/golang/
 
@@ -53,14 +53,14 @@ the convenience of garbage collection and the power of run-time reflection.
 It's a fast, statically typed, compiled language that feels like a
 dynamically typed, interpreted language.
 
-About go-nocgo
---------------
+About go-cgo
+------------
 
 Home: https://go.dev/
 
 Package license: BSD-3-Clause
 
-Summary: The Go Programming Language (nocgo)
+Summary: The Go Programming Language (cgo)
 
 Development: https://github.com/golang/
 
