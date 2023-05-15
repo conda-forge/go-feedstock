@@ -1,4 +1,4 @@
-set -euf
+set -eufx
 
 # Enable CGO, and set compiler flags to match conda-forge settings
 export CGO_ENABLED=1
@@ -13,7 +13,14 @@ case $(uname -s) in
     ;;
   Linux)
     # We have to disable garbage collection for sections
-    export CGO_LDFLAGS="${CGO_LDFLAGS} -Wl,--no-gc-sections"
+    export CGO_LDFLAGS="${CGO_LDFLAGS} -lrt -Wl,--no-gc-sections"
+    
+    if [[ ${target_platform} == "linux-64" ]]; then
+      # forcibly set the sysroot to the conda-forge sysroot
+      export CGO_CFLAGS="${CGO_CFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
+      export CGO_LDFLAGS="${CGO_LDFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
+      export CGO_CPPFLAGS="${CGO_CPPFLAGS} --sysroot=${CONDA_BUILD_SYSROOT}"
+    fi
     ;;
   *)
     echo "Unknown OS: $(uname -s)"
