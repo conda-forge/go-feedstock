@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.19.6" %}
+{% set version = "1.20.4" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: d7f0013f82e6d7f862cc6cb5c8cdb48eef5f2e239b35baa97e2f1a7466043767
+    sha256: 9f34ace128764b7a3a4b238b805856cc1b2184304df9e5690825b0710f4202d6
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -24,22 +24,22 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: e4d63c933a68e5fad07cab9d12c5c1610ce4810832d47c44314c3246f511ac4f  # [aarch64]
+    sha256: 105889992ee4b1d40c7c108555222ca70ae43fccb42e20fbf1eebb822f5e72c6  # [aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
-    sha256: e3410c676ced327aec928303fef11385702a5562fd19d9a1750d5a2979763c3d  # [linux and x86_64]
+    sha256: 698ef3243972a51ddb4028e4a1ac63dc6d60821bf18e59a807e051fee0a385bd  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 4ce62f9bad666e7aa73171c3056fe89b23548d1a78de8be5f30b64ccd10990de  # [ppc64le]
+    sha256: 8c6f44b96c2719c90eebabe2dd866f9c39538648f7897a212cac448587e9a408  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: 8d84af29e46c38b1eec77f9310310517c9e394ac7489e1c7329a94b443b0388d  # [win64]
+    sha256: e7528da720f470b711fbd826814167a5fe1bc02a479ab1958dcf839a8294e6d2  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: 108a3cd27b7dff5a8b3540d3bab0aa04d16814babc85625b183f2a1217af88d0  # [osx]
+    sha256: 242b099b5b9bd9c5d4d25c041216bc75abcdf8e0541aec975eeabcbce61ad47f  # [osx]
 
 build:
   binary_relocation: false
@@ -54,7 +54,7 @@ build:
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
   number: 0
-  skip: True  # [linux and s390x]
+  skip: true  # [linux and s390x]
 
 requirements:
   run:
@@ -68,15 +68,15 @@ test:
 
 outputs:
   - name: {{ name }}
-    script: {{ go_variant_str }}/build.sh   # [unix]
+    script: {{ go_variant_str }}/build.sh  # [unix]
     script: {{ go_variant_str }}/build.bat  # [win]
-    
-    build:                                    # [linux64 and cgo]
-      binary_relocation: false                # [linux64 and cgo]
+
+    build:   # [linux64 and cgo]
+      binary_relocation: false  # [linux64 and cgo]
       detect_binary_files_with_prefix: false  # [linux64 and cgo]
-      run_exports:                            # [linux64 and cgo]
-        strong:                               # [linux64 and cgo]
-        - __glibc >=2.17                      # [linux64 and cgo]
+      run_exports:   # [linux64 and cgo]
+        strong:   # [linux64 and cgo]
+          - __glibc >=2.17                    # [linux64 and cgo]
     requirements:
       build:
         - {{ compiler('c') }}        # [unix and cgo]
