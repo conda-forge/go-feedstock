@@ -1,0 +1,81 @@
+From e2092065fc9e71a3f6d8cd9521865d950d3ab040 Mon Sep 17 00:00:00 2001
+From: "Uwe L. Korn" <uwe.korn@quantco.com>
+Date: Tue, 16 May 2023 15:36:34 +0200
+Subject: [PATCH] Mark -ftree as a safe compiler flag
+
+---
+ src/cmd/go/internal/work/security.go | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/src/cmd/go/internal/work/security.go b/src/cmd/go/internal/work/security.go
+index f4f1880..f5211de 100644
+--- a/src/cmd/go/internal/work/security.go
++++ b/src/cmd/go/internal/work/security.go
+@@ -59,10 +59,12 @@ var validCompilerFlags = []*lazyregexp.Regexp{
+ 	re(`-f(no-)builtin-[a-zA-Z0-9_]*`),
+ 	re(`-f(no-)?common`),
+ 	re(`-f(no-)?constant-cfstrings`),
++	re(`-fdebug-prefix-map=(.+)`),
+ 	re(`-fdiagnostics-show-note-include-stack`),
+ 	re(`-f(no-)?eliminate-unused-debug-types`),
+ 	re(`-f(no-)?exceptions`),
+ 	re(`-f(no-)?fast-math`),
++	re(`-ffunction-sections`),
+ 	re(`-f(no-)?inline-functions`),
+ 	re(`-finput-charset=([^@\-].*)`),
+ 	re(`-f(no-)?fat-lto-objects`),
+@@ -88,6 +90,7 @@ var validCompilerFlags = []*lazyregexp.Regexp{
+ 	re(`-f(no-)?visibility-inlines-hidden`),
+ 	re(`-fsanitize=(.+)`),
+ 	re(`-ftemplate-depth-(.+)`),
++	re(`-ftree-vectorize`),
+ 	re(`-fvisibility=(.+)`),
+ 	re(`-g([^@\-].*)?`),
+ 	re(`-m32`),
+@@ -231,11 +234,17 @@ var validLinkerFlagsWithNextArg = []string{
+ 
+ func checkCompilerFlags(name, source string, list []string) error {
+ 	checkOverrides := true
++	if err := checkFlags(name, source, list, validCompilerFlags, validCompilerFlagsWithNextArg, checkOverrides); err != nil {
++		fmt.Printf("checkCompilerFlags: %s", err.Error())
++	}
+ 	return checkFlags(name, source, list, validCompilerFlags, validCompilerFlagsWithNextArg, checkOverrides)
+ }
+ 
+ func checkLinkerFlags(name, source string, list []string) error {
+ 	checkOverrides := true
++	if err := checkFlags(name, source, list, validLinkerFlags, validLinkerFlagsWithNextArg, checkOverrides); err != nil {
++		fmt.Printf("checkLinkerFlags: %s\n", err.Error())
++	}
+ 	return checkFlags(name, source, list, validLinkerFlags, validLinkerFlagsWithNextArg, checkOverrides)
+ }
+ 
+@@ -246,12 +255,14 @@ func checkLinkerFlags(name, source string, list []string) error {
+ func checkCompilerFlagsForInternalLink(name, source string, list []string) error {
+ 	checkOverrides := false
+ 	if err := checkFlags(name, source, list, validCompilerFlags, validCompilerFlagsWithNextArg, checkOverrides); err != nil {
++		fmt.Printf("checkCompilerFlagsForInternalLink: %s\n", err.Error())
+ 		return err
+ 	}
+ 	// Currently the only flag on the allow list that causes problems
+ 	// for the linker is "-flto"; check for it manually here.
+ 	for _, fl := range list {
+ 		if strings.HasPrefix(fl, "-flto") {
++			fmt.Printf("flag %q triggers external linking", fl)
+ 			return fmt.Errorf("flag %q triggers external linking", fl)
+ 		}
+ 	}
+@@ -322,8 +333,10 @@ Args:
+ 				}
+ 
+ 				if i+1 < len(list) {
++					fmt.Printf("invalid flag in %s: %s %s (see https://golang.org/s/invalidflag)", source, arg, list[i+1])
+ 					return fmt.Errorf("invalid flag in %s: %s %s (see https://golang.org/s/invalidflag)", source, arg, list[i+1])
+ 				}
++				fmt.Printf("invalid flag in %s: %s without argument (see https://golang.org/s/invalidflag)", source, arg)
+ 				return fmt.Errorf("invalid flag in %s: %s without argument (see https://golang.org/s/invalidflag)", source, arg)
+ 			}
+ 		}
+-- 
+2.40.1
+
