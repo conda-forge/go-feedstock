@@ -1,29 +1,70 @@
-From 6af384eccbc06b9b7de4d27b55ff19d2a22d86b2 Mon Sep 17 00:00:00 2001
+From 266eee65be52f104b130a897e0a5f270bc2bc03f Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 23:02:19 -0400
-Subject: [PATCH 1/6] Fix cgo_fortran test setup for conda
+Subject: [PATCH 1/9] Fix cgo_fortran test setup for conda
 
 ---
- misc/cgo/fortran/test.bash | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ misc/cgo/fortran/fortran_test.go | 40 +-------------------------------
+ 1 file changed, 1 insertion(+), 39 deletions(-)
 
-diff --git a/misc/cgo/fortran/test.bash b/misc/cgo/fortran/test.bash
-index 2b61730815..9e8948bae7 100755
---- a/misc/cgo/fortran/test.bash
-+++ b/misc/cgo/fortran/test.bash
-@@ -20,11 +20,7 @@ fi
+diff --git a/misc/cgo/fortran/fortran_test.go b/misc/cgo/fortran/fortran_test.go
+index 4604a4d..453c0dd 100644
+--- a/misc/cgo/fortran/fortran_test.go
++++ b/misc/cgo/fortran/fortran_test.go
+@@ -8,9 +8,6 @@ import (
+ 	"fmt"
+ 	"os"
+ 	"os/exec"
+-	"path/filepath"
+-	"runtime"
+-	"strings"
+ 	"testing"
+ )
  
- case "$FC" in
- *gfortran*)
--  libpath=$(dirname $($FC -print-file-name=libgfortran.$libext))
--  if [ "$goos" != "aix" ]; then
--	  RPATH_FLAG="-Wl,-rpath,$libpath"
--  fi
--  export CGO_LDFLAGS="$CGO_LDFLAGS $RPATH_FLAG -L $libpath"
-+  # CONDA's gfortran + go does not need changes to CGO_LDFLAGS
-   ;;
- esac
+@@ -25,42 +22,7 @@ func TestFortran(t *testing.T) {
+ 	}
  
+ 	var fcExtra []string
+-	if strings.Contains(fc, "gfortran") {
+-		// TODO: This duplicates but also diverges from logic from cmd/go
+-		// itself. For example, cmd/go merely adds -lgfortran without the extra
+-		// library path work. If this is what's necessary to run gfortran, we
+-		// should reconcile the logic here and in cmd/go.. Maybe this should
+-		// become a cmd/go script test to share that logic.
+-
+-		// Add -m32 if we're targeting 386, in case this is a cross-compile.
+-		if runtime.GOARCH == "386" {
+-			fcExtra = append(fcExtra, "-m32")
+-		}
+-
+-		// Find libgfortran. If the FORTRAN compiler isn't bundled
+-		// with the C linker, this may be in a path the C linker can't
+-		// find on its own. (See #14544)
+-		libExt := "so"
+-		switch runtime.GOOS {
+-		case "darwin":
+-			libExt = "dylib"
+-		case "aix":
+-			libExt = "a"
+-		}
+-		libPath, err := exec.Command(fc, append([]string{"-print-file-name=libgfortran." + libExt}, fcExtra...)...).CombinedOutput()
+-		if err != nil {
+-			t.Errorf("error invoking %s: %s", fc, err)
+-		}
+-		libDir := filepath.Dir(string(libPath))
+-		cgoLDFlags := os.Getenv("CGO_LDFLAGS")
+-		cgoLDFlags += " -L " + libDir
+-		if runtime.GOOS != "aix" {
+-			cgoLDFlags += " -Wl,-rpath," + libDir
+-		}
+-		t.Logf("CGO_LDFLAGS=%s", cgoLDFlags)
+-		os.Setenv("CGO_LDFLAGS", cgoLDFlags)
+-
+-	}
++	// CONDA's gfortran + go does not need changes to CGO_LDFLAGS
+ 
+ 	// Do a test build that doesn't involve Go FORTRAN support.
+ 	fcArgs := append([]string{"helloworld/helloworld.f90", "-o", "/dev/null"}, fcExtra...)
 -- 
-2.34.1
+2.39.2 (Apple Git-143)
 

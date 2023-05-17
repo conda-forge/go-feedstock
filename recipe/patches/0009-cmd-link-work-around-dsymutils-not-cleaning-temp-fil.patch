@@ -1,0 +1,44 @@
+From 469469384226bc7cb5cee26849388c4bdd9f0c88 Mon Sep 17 00:00:00 2001
+From: Cherry Mui <cherryyz@google.com>
+Date: Mon, 1 May 2023 12:47:15 -0400
+Subject: [PATCH 9/9] cmd/link: work around dsymutils not cleaning temp file
+
+Some versions of dsymutils, notably the one in clang 14.0.3, which
+is shipped in some versions of Xcode, have a bug that it creates a
+temporary directory but doesn't clean it up at exit. The temporary
+directory is created in DSYMUTIL_REPRODUCER_PATH (if set,
+otherwise TMPDIR). Work around the issue by setting
+DSYMUTIL_REPRODUCER_PATH to the linker's temporary directory, so
+the linker will clean it up at exit anyway.
+
+Fixes #59026.
+
+Change-Id: Ie3e90a2d6a01f90040dc2eac91e8e536ccdda5a2
+Reviewed-on: https://go-review.googlesource.com/c/go/+/490818
+Reviewed-by: Than McIntosh <thanm@google.com>
+TryBot-Result: Gopher Robot <gobot@golang.org>
+Run-TryBot: Cherry Mui <cherryyz@google.com>
+---
+ src/cmd/link/internal/ld/lib.go | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/cmd/link/internal/ld/lib.go b/src/cmd/link/internal/ld/lib.go
+index c073017..0cec030 100644
+--- a/src/cmd/link/internal/ld/lib.go
++++ b/src/cmd/link/internal/ld/lib.go
+@@ -1848,7 +1848,11 @@ func (ctxt *Link) hostlink() {
+ 		stripCmd := strings.TrimSuffix(string(out), "\n")
+ 
+ 		dsym := filepath.Join(*flagTmpdir, "go.dwarf")
+-		if out, err := exec.Command(dsymutilCmd, "-f", *flagOutfile, "-o", dsym).CombinedOutput(); err != nil {
++		cmd := exec.Command(dsymutilCmd, "-f", *flagOutfile, "-o", dsym)
++		// dsymutil may not clean up its temp directory at exit.
++		// Set DSYMUTIL_REPRODUCER_PATH to work around. see issue 59026.
++		cmd.Env = append(os.Environ(), "DSYMUTIL_REPRODUCER_PATH="+*flagTmpdir)
++		if out, err := cmd.CombinedOutput(); err != nil {
+ 			Exitf("%s: running dsymutil failed: %v\n%s", os.Args[0], err, out)
+ 		}
+ 		// Remove STAB (symbolic debugging) symbols after we are done with them (by dsymutil).
+-- 
+2.39.2 (Apple Git-143)
+

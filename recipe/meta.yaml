@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.19.9" %}
+{% set version = "1.20.1" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 131190a4697a70c5b1d232df5d3f55a3f9ec0e78e40516196ffb3f09ae6a5744
+    sha256: b5c1a3af52c385a6d1c76aed5361cf26459023980d0320de7658bae3915831a2
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -17,11 +17,10 @@ source:
       - patches/0004-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
       - patches/0005-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
       - patches/0006-issue10607-is-only-valid-when-running-with-CGO.patch
-      # https://github.com/conda-forge/go-feedstock/pull/150#issuecomment-1153458502
       - patches/0007-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
-      # https://go-review.googlesource.com/c/go/+/490818
-      - patches/a9a01ea280892e69c3722eebbc60d14c17a77e8d.patch
       - patches/0008-Mark-ftree-as-a-safe-compiler-flag.patch
+      ## https://go-review.googlesource.com/c/go/+/490818
+      - patches/0009-cmd-link-work-around-dsymutils-not-cleaning-temp-fil.patch
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
@@ -40,7 +39,7 @@ source:
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: 22e2fc77a8f11709a2c9ffc7d5699ba226753b2ed3e30574049c2dc28870dc7a  # [osx]
+    sha256: a300a45e801ab459f3008aae5bb9efbe9a6de9bcd12388f5ca9bbd14f70236de  # [osx]
 
 build:
   binary_relocation: false
