@@ -1,7 +1,7 @@
-From 8b2b9dccaab1bf2e5fb28f5a3bff970bf7079a51 Mon Sep 17 00:00:00 2001
+From b55c6a11f3cca3000d754608a9e026d7b28acd77 Mon Sep 17 00:00:00 2001
 From: Nehal J Wani <nehaljw.kkd1@gmail.com>
 Date: Fri, 2 Apr 2021 12:55:53 -0400
-Subject: [PATCH 5/6] cmd/link/internal/ld: disable
+Subject: [PATCH 5/9] cmd/link/internal/ld: disable
  testWindowsBuildmodeCSharedASLR if CGO isn't enabled
 
 With CGO disabled, the test throws the following error:
@@ -14,10 +14,10 @@ ld_test.go:215: build failure: exit status 2
  1 file changed, 1 insertion(+)
 
 diff --git a/src/cmd/link/internal/ld/ld_test.go b/src/cmd/link/internal/ld/ld_test.go
-index 2d5a7add9d..e3d81bb41c 100644
+index 314dab7..0aedeb4 100644
 --- a/src/cmd/link/internal/ld/ld_test.go
 +++ b/src/cmd/link/internal/ld/ld_test.go
-@@ -197,6 +197,7 @@ func TestWindowsBuildmodeCSharedASLR(t *testing.T) {
+@@ -196,6 +196,7 @@ func TestWindowsBuildmodeCSharedASLR(t *testing.T) {
  func testWindowsBuildmodeCSharedASLR(t *testing.T, useASLR bool) {
  	t.Parallel()
  	testenv.MustHaveGoBuild(t)
@@ -26,5 +26,5 @@ index 2d5a7add9d..e3d81bb41c 100644
  	dir := t.TempDir()
  
 -- 
-2.34.1
+2.39.2 (Apple Git-143)
 

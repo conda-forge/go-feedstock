@@ -1,14 +1,14 @@
-From 66023242dae58bfb5c8cea20e7e7ea37f0afb991 Mon Sep 17 00:00:00 2001
+From ad0ffd2fdb2a685d36fef28c4a459fc8fbb22de2 Mon Sep 17 00:00:00 2001
 From: "Uwe L. Korn" <uwe.korn@quantco.com>
 Date: Tue, 16 May 2023 15:36:34 +0200
-Subject: [PATCH] Mark -ftree as a safe compiler flag
+Subject: [PATCH 8/9] Mark -ftree as a safe compiler flag
 
 ---
  src/cmd/go/internal/work/security.go | 3 +++
  1 file changed, 3 insertions(+)
 
 diff --git a/src/cmd/go/internal/work/security.go b/src/cmd/go/internal/work/security.go
-index f4f1880..2767696 100644
+index 0bf8763..ee05fca 100644
 --- a/src/cmd/go/internal/work/security.go
 +++ b/src/cmd/go/internal/work/security.go
 @@ -59,10 +59,12 @@ var validCompilerFlags = []*lazyregexp.Regexp{
@@ -33,5 +33,5 @@ index f4f1880..2767696 100644
  	re(`-g([^@\-].*)?`),
  	re(`-m32`),
 -- 
-2.40.1
+2.39.2 (Apple Git-143)
 

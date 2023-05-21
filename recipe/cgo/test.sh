@@ -13,6 +13,10 @@ go env
 # Ensure CGO_ENABLED=1
 test "$(go env CGO_ENABLED)" == 1
 
+# Ensure runtime/cgo is not stale.
+# This will be assumed as stale as we have changed the value of CC since the build.
+export CC=$(basename $CC)
+go build -x runtime/cgo
 
 # Run go's built-in test
 case $(uname -s) in
