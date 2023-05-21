@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.20.2" %}
+{% set version = "1.20.3" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 4d0e2850d197b4ddad3bdb0196300179d095bb3aefd4dfbc3b36702c3728f8ab
+    sha256: e447b498cde50215c4f7619e5124b0fc4e25fb5d16ea47271c47f278e7aa763a
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -39,7 +39,7 @@ source:
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: c93b8ced9517d07e1cd4c362c6e2d5242cb139e29b417a328fbf19aded08764c  # [osx]
+    sha256: c1e1161d6d859deb576e6cfabeb40e3d042ceb1c6f444f617c3c9d76269c3565  # [osx]
 
 build:
   binary_relocation: false
