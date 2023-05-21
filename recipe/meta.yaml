@@ -33,7 +33,7 @@ source:
     sha256: 8c6f44b96c2719c90eebabe2dd866f9c39538648f7897a212cac448587e9a408  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: e7528da720f470b711fbd826814167a5fe1bc02a479ab1958dcf839a8294e6d22  # [win64]
+    sha256: e7528da720f470b711fbd826814167a5fe1bc02a479ab1958dcf839a8294e6d2  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
