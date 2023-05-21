@@ -24,16 +24,16 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: 5e5e2926733595e6f3c5b5ad1089afac11c1490351855e87849d0e7702b1ec2e  # [aarch64]
+    sha256: 78d632915bb75e9a6356a47a42625fd1a785c83a64a643fedd8f61e31b1b3bef  # [aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
-    sha256: 000a5b1fca4f75895f78befeb2eecf10bfff3c428597f3f1e69133b63b911b02  # [linux and x86_64]
+    sha256: 4eaea32f59cde4dc635fbc42161031d13e1c780b87097f4b4234cfce671f1768  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 85cfd4b89b48c94030783b6e9e619e35557862358b846064636361421d0b0c52  # [ppc64le]
+    sha256: 850564ddb760cb703db63bf20182dc4407abd2ff090a95fa66d6634d172fd095  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: 3b493969196a6de8d9762d09f5bc5ae7a3e5814b0cfbf9cc26838c2bc1314f9c  # [win64]
+    sha256: fe439f0e438f7555a7f5f7194ddb6f4a07b0de1fa414385d19f2aeb26d9f43db  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
