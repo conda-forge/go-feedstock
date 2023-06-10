@@ -1,0 +1,29 @@
+From b52950f6f76068df0e1facf83689c407f9339d67 Mon Sep 17 00:00:00 2001
+From: Russ Cox <rsc@golang.org>
+Date: Tue, 6 Jun 2023 20:47:05 -0400
+Subject: [PATCH] cmd/go: fix Script/build_cwd_newline test
+
+This test is fundamentally about testing cgo.
+Skip on nocgo builders.
+Fixes CGO_ENABLED=0 go test -run=Script/newline
+
+Change-Id: Ic02349e0acd8cf67508c1bd788333f42b30e84fc
+Reviewed-on: https://go-review.googlesource.com/c/go/+/501395
+Run-TryBot: Russ Cox <rsc@golang.org>
+Reviewed-by: Ian Lance Taylor <iant@google.com>
+TryBot-Result: Gopher Robot <gobot@golang.org>
+---
+ src/cmd/go/testdata/script/build_cwd_newline.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/cmd/go/testdata/script/build_cwd_newline.txt b/src/cmd/go/testdata/script/build_cwd_newline.txt
+index 574464cc18d97..127d24cc68d01 100644
+--- a/src/cmd/go/testdata/script/build_cwd_newline.txt
++++ b/src/cmd/go/testdata/script/build_cwd_newline.txt
+@@ -1,5 +1,6 @@
+ [GOOS:windows] skip 'filesystem normalizes / to \'
+ [GOOS:plan9] skip 'filesystem disallows \n in paths'
++[!cgo] skip 'testing cgo handling of newlines'
+ 
+ # If the directory path containing a package to be built includes a newline,
+ # the go command should refuse to even try to build the package.
