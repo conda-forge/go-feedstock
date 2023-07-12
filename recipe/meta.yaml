@@ -21,9 +21,6 @@ source:
       - patches/0008-Mark-ftree-as-a-safe-compiler-flag.patch
       # https://go-review.googlesource.com/c/go/+/490818
       - patches/0009-cmd-link-work-around-dsymutils-not-cleaning-temp-fil.patch
-      # Can be removed with 1.20.6
-      - patches/b52950f6f76068df0e1facf83689c407f9339d67.patch
-      - patches/e2b1c0baa600968345d18c6ab339f07b09763da1.patch
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
