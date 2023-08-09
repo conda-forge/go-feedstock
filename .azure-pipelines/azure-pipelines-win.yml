@@ -39,7 +39,7 @@ jobs:
 
     - script: |
         call activate base
-        mamba.exe install "python=3.10" conda-build conda pip conda-forge-ci-setup=3 -c conda-forge --strict-channel-priority --yes
+        mamba.exe install "python=3.10" conda-build conda pip boa conda-forge-ci-setup=3 -c conda-forge --strict-channel-priority --yes
       displayName: Install conda-build
 
     - script: set PYTHONUNBUFFERED=1
@@ -66,7 +66,7 @@ jobs:
         if NOT [%HOST_PLATFORM%] == [%BUILD_PLATFORM%] (
           set "EXTRA_CB_OPTIONS=%EXTRA_CB_OPTIONS% --no-test"
         )
-        conda.exe build "recipe" -m .ci_support\%CONFIG%.yaml --suppress-variables %EXTRA_CB_OPTIONS%
+        conda.exe mambabuild "recipe" -m .ci_support\%CONFIG%.yaml --suppress-variables %EXTRA_CB_OPTIONS%
       displayName: Build recipe
       env:
         PYTHONUNBUFFERED: 1
