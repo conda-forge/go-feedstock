@@ -9,7 +9,6 @@ build_platform:
   osx_arm64: osx_64
   linux_aarch64: linux_64
   linux_ppc64le: linux_64
-build_with_mambabuild: false
 conda_forge_output_validation: true
 github:
   branch_name: main
