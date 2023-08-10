@@ -1,7 +1,7 @@
-From c78da9b8506a1303b9bc1e2756b95801344552e5 Mon Sep 17 00:00:00 2001
+From ba0dc795fcf151dfcbbb37b89020d7a3ff309d95 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Sun, 24 Jan 2021 23:52:48 -0500
-Subject: [PATCH 4/9] Add conda-aware default values for GOPATH and GOBIN
+Subject: [PATCH 4/8] Add conda-aware default values for GOPATH and GOBIN
 
 These new defaults are to make integration with conda-build easier and
 are only in effect if the environment variable CONDA_GO_COMPILER is
@@ -36,10 +36,10 @@ maintaining compatibilit with the current case.
  create mode 100644 src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go
 
 diff --git a/src/cmd/go/go_test.go b/src/cmd/go/go_test.go
-index ef22499..7ae44e3 100644
+index 54249f6..93fabe6 100644
 --- a/src/cmd/go/go_test.go
 +++ b/src/cmd/go/go_test.go
-@@ -2917,3 +2917,36 @@ func TestExecInDeletedDir(t *testing.T) {
+@@ -2976,3 +2976,36 @@ func TestExecInDeletedDir(t *testing.T) {
  	// `go version` should not fail
  	tg.run("version")
  }
@@ -77,19 +77,19 @@ index ef22499..7ae44e3 100644
 +}
 +
 diff --git a/src/cmd/go/internal/cfg/cfg.go b/src/cmd/go/internal/cfg/cfg.go
-index 3257140..dd7fbd9 100644
+index 8a82e55..67042c0 100644
 --- a/src/cmd/go/internal/cfg/cfg.go
 +++ b/src/cmd/go/internal/cfg/cfg.go
-@@ -371,7 +371,7 @@ var (
- 	GOROOTpkg    string
- 	GOROOTsrc    string
+@@ -405,7 +405,7 @@ var (
+ 
  	GOROOT_FINAL string
--	GOBIN        = Getenv("GOBIN")
-+	GOBIN        = envOr("GOBIN", defaultCondaGOBIN())
- 	GOMODCACHE   = envOr("GOMODCACHE", gopathDir("pkg/mod"))
+ 
+-	GOBIN      = Getenv("GOBIN")
++	GOBIN      = envOr("GOBIN", defaultCondaGOBIN())
+ 	GOMODCACHE = envOr("GOMODCACHE", gopathDir("pkg/mod"))
  
  	// Used in envcmd.MkEnv and build ID computations.
-@@ -394,6 +394,32 @@ var (
+@@ -428,6 +428,32 @@ var (
  
  var SumdbDir = gopathDir("pkg/sumdb")
  
@@ -134,10 +134,10 @@ index 0000000..002a5c7
 +	println("hello world")
 +}
 diff --git a/src/go/build/build.go b/src/go/build/build.go
-index 420873c..6a0b228 100644
+index dd6cdc9..42d4aea 100644
 --- a/src/go/build/build.go
 +++ b/src/go/build/build.go
-@@ -285,6 +285,16 @@ func (ctxt *Context) SrcDirs() []string {
+@@ -286,6 +286,16 @@ func (ctxt *Context) SrcDirs() []string {
  // if set, or else the compiled code's GOARCH, GOOS, and GOROOT.
  var Default Context = defaultContext()
  
@@ -154,7 +154,7 @@ index 420873c..6a0b228 100644
  func defaultGOPATH() string {
  	env := "HOME"
  	if runtime.GOOS == "windows" {
-@@ -314,7 +324,7 @@ func defaultContext() Context {
+@@ -315,7 +325,7 @@ func defaultContext() Context {
  	if goroot := runtime.GOROOT(); goroot != "" {
  		c.GOROOT = filepath.Clean(goroot)
  	}
@@ -163,7 +163,7 @@ index 420873c..6a0b228 100644
  	c.Compiler = runtime.Compiler
  	c.ToolTags = append(c.ToolTags, buildcfg.ToolTags...)
  
-@@ -362,6 +372,13 @@ func envOr(name, def string) string {
+@@ -363,6 +373,13 @@ func envOr(name, def string) string {
  	return s
  }
  
