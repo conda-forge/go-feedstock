@@ -11,7 +11,7 @@ Home: https://go.dev/
 
 Package license: BSD-3-Clause
 
-Summary: The Go Programming Language ()
+Summary: The Go Programming Language (go_variant_str)
 
 Development: https://github.com/golang/
 
