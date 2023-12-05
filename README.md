@@ -35,14 +35,14 @@ Package license: BSD-3-Clause
 
 Summary: The Go Programming Language
 
-About go-cgo
-------------
+About go-nocgo
+--------------
 
 Home: https://go.dev/
 
 Package license: BSD-3-Clause
 
-Summary: The Go Programming Language (cgo)
+Summary: The Go Programming Language (nocgo)
 
 Development: https://github.com/golang/
 
@@ -57,14 +57,14 @@ It's a fast, statically typed, compiled language that feels like a
 dynamically typed, interpreted language.
 
 
-About go-nocgo
---------------
+About go-cgo
+------------
 
 Home: https://go.dev/
 
 Package license: BSD-3-Clause
 
-Summary: The Go Programming Language (nocgo)
+Summary: The Go Programming Language (cgo)
 
 Development: https://github.com/golang/
 
@@ -263,7 +263,7 @@ available continuous integration services. Thanks to the awesome service provide
 [CircleCI](https://circleci.com/), [AppVeyor](https://www.appveyor.com/),
 [Drone](https://cloud.drone.io/welcome), and [TravisCI](https://travis-ci.com/)
 it is possible to build and upload installable packages to the
-[conda-forge](https://anaconda.org/conda-forge) [Anaconda-Cloud](https://anaconda.org/)
+[conda-forge](https://anaconda.org/conda-forge) [anaconda.org](https://anaconda.org/)
 channel for Linux, Windows and OSX respectively.
 
 To manage the continuous integration and simplify feedstock maintenance
