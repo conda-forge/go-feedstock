@@ -1,7 +1,7 @@
-From 7502c92b3af04af90873d53d16c783204d6af8db Mon Sep 17 00:00:00 2001
+From bcc04311d9e9353330da5ad3d639779c2eeb8fd0 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Sat, 11 Jun 2022 08:47:11 -0400
-Subject: [PATCH 2/8] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
+Subject: [PATCH 2/7] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
 
 ---
  src/cmd/go/script_test.go | 5 +++++
@@ -26,6 +26,3 @@ index 624c5bf..2db02af 100644
  }
  
  // updateSum runs 'go mod tidy', 'go list -mod=mod -m all', or
--- 
-2.39.2 (Apple Git-143)
-

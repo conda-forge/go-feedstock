@@ -16,9 +16,8 @@ source:
       - patches/0003-Inherit-CGO_-environment-variables.patch
       - patches/0004-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
       - patches/0005-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
-      - patches/0006-issue10607-is-only-valid-when-running-with-CGO.patch
-      - patches/0007-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
-      - patches/0008-Mark-ftree-as-a-safe-compiler-flag.patch
+      - patches/0006-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
+      - patches/0007-Mark-ftree-as-a-safe-compiler-flag.patch
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
