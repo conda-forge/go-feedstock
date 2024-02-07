@@ -1,4 +1,4 @@
-From fa3563aa271a8686fde567c4e5ebda4e8f937dc2 Mon Sep 17 00:00:00 2001
+From d2159a1b847909611b908b9478d21a1306079ce2 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Mon, 13 Jun 2022 22:43:22 -0400
 Subject: [PATCH 6/7] Revert "cmd/link: enable internal linker in more cases

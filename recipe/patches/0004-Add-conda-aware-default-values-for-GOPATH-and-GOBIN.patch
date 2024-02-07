@@ -1,4 +1,4 @@
-From a634a6338610fd12efee3c5186df7e673c726c69 Mon Sep 17 00:00:00 2001
+From 93959b98b638b9efa24dbeb70818c5be38775328 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Sun, 24 Jan 2021 23:52:48 -0500
 Subject: [PATCH 4/7] Add conda-aware default values for GOPATH and GOBIN

@@ -1,4 +1,4 @@
-From 5f74143dcdd8b52953645329ba513eeae4f7bd96 Mon Sep 17 00:00:00 2001
+From c8732e79cbea2f4eabccc6cead4aefcd45c5accf Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 21:13:14 -0400
 Subject: [PATCH 3/7] Inherit CGO_* environment variables
