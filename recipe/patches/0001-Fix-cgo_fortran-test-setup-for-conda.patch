@@ -1,27 +1,26 @@
-From ede31158c9c3345fe53dd08a28189b01c9409661 Mon Sep 17 00:00:00 2001
+From b9d600320d9040166e8919bc99c45d5d3e9dec38 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 23:02:19 -0400
-Subject: [PATCH 1/8] Fix cgo_fortran test setup for conda
+Subject: [PATCH 1/7] Fix cgo_fortran test setup for conda
 
 ---
- .../cgo/internal/testfortran/fortran_test.go  | 40 +------------------
- 1 file changed, 1 insertion(+), 39 deletions(-)
+ .../cgo/internal/testfortran/fortran_test.go  | 39 +------------------
+ 1 file changed, 1 insertion(+), 38 deletions(-)
 
 diff --git a/src/cmd/cgo/internal/testfortran/fortran_test.go b/src/cmd/cgo/internal/testfortran/fortran_test.go
-index eaa36ac..ce1b75e 100644
+index 0eae7c5..9d83999 100644
 --- a/src/cmd/cgo/internal/testfortran/fortran_test.go
 +++ b/src/cmd/cgo/internal/testfortran/fortran_test.go
-@@ -9,9 +9,6 @@ import (
+@@ -8,8 +8,6 @@ import (
  	"internal/testenv"
  	"os"
  	"os/exec"
 -	"path/filepath"
 -	"runtime"
--	"strings"
+ 	"strings"
  	"testing"
  )
- 
-@@ -29,42 +26,7 @@ func TestFortran(t *testing.T) {
+@@ -28,42 +26,7 @@ func TestFortran(t *testing.T) {
  	}
  
  	var fcExtra []string
@@ -65,6 +64,3 @@ index eaa36ac..ce1b75e 100644
  
  	// Do a test build that doesn't involve Go FORTRAN support.
  	fcArgs := append([]string{"testdata/helloworld/helloworld.f90", "-o", "/dev/null"}, fcExtra...)
--- 
-2.39.2 (Apple Git-143)
-

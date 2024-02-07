@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.21.7" %}
+{% set version = "1.22.0" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 00197ab20f33813832bff62fd93cca1c42a08cc689a32a6672ca49591959bff6
+    sha256: 4d196c3d41a0d6c1dfc64d04e3cc1f608b0c436bd87b7060ce3e23234e1f4d5c
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -16,28 +16,27 @@ source:
       - patches/0003-Inherit-CGO_-environment-variables.patch
       - patches/0004-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
       - patches/0005-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
-      - patches/0006-issue10607-is-only-valid-when-running-with-CGO.patch
-      - patches/0007-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
-      - patches/0008-Mark-ftree-as-a-safe-compiler-flag.patch
+      - patches/0006-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
+      - patches/0007-Mark-ftree-as-a-safe-compiler-flag.patch
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: a9bc1ccedbfde059f25b3a2ad81ae4cdf21192ae207dfd3ccbbfe99c3749e233  # [aarch64]
+    sha256: 6a63fef0e050146f275bf02a0896badfe77c11b6f05499bb647e7bd613a45a10  # [aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
-    sha256: 13b76a9b2a26823e53062fa841b07087d48ae2ef2936445dc34c4ae03293702c  # [linux and x86_64]
+    sha256: f6c8a87aa03b92c4b0bf3d558e28ea03006eb29db78917daec5cfb6ec1046265  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 48a99ecce9b1e632870c29420088f61cf17a6f0c5bdb3cc821ff5c00e14b1a8a  # [ppc64le]
+    sha256: 0e57f421df9449066f00155ce98a5be93744b3d81b00ee4c2c9b511be2a31d93  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: 9ba8652778baded6e9a758c3129aae73393b4b75b230933bb0cf3ab65b19be35  # [win64]
+    sha256: 78b3158fe3aa358e0b6c9f26ecd338f9a11441e88bc434ae2e9f0ca2b0cc4dd3  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: 4b9f4e02e465ba0f3a4c138ecb1c148135cf77c0efb5474461746b7c123b3484  # [osx]
+    sha256: ebca81df938d2d1047cc992be6c6c759543cf309d401b86af38a6aed3d4090f4  # [osx]
 
 build:
   binary_relocation: false

@@ -1,7 +1,7 @@
-From ba0dc795fcf151dfcbbb37b89020d7a3ff309d95 Mon Sep 17 00:00:00 2001
+From 93959b98b638b9efa24dbeb70818c5be38775328 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Sun, 24 Jan 2021 23:52:48 -0500
-Subject: [PATCH 4/8] Add conda-aware default values for GOPATH and GOBIN
+Subject: [PATCH 4/7] Add conda-aware default values for GOPATH and GOBIN
 
 These new defaults are to make integration with conda-build easier and
 are only in effect if the environment variable CONDA_GO_COMPILER is
@@ -36,10 +36,10 @@ maintaining compatibilit with the current case.
  create mode 100644 src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go
 
 diff --git a/src/cmd/go/go_test.go b/src/cmd/go/go_test.go
-index 54249f6..93fabe6 100644
+index 3282295..59305ef 100644
 --- a/src/cmd/go/go_test.go
 +++ b/src/cmd/go/go_test.go
-@@ -2976,3 +2976,36 @@ func TestExecInDeletedDir(t *testing.T) {
+@@ -2801,3 +2801,36 @@ func TestExecInDeletedDir(t *testing.T) {
  	// `go version` should not fail
  	tg.run("version")
  }
@@ -77,10 +77,10 @@ index 54249f6..93fabe6 100644
 +}
 +
 diff --git a/src/cmd/go/internal/cfg/cfg.go b/src/cmd/go/internal/cfg/cfg.go
-index 8a82e55..67042c0 100644
+index a8daa2d..cfa825c 100644
 --- a/src/cmd/go/internal/cfg/cfg.go
 +++ b/src/cmd/go/internal/cfg/cfg.go
-@@ -405,7 +405,7 @@ var (
+@@ -404,7 +404,7 @@ var (
  
  	GOROOT_FINAL string
  
@@ -89,7 +89,7 @@ index 8a82e55..67042c0 100644
  	GOMODCACHE = envOr("GOMODCACHE", gopathDir("pkg/mod"))
  
  	// Used in envcmd.MkEnv and build ID computations.
-@@ -428,6 +428,32 @@ var (
+@@ -427,6 +427,32 @@ var (
  
  var SumdbDir = gopathDir("pkg/sumdb")
  
@@ -134,7 +134,7 @@ index 0000000..002a5c7
 +	println("hello world")
 +}
 diff --git a/src/go/build/build.go b/src/go/build/build.go
-index dd6cdc9..42d4aea 100644
+index 9ce3700..0314a81 100644
 --- a/src/go/build/build.go
 +++ b/src/go/build/build.go
 @@ -286,6 +286,16 @@ func (ctxt *Context) SrcDirs() []string {
@@ -177,6 +177,3 @@ index dd6cdc9..42d4aea 100644
  // An ImportMode controls the behavior of the Import method.
  type ImportMode uint
  
--- 
-2.39.2 (Apple Git-143)
-
