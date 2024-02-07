@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.21.6" %}
+{% set version = "1.21.7" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 124926a62e45f78daabbaedb9c011d97633186a33c238ffc1e25320c02046248
+    sha256: 00197ab20f33813832bff62fd93cca1c42a08cc689a32a6672ca49591959bff6
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -22,22 +22,22 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: e2e8aa88e1b5170a0d495d7d9c766af2b2b6c6925a8f8956d834ad6b4cacbd9a  # [aarch64]
+    sha256: a9bc1ccedbfde059f25b3a2ad81ae4cdf21192ae207dfd3ccbbfe99c3749e233  # [aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
-    sha256: 3f934f40ac360b9c01f616a9aa1796d227d8b0328bf64cb045c7b8c4ee9caea4  # [linux and x86_64]
+    sha256: 13b76a9b2a26823e53062fa841b07087d48ae2ef2936445dc34c4ae03293702c  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: e872b1e9a3f2f08fd4554615a32ca9123a4ba877ab6d19d36abc3424f86bc07f  # [ppc64le]
+    sha256: 48a99ecce9b1e632870c29420088f61cf17a6f0c5bdb3cc821ff5c00e14b1a8a  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: 27ac9dd6e66fb3fd0acfa6792ff053c86e7d2c055b022f4b5d53bfddec9e3301  # [win64]
+    sha256: 9ba8652778baded6e9a758c3129aae73393b4b75b230933bb0cf3ab65b19be35  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: 31d6ecca09010ab351e51343a5af81d678902061fee871f912bdd5ef4d778850  # [osx]
+    sha256: 4b9f4e02e465ba0f3a4c138ecb1c148135cf77c0efb5474461746b7c123b3484  # [osx]
 
 build:
   binary_relocation: false
