@@ -1,3 +1,5 @@
+c_stdlib:
+- vs
 cgo:
 - 'true'
 channel_sources:
