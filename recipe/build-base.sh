@@ -62,6 +62,8 @@ popd
 # Don't need the cached build objects
 rm -fr ${GOROOT}/pkg/obj
 
+# Don't need the test files from the source
+find ${GOROOT}/src -type d -name "testdata" -exec rm -rf \;
 
 # Dropping the verbose option here, +8000 files
 cp -a ${GOROOT} ${PREFIX}/go
