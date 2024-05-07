@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.22.2" %}
+{% set version = "1.22.3" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 374ea82b289ec738e968267cac59c7d5ff180f9492250254784b2044e90df5a9
+    sha256: 80648ef34f903193d72a59c0dff019f5f98ae0c9aa13ade0b0ecbff991a76f68
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -21,22 +21,22 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: 36e720b2d564980c162a48c7e97da2e407dfcc4239e1e58d98082dfa2486a0c1  # [aarch64]
+    sha256: 6c33e52a5b26e7aa021b94475587fce80043a727a54ceb0eee2f9fc160646434  # [aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
-    sha256: 5901c52b7a78002aeff14a21f93e0f064f74ce1360fce51c6ee68cd471216a17  # [linux and x86_64]
+    sha256: 8920ea521bad8f6b7bc377b4824982e011c19af27df88a815e3586ea895f1b36  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 251a8886c5113be6490bdbb955ddee98763b49c9b1bf4c8364c02d3b482dab00  # [ppc64le]
+    sha256: 04b7b05283de30dd2da20bf3114b2e22cc727938aed3148babaf35cc951051ac  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: 8e581cf330f49d3266e936521a2d8263679ef7e2fc2cbbceb85659122d883596  # [win64]
+    sha256: cab2af6951a6e2115824263f6df13ff069c47270f5788714fa1d776f7f60cb39  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: 33e7f63077b1c5bce4f1ecadd4d990cf229667c40bfb00686990c950911b7ab7  # [osx]
+    sha256: 610e48c1df4d2f852de8bc2e7fd2dc1521aac216f0c0026625db12f67f192024  # [osx]
 
 build:
   binary_relocation: false
@@ -50,7 +50,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 1
+  number: 0
   skip: true  # [linux and s390x]
 
 requirements:
@@ -77,19 +77,18 @@ outputs:
     requirements:
       build:
         - {{ compiler('c') }}        # [unix and cgo]
-        - sysroot_linux-64 2.17      # [linux64 and cgo]
+        - {{ stdlib("c") }}          # [unix and cgo]
         - {{ compiler('cxx') }}      # [unix and cgo]
         - {{ compiler('fortran') }}  # [unix and cgo]
 
         - {{ compiler('m2w64_c') }}        # [win and cgo]
+        - {{ stdlib("m2w64_c") }}          # [win and cgo]
         - {{ compiler('m2w64_cxx') }}      # [win and cgo]
         - {{ compiler('m2w64_fortran') }}  # [win and cgo]
       run:
         - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
-        - sysroot_linux-64 2.17      # [linux64 and cgo]
       run_constrained:
         # TODO: Move to run section once conda/conda#9845 is fixed
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
 
         - {{ pin_compatible(compiler('c')) }}        # [unix and cgo]
         - {{ pin_compatible(compiler('cxx')) }}      # [unix and cgo]
