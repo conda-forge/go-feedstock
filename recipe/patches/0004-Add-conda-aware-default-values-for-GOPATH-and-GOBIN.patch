@@ -1,4 +1,4 @@
-From 93959b98b638b9efa24dbeb70818c5be38775328 Mon Sep 17 00:00:00 2001
+From e2f8517c4b0bacc59d2c769da4f40d96590f6b22 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Sun, 24 Jan 2021 23:52:48 -0500
 Subject: [PATCH 4/7] Add conda-aware default values for GOPATH and GOBIN
@@ -36,7 +36,7 @@ maintaining compatibilit with the current case.
  create mode 100644 src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go
 
 diff --git a/src/cmd/go/go_test.go b/src/cmd/go/go_test.go
-index 3282295..59305ef 100644
+index b45a905..5770c71 100644
 --- a/src/cmd/go/go_test.go
 +++ b/src/cmd/go/go_test.go
 @@ -2801,3 +2801,36 @@ func TestExecInDeletedDir(t *testing.T) {
@@ -77,19 +77,19 @@ index 3282295..59305ef 100644
 +}
 +
 diff --git a/src/cmd/go/internal/cfg/cfg.go b/src/cmd/go/internal/cfg/cfg.go
-index a8daa2d..cfa825c 100644
+index 3715a19..88a0366 100644
 --- a/src/cmd/go/internal/cfg/cfg.go
 +++ b/src/cmd/go/internal/cfg/cfg.go
-@@ -404,7 +404,7 @@ var (
+@@ -411,7 +411,7 @@ var (
+ 	GOROOTpkg string
+ 	GOROOTsrc string
  
- 	GOROOT_FINAL string
- 
--	GOBIN      = Getenv("GOBIN")
-+	GOBIN      = envOr("GOBIN", defaultCondaGOBIN())
- 	GOMODCACHE = envOr("GOMODCACHE", gopathDir("pkg/mod"))
+-	GOBIN                         = Getenv("GOBIN")
++	GOBIN                         = envOr("GOBIN", defaultCondaGOBIN())
+ 	GOMODCACHE, GOMODCACHEChanged = EnvOrAndChanged("GOMODCACHE", gopathDir("pkg/mod"))
  
  	// Used in envcmd.MkEnv and build ID computations.
-@@ -427,6 +427,32 @@ var (
+@@ -452,6 +452,32 @@ func EnvOrAndChanged(name, def string) (v string, changed bool) {
  
  var SumdbDir = gopathDir("pkg/sumdb")
  
@@ -134,10 +134,10 @@ index 0000000..002a5c7
 +	println("hello world")
 +}
 diff --git a/src/go/build/build.go b/src/go/build/build.go
-index 9ce3700..0314a81 100644
+index 000db9f..4735a49 100644
 --- a/src/go/build/build.go
 +++ b/src/go/build/build.go
-@@ -286,6 +286,16 @@ func (ctxt *Context) SrcDirs() []string {
+@@ -287,6 +287,16 @@ func (ctxt *Context) SrcDirs() []string {
  // if set, or else the compiled code's GOARCH, GOOS, and GOROOT.
  var Default Context = defaultContext()
  
@@ -151,10 +151,10 @@ index 9ce3700..0314a81 100644
 +	return defaultGOPATH()
 +}
 +
+ // Keep consistent with cmd/go/internal/cfg.defaultGOPATH.
  func defaultGOPATH() string {
  	env := "HOME"
- 	if runtime.GOOS == "windows" {
-@@ -315,7 +325,7 @@ func defaultContext() Context {
+@@ -337,7 +347,7 @@ func defaultContext() Context {
  	if goroot := runtime.GOROOT(); goroot != "" {
  		c.GOROOT = filepath.Clean(goroot)
  	}
@@ -163,7 +163,7 @@ index 9ce3700..0314a81 100644
  	c.Compiler = runtime.Compiler
  	c.ToolTags = append(c.ToolTags, buildcfg.ToolTags...)
  
-@@ -363,6 +373,13 @@ func envOr(name, def string) string {
+@@ -385,6 +395,13 @@ func envOr(name, def string) string {
  	return s
  }
  

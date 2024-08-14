@@ -1,4 +1,4 @@
-From 69aeeec9aa867cab5f9f96345015154972ec1770 Mon Sep 17 00:00:00 2001
+From 74359bc88d42d543a17b79f55c02be227a6a670f Mon Sep 17 00:00:00 2001
 From: Nehal J Wani <nehaljw.kkd1@gmail.com>
 Date: Fri, 2 Apr 2021 12:55:53 -0400
 Subject: [PATCH 5/7] cmd/link/internal/ld: disable
@@ -14,7 +14,7 @@ ld_test.go:215: build failure: exit status 2
  1 file changed, 1 insertion(+)
 
 diff --git a/src/cmd/link/internal/ld/ld_test.go b/src/cmd/link/internal/ld/ld_test.go
-index 1767667..bd167ea 100644
+index c954ab6..6990423 100644
 --- a/src/cmd/link/internal/ld/ld_test.go
 +++ b/src/cmd/link/internal/ld/ld_test.go
 @@ -199,6 +199,7 @@ func TestWindowsBuildmodeCSharedASLR(t *testing.T) {

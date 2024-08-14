@@ -1,4 +1,4 @@
-From b9d600320d9040166e8919bc99c45d5d3e9dec38 Mon Sep 17 00:00:00 2001
+From f11954d3056c18f8d213c664fd9a7a1cb02238bb Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 23:02:19 -0400
 Subject: [PATCH 1/7] Fix cgo_fortran test setup for conda
