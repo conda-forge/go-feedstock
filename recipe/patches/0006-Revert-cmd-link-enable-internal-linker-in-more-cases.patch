@@ -1,4 +1,4 @@
-From d2159a1b847909611b908b9478d21a1306079ce2 Mon Sep 17 00:00:00 2001
+From 2c393086123c7682a4f152e5a2d20bb4e52a34b5 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Mon, 13 Jun 2022 22:43:22 -0400
 Subject: [PATCH 6/7] Revert "cmd/link: enable internal linker in more cases
@@ -10,10 +10,10 @@ This reverts commit 2c4f389c0298a37f1f3c000ad8b87e65d46c757f.
  1 file changed, 5 insertions(+)
 
 diff --git a/src/cmd/dist/test.go b/src/cmd/dist/test.go
-index 5e62bbf..4aa6089 100644
+index 0ffcabe..fb5a077 100644
 --- a/src/cmd/dist/test.go
 +++ b/src/cmd/dist/test.go
-@@ -1068,6 +1068,11 @@ func (t *tester) internalLink() bool {
+@@ -1071,6 +1071,11 @@ func (t *tester) internalLink() bool {
  		// linkmode=internal fails on dragonfly since errno is a TLS relocation.
  		return false
  	}

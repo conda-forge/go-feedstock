@@ -1,4 +1,4 @@
-From 8b4e68564f9bfa150994c372224942f41d218983 Mon Sep 17 00:00:00 2001
+From 33e3c7b1dae945783cc6393bdc8c29e88649a617 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Sat, 11 Jun 2022 08:47:11 -0400
 Subject: [PATCH 2/7] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
@@ -8,10 +8,10 @@ Subject: [PATCH 2/7] Add CC,{C,CPP,LD}FLAGS to script_test extraEnvKeys
  1 file changed, 5 insertions(+)
 
 diff --git a/src/cmd/go/script_test.go b/src/cmd/go/script_test.go
-index 624c5bf..2db02af 100644
+index a38dec3..1667558 100644
 --- a/src/cmd/go/script_test.go
 +++ b/src/cmd/go/script_test.go
-@@ -282,9 +282,14 @@ var extraEnvKeys = []string{
+@@ -290,9 +290,14 @@ var extraEnvKeys = []string{
  	"LIBRARY_PATH",       // allow override of non-standard static library paths
  	"C_INCLUDE_PATH",     // allow override non-standard include paths
  	"CC",                 // don't lose user settings when invoking cgo
