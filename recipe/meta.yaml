@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.23.0" %}
+{% set version = "1.23.1" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 42b7a8e80d805daa03022ed3fde4321d4c3bf2c990a144165d01eeecd6f699c6
+    sha256: 6ee44e298379d146a5e5aa6b1c5b5d5f5d0a3365eabdd70741e6e21340ec3b0d
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -21,22 +21,22 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: 62788056693009bcf7020eedc778cdd1781941c6145eab7688bd087bce0f8659  # [aarch64]
+    sha256: faec7f7f8ae53fda0f3d408f52182d942cc89ef5b7d3d9f23ff117437d4b2d2f  # [aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
-    sha256: 905a297f19ead44780548933e0ff1a1b86e8327bb459e92f9c0012569f76f5e3  # [linux and x86_64]
+    sha256: 49bbb517cfa9eee677e1e7897f7cf9cfdbcf49e05f61984a2789136de359f9bd  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 8b26e20d4d43a4d7641cddbdc0298d7ba3804d910a9e06cda7672970dbf2829d  # [ppc64le]
+    sha256: 042888cae54b5fbfd9dd1e3b6bc4a5134879777fe6497fc4c62ec394b5ecf2da  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: d4be481ef73079ee0ad46081d278923aa3fd78db1b3cf147172592f73e14c1ac  # [win64]
+    sha256: 32dedf277c86610e380e1765593edb66876f00223df71690bd6be68ee17675c0  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: ffd070acf59f054e8691b838f274d540572db0bd09654af851e4e76ab88403dc  # [osx]
+    sha256: 488d9e4ca3e3ed513ee4edd91bef3a2360c65fa6d6be59cf79640bf840130a58  # [osx]
 
 build:
   binary_relocation: false
@@ -50,7 +50,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 1
+  number: 0
   skip: true  # [linux and s390x]
 
 requirements:
