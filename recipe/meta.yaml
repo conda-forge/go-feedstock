@@ -59,10 +59,12 @@ outputs:
       build:
         - {{ compiler('go14') }}  # [not (aarch64 or ppc64le or osx)]
 
+        - {{ stdlib('c') }}        # [unix and cgo]
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('cxx') }}      # [unix and cgo]
         - {{ compiler('fortran') }}  # [unix and cgo]
 
+        - {{ stdlib('m2w64_c') }}        # [win and cgo]
         - {{ compiler('m2w64_c') }}        # [win and cgo]
         - {{ compiler('m2w64_cxx') }}      # [win and cgo]
         - {{ compiler('m2w64_fortran') }}  # [win and cgo]
