@@ -77,18 +77,18 @@ outputs:
       build:
         - {{ compiler('go14') }}  # [not (aarch64 or ppc64le or osx or win64)]
 
+        - {{ stdlib('c') }}         # [unix and cgo]
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('cxx') }}      # [unix and cgo]
         - {{ compiler('fortran') }}  # [unix and cgo]
 
+        - {{ stdlib('m2w64_c') }}          # [win and cgo]
         - {{ compiler('m2w64_c') }}        # [win and cgo]
         - {{ compiler('m2w64_cxx') }}      # [win and cgo]
         - {{ compiler('m2w64_fortran') }}  # [win and cgo]
       run:
         - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
       run_constrained:
-        # TODO: Move to run section once conda/conda#9845 is fixed
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
 
         - {{ pin_compatible(compiler('c')) }}        # [unix and cgo]
         - {{ pin_compatible(compiler('cxx')) }}      # [unix and cgo]
