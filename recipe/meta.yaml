@@ -71,9 +71,6 @@ outputs:
       run:
         - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
       run_constrained:
-        # TODO: Move to run section once conda/conda#9845 is fixed
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
-
         - {{ pin_compatible(compiler('c')) }}        # [unix and cgo]
         - {{ pin_compatible(compiler('cxx')) }}      # [unix and cgo]
         - {{ pin_compatible(compiler('fortran')) }}  # [unix and cgo]
