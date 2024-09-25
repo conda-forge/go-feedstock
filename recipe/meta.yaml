@@ -71,29 +71,26 @@ outputs:
     script: {{ go_variant_str }}/build.sh  # [unix]
     script: {{ go_variant_str }}/build.bat  # [win]
 
-    build:   # [linux64 and cgo]
-      binary_relocation: false  # [linux64 and cgo]
+    build:                                    # [linux64 and cgo]
+      binary_relocation: false                # [linux64 and cgo]
       detect_binary_files_with_prefix: false  # [linux64 and cgo]
-      run_exports:   # [linux64 and cgo]
-        strong:   # [linux64 and cgo]
-          - __glibc >=2.17                    # [linux64 and cgo]
+      run_exports:                            # [linux64 and cgo]
+        strong:                               # [linux64 and cgo]
+          - __glibc >={{ c_stdlib_version }}  # [linux64 and cgo]
     requirements:
       build:
+        - {{ stdlib('c') }}          # [unix and cgo]
         - {{ compiler('c') }}        # [unix and cgo]
-        - sysroot_linux-64 2.17      # [linux64 and cgo]
         - {{ compiler('cxx') }}      # [unix and cgo]
         - {{ compiler('fortran') }}  # [unix and cgo]
 
+        - {{ stdlib('m2w64_c') }}          # [win and cgo]
         - {{ compiler('m2w64_c') }}        # [win and cgo]
         - {{ compiler('m2w64_cxx') }}      # [win and cgo]
         - {{ compiler('m2w64_fortran') }}  # [win and cgo]
       run:
         - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
-        - sysroot_linux-64 2.17      # [linux64 and cgo]
       run_constrained:
-        # TODO: Move to run section once conda/conda#9845 is fixed
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
-
         - {{ pin_compatible(compiler('c')) }}        # [unix and cgo]
         - {{ pin_compatible(compiler('cxx')) }}      # [unix and cgo]
         - {{ pin_compatible(compiler('fortran')) }}  # [unix and cgo]
