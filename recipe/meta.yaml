@@ -53,7 +53,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 0
+  number: 1
   skip: true  # [linux and s390x]
 
 requirements:
