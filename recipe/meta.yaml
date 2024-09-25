@@ -19,6 +19,8 @@ source:
       - patches/0006-issue10607-is-only-valid-when-running-with-CGO.patch
       - patches/0007-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
       - patches/0008-Mark-ftree-as-a-safe-compiler-flag.patch
+      # https://github.com/golang/go/issues/68088
+      - patches/0009-cmd-link-don-t-let-dsymutil-delete-our-temp-director.patch
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
