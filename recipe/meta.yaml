@@ -22,6 +22,7 @@ source:
       # https://go-review.googlesource.com/c/go/+/490818
       - patches/a9a01ea280892e69c3722eebbc60d14c17a77e8d.patch
       - patches/0008-Mark-ftree-as-a-safe-compiler-flag.patch
+      - patches/0009-cmd-link-don-t-let-dsymutil-delete-our-temp-director.patch
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
