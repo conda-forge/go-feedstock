@@ -28,6 +28,7 @@ source:
       - patches/a9a01ea.patch
       # https://go-review.googlesource.com/c/go/+/472295
       - patches/bb8f9a6.patch  # [win]
+      - patches/0009-cmd-link-don-t-let-dsymutil-delete-our-temp-director.patch
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
