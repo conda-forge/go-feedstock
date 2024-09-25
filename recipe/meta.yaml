@@ -17,6 +17,7 @@ source:
       - patches/0004-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
       - patches/0005-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
       - patches/0006-issue10607-is-only-valid-when-running-with-CGO.patch
+      - patches/0009-cmd-link-don-t-let-dsymutil-delete-our-temp-director.patch
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64]
     url: https://go.dev/dl/go1.17.linux-arm64.tar.gz  # [aarch64]
@@ -80,9 +81,6 @@ outputs:
       run:
         - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
       run_constrained:
-        # TODO: Move to run section once conda/conda#9845 is fixed
-        - __osx >={{ MACOSX_DEPLOYMENT_TARGET }}  # [osx]
-
         - {{ pin_compatible(compiler('c')) }}        # [unix and cgo]
         - {{ pin_compatible(compiler('cxx')) }}      # [unix and cgo]
         - {{ pin_compatible(compiler('fortran')) }}  # [unix and cgo]
