@@ -1,13 +1,83 @@
+About go-feedstock
+==================
+
+Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/go-feedstock/blob/main/LICENSE.txt)
+
+
 About go
-========
+--------
 
 Home: http://golang.org
 
 Package license: BSD-3-Clause
 
-Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/go-feedstock/blob/master/LICENSE.txt)
+Summary: The Go Programming Language (go_variant_str)
+
+Development: https://go.googlesource.com/go
+
+Documentation: https://golang.org/doc
+
+Go is expressive, concise, clean, and efficient. Its concurrency mechanisms
+make it easy to write programs that get the most out of multicore and
+networked machines, while its novel type system enables flexible and
+modular program construction. Go compiles quickly to machine code yet has
+the convenience of garbage collection and the power of run-time reflection.
+It's a fast, statically typed, compiled language that feels like a
+dynamically typed, interpreted language.
+
+
+About go
+--------
+
+Home: http://golang.org
+
+Package license: BSD-3-Clause
 
 Summary: The Go Programming Language
+
+About go-cgo
+------------
+
+Home: http://golang.org
+
+Package license: BSD-3-Clause
+
+Summary: The Go Programming Language (cgo)
+
+Development: https://go.googlesource.com/go
+
+Documentation: https://golang.org/doc
+
+Go is expressive, concise, clean, and efficient. Its concurrency mechanisms
+make it easy to write programs that get the most out of multicore and
+networked machines, while its novel type system enables flexible and
+modular program construction. Go compiles quickly to machine code yet has
+the convenience of garbage collection and the power of run-time reflection.
+It's a fast, statically typed, compiled language that feels like a
+dynamically typed, interpreted language.
+
+
+About go-nocgo
+--------------
+
+Home: http://golang.org
+
+Package license: BSD-3-Clause
+
+Summary: The Go Programming Language (nocgo)
+
+Development: https://go.googlesource.com/go
+
+Documentation: https://golang.org/doc
+
+Go is expressive, concise, clean, and efficient. Its concurrency mechanisms
+make it easy to write programs that get the most out of multicore and
+networked machines, while its novel type system enables flexible and
+modular program construction. Go compiles quickly to machine code yet has
+the convenience of garbage collection and the power of run-time reflection.
+It's a fast, statically typed, compiled language that feels like a
+dynamically typed, interpreted language.
+
 
 Current build status
 ====================
@@ -20,8 +90,8 @@ Current build status
     <td>
       <details>
         <summary>
-          <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-            <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master">
+          <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+            <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main">
           </a>
         </summary>
         <table>
@@ -29,85 +99,85 @@ Current build status
           <tbody><tr>
               <td>linux_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0</td>
               <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
                 </a>
               </td>
             </tr><tr>
               <td>linux_64_cgotruego_variant_strcgogo_variant_ver2.3.0</td>
               <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
                 </a>
               </td>
             </tr><tr>
               <td>linux_aarch64_cgofalsego_variant_strnocgogo_variant_ver2.2.0</td>
               <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_aarch64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
                 </a>
               </td>
             </tr><tr>
               <td>linux_aarch64_cgotruego_variant_strcgogo_variant_ver2.3.0</td>
               <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_aarch64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
                 </a>
               </td>
             </tr><tr>
               <td>linux_ppc64le_cgofalsego_variant_strnocgogo_variant_ver2.2.0</td>
               <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_ppc64le_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
                 </a>
               </td>
             </tr><tr>
               <td>linux_ppc64le_cgotruego_variant_strcgogo_variant_ver2.3.0</td>
               <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=linux&configuration=linux_ppc64le_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
                 </a>
               </td>
             </tr><tr>
               <td>osx_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0</td>
               <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=osx&configuration=osx_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
                 </a>
               </td>
             </tr><tr>
               <td>osx_64_cgotruego_variant_strcgogo_variant_ver2.3.0</td>
               <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=osx&configuration=osx_64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
                 </a>
               </td>
             </tr><tr>
               <td>osx_arm64_cgofalsego_variant_strnocgogo_variant_ver2.2.0</td>
               <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=osx&configuration=osx_arm64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
                 </a>
               </td>
             </tr><tr>
               <td>osx_arm64_cgotruego_variant_strcgogo_variant_ver2.3.0</td>
               <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=osx&configuration=osx_arm64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
                 </a>
               </td>
             </tr><tr>
               <td>win_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0</td>
               <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=win&configuration=win_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=win&configuration=win%20win_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0" alt="variant">
                 </a>
               </td>
             </tr><tr>
               <td>win_64_cgotruego_variant_strcgogo_variant_ver2.3.0</td>
               <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=master&jobName=win&configuration=win_64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=win&configuration=win%20win_64_cgotruego_variant_strcgogo_variant_ver2.3.0" alt="variant">
                 </a>
               </td>
             </tr>
@@ -193,7 +263,7 @@ available continuous integration services. Thanks to the awesome service provide
 [CircleCI](https://circleci.com/), [AppVeyor](https://www.appveyor.com/),
 [Drone](https://cloud.drone.io/welcome), and [TravisCI](https://travis-ci.com/)
 it is possible to build and upload installable packages to the
-[conda-forge](https://anaconda.org/conda-forge) [Anaconda-Cloud](https://anaconda.org/)
+[conda-forge](https://anaconda.org/conda-forge) [anaconda.org](https://anaconda.org/)
 channel for Linux, Windows and OSX respectively.
 
 To manage the continuous integration and simplify feedstock maintenance
