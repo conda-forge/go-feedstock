@@ -41,7 +41,7 @@ source:
 build:
   binary_relocation: false
   detect_binary_files_with_prefix: false
-  force_ignore_keys:   # [win]
+  force_ignore_keys:    # [win]
     - c_compiler        # [win]
     - cxx_compiler      # [win]
     - fortran_compiler  # [win]
@@ -56,8 +56,7 @@ build:
 requirements:
   run:
     - {{ pin_subpackage(name, exact=true) }}
-    - {{ compiler('c') }}  # [unix and cgo]
-    - {{ compiler('m2w64_c') }}  # [win and cgo]
+    - {{ compiler('c') }}
 
 test:
   commands:
@@ -76,31 +75,21 @@ outputs:
           - __glibc >=2.17                    # [linux64 and cgo]
     requirements:
       build:
-        - {{ compiler('c') }}        # [unix and cgo]
-        - {{ stdlib("c") }}          # [unix and cgo]
-        - {{ compiler('cxx') }}      # [unix and cgo]
-        - {{ compiler('fortran') }}  # [unix and cgo]
-
-        - {{ compiler('m2w64_c') }}        # [win and cgo]
-        - {{ stdlib("m2w64_c") }}          # [win and cgo]
-        - {{ compiler('m2w64_cxx') }}      # [win and cgo]
-        - {{ compiler('m2w64_fortran') }}  # [win and cgo]
+        - {{ stdlib('c') }}          # [cgo]
+        - {{ compiler('c') }}        # [cgo]
+        - {{ compiler('cxx') }}      # [cgo]
+        - {{ compiler('fortran') }}  # [cgo]
       run:
         - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
       run_constrained:
         # TODO: Move to run section once conda/conda#9845 is fixed
 
-        - {{ pin_compatible(compiler('c')) }}        # [unix and cgo]
-        - {{ pin_compatible(compiler('cxx')) }}      # [unix and cgo]
-        - {{ pin_compatible(compiler('fortran')) }}  # [unix and cgo]
-
-        - {{ pin_compatible(compiler('m2w64_c')) }}        # [win and cgo]
-        - {{ pin_compatible(compiler('m2w64_cxx')) }}      # [win and cgo]
-        - {{ pin_compatible(compiler('m2w64_fortran')) }}  # [win and cgo]
+        - {{ pin_compatible(compiler('c')) }}        # [cgo]
+        - {{ pin_compatible(compiler('cxx')) }}      # [cgo]
+        - {{ pin_compatible(compiler('fortran')) }}  # [cgo]
     test:
       requires:
-        - {{ compiler('c') }}        # [unix and cgo]
-        - {{ compiler('m2w64_c') }}  # [win and cgo]
+        - {{ compiler('c') }}
         - git  # [linux]
         - perl
       files:
