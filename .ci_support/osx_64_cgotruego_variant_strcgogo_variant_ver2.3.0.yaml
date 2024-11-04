@@ -1,9 +1,15 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '10.12'
+- '10.13'
+MACOSX_SDK_VERSION:
+- '10.13'
 c_compiler:
 - clang
 c_compiler_version:
-- '13'
+- '18'
+c_stdlib:
+- macosx_deployment_target
+c_stdlib_version:
+- '10.13'
 cgo:
 - 'true'
 channel_sources:
@@ -13,11 +19,11 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '13'
+- '18'
 fortran_compiler:
 - gfortran
 fortran_compiler_version:
-- '9'
+- '13'
 go_variant_str:
 - cgo
 go_variant_ver:
