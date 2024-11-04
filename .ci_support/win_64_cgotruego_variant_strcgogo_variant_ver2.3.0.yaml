@@ -12,10 +12,6 @@ go_variant_str:
 - cgo
 go_variant_ver:
 - 2.3.0
-m2w64_c_compiler:
-- gcc
-m2w64_c_compiler_version:
-- '13'
 perl:
 - 5.32.1
 target_platform:
