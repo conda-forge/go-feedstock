@@ -46,7 +46,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 1
+  number: 2
 
 requirements:
   run:
@@ -68,11 +68,12 @@ outputs:
 
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('cxx') }}      # [unix and cgo]
-        - {{ compiler('fortran') }}  # [unix and cgo]
+        - {{ compiler("fortran") }}
 
-        - {{ compiler('m2w64_c') }}        # [win and cgo]
-        - {{ compiler('m2w64_cxx') }}      # [win and cgo]
-        - {{ compiler('m2w64_fortran') }}  # [win and cgo]
+        - {{ stdlib("c") }}
+        - {{ compiler("c") }}
+        - {{ compiler("cxx") }}
+        - {{ compiler("fortran") }}
       run:
         - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
       run_constrained:
