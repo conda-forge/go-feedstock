@@ -1,4 +1,4 @@
-From 96889f99245898d4ee8ca47d6261fda3fc7562c0 Mon Sep 17 00:00:00 2001
+From bfbba3be04b741b14cb2e5c5e03fca6b530fcdab Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Patrick=20Sodr=C3=A9?= <psodre@gmail.com>
 Date: Tue, 7 Apr 2020 21:13:14 -0400
 Subject: [PATCH 3/7] Inherit CGO_* environment variables
@@ -8,10 +8,10 @@ Subject: [PATCH 3/7] Inherit CGO_* environment variables
  1 file changed, 32 insertions(+), 1 deletion(-)
 
 diff --git a/src/cmd/go/internal/work/exec.go b/src/cmd/go/internal/work/exec.go
-index c4852d8..71c0934 100644
+index 7b07316..f789a9f 100644
 --- a/src/cmd/go/internal/work/exec.go
 +++ b/src/cmd/go/internal/work/exec.go
-@@ -2682,6 +2682,37 @@ func (b *Builder) gccArchArgs() []string {
+@@ -2641,6 +2641,37 @@ func (b *Builder) gccArchArgs() []string {
  	return nil
  }
  
@@ -49,7 +49,7 @@ index c4852d8..71c0934 100644
  // envList returns the value of the given environment variable broken
  // into fields, using the default value when the variable is empty.
  //
-@@ -2725,7 +2756,7 @@ func buildFlags(name, defaults string, fromPackage []string, check func(string,
+@@ -2684,7 +2715,7 @@ func buildFlags(name, defaults string, fromPackage []string, check func(string,
  	if err := check(name, "#cgo "+name, fromPackage); err != nil {
  		return nil, err
  	}
