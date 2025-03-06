@@ -1,4 +1,4 @@
-From 74359bc88d42d543a17b79f55c02be227a6a670f Mon Sep 17 00:00:00 2001
+From 3d587868a445107e8294b52817e8de52de3e17bc Mon Sep 17 00:00:00 2001
 From: Nehal J Wani <nehaljw.kkd1@gmail.com>
 Date: Fri, 2 Apr 2021 12:55:53 -0400
 Subject: [PATCH 5/7] cmd/link/internal/ld: disable
