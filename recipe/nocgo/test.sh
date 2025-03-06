@@ -37,7 +37,7 @@ case $(uname -s) in
     case $ARCH in
       ppc64le)
         # Expect PASS
-        go tool dist test -v -no-rebuild -run='!^runtime|crypto/internal/fips140test$'
+        go tool dist test -v -no-rebuild -run='!^runtime|crypto/internal/fips140test'
         # Occasionally FAILS
         go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
         # Expect FAIL
