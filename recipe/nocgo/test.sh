@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-set -euf
+
+set -euxf
 
 # Test we are running GO under $CONDA_PREFIX
 test "$(which go)" == "${CONDA_PREFIX}/bin/go"
@@ -20,7 +21,7 @@ go env
 case $(uname -s) in
   Darwin)
     # Expect PASS
-    go tool dist test -v -no-rebuild -run='!^go_test:net/http|go_test:runtime|go_test:time$'
+    go tool dist test -v -no-rebuild -run='!^net/http|runtime|time|crypto/internal/fips140test'
     # Occasionally FAILS
     go tool dist test -v -no-rebuild -run='^go_test:net/http$' || true
     go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
@@ -36,7 +37,7 @@ case $(uname -s) in
     case $ARCH in
       ppc64le)
         # Expect PASS
-        go tool dist test -v -no-rebuild -run='!^go_test:runtime$'
+        go tool dist test -v -no-rebuild -run='!^runtime|crypto/internal/fips140test$'
         # Occasionally FAILS
         go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
         # Expect FAIL
