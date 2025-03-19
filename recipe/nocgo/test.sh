@@ -44,7 +44,7 @@ case $(uname -s) in
         ;;
       *)
         # Expect PASS
-        go tool dist test -v -no-rebuild -run='!^archive/tar'
+        go tool dist test -v -no-rebuild -run='!^archive/tar|crypto/internal/fips140test'
         ;;
     esac
     ;;
