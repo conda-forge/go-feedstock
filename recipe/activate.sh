@@ -1,0 +1,2 @@
+GOTOOLCHAIN=local
+export GOTOOLCHAIN
