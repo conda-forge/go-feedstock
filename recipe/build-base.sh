@@ -85,12 +85,7 @@ else
   find ../go/bin -type f -exec ln -s {} . \;
 fi
 
-# Taken from https://conda-forge.org/docs/maintainer/adding_pkgs/#activate-scripts
-
-# Copy the [de]activate scripts to $PREFIX/etc/conda/[de]activate.d.
-# This will allow them to be run on environment activation.
-for CHANGE in "activate"
-do
-    mkdir -p "${PREFIX}/etc/conda/${CHANGE}.d"
-    cp "${RECIPE_DIR}/${CHANGE}.sh" "${PREFIX}/etc/conda/${CHANGE}.d/${PKG_NAME}_${CHANGE}.sh"
-done
+# JSON files under '$PREFIX/etc/conda/env_vars.d/' containing environment variables as key-value pairs
+# are sourced automatically upon activation.
+# Ref.: https://github.com/conda/conda/issues/6820#issuecomment-1269581626
+cp env.json "${PREFIX}/etc/conda/env_vars.d/${PKG_NAME}.json"

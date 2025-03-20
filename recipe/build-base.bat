@@ -48,14 +48,8 @@ rem all files in bin are gone
 rmdir /q /s "%PREFIX%\go\bin"
 if errorlevel 1 exit 1
 
-:: Taken from https://conda-forge.org/docs/maintainer/adding_pkgs/#activate-scripts
-setlocal EnableDelayedExpansion
-
-:: Copy the [de]activate scripts to %PREFIX%\etc\conda\[de]activate.d.
-:: This will allow them to be run on environment activation.
-for %%F in (activate) DO (
-    if not exist %PREFIX%\etc\conda\%%F.d mkdir %PREFIX%\etc\conda\%%F.d
-    copy %RECIPE_DIR%\%%F.bat %PREFIX%\etc\conda\%%F.d\%PKG_NAME%_%%F.bat
-    :: Copy unix shell activation scripts, needed by Windows Bash users
-    copy %RECIPE_DIR%\%%F.sh %PREFIX%\etc\conda\%%F.d\%PKG_NAME%_%%F.sh
-)
+@echo off
+:: JSON files under '%PREFIX%\etc\conda\env_vars.d\' containing environment variables as key-value pairs
+:: are sourced automatically upon activation.
+:: Ref.: https://github.com/conda/conda/issues/6820#issuecomment-1269581626
+copy env.json %PREFIX%\etc\conda\env_vars.d\%PKG_NAME%.json

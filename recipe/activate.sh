@@ -1,2 +1,0 @@
-GOTOOLCHAIN=local
-export GOTOOLCHAIN
