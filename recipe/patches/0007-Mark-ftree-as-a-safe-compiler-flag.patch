@@ -1,4 +1,4 @@
-From eade78f4d31199f3de858a2821db0a019423c4e4 Mon Sep 17 00:00:00 2001
+From cd4e5021242f5b1a41706931c746dba2d3c789f8 Mon Sep 17 00:00:00 2001
 From: "Uwe L. Korn" <uwe.korn@quantco.com>
 Date: Tue, 16 May 2023 15:36:34 +0200
 Subject: [PATCH 7/7] Mark -ftree as a safe compiler flag
@@ -8,7 +8,7 @@ Subject: [PATCH 7/7] Mark -ftree as a safe compiler flag
  1 file changed, 2 insertions(+)
 
 diff --git a/src/cmd/go/internal/work/security.go b/src/cmd/go/internal/work/security.go
-index 543ab22..5410807 100644
+index 50bfd0a..7509fad 100644
 --- a/src/cmd/go/internal/work/security.go
 +++ b/src/cmd/go/internal/work/security.go
 @@ -66,6 +66,7 @@ var validCompilerFlags = []*lazyregexp.Regexp{
@@ -24,6 +24,6 @@ index 543ab22..5410807 100644
  	re(`-fsanitize=(.+)`),
  	re(`-ftemplate-depth-(.+)`),
 +	re(`-ftree-vectorize`),
+ 	re(`-ftls-model=(global-dynamic|local-dynamic|initial-exec|local-exec)`),
  	re(`-fvisibility=(.+)`),
  	re(`-g([^@\-].*)?`),
- 	re(`-m32`),

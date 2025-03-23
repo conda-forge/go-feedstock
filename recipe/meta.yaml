@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.23.6" %}
+{% set version = "1.24.1" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 039c5b04e65279daceee8a6f71e70bd05cf5b801782b6f77c6e19e2ed0511222
+    sha256: 8244ebf46c65607db10222b5806aeb31c1fcf8979c1b6b12f60c677e9a3c0656
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -21,22 +21,22 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: 561c780e8f4a8955d32bf72e46af0b5ee5e0debe1e4633df9a03781878219202  # [aarch64]
+    sha256: 8df5750ffc0281017fb6070fba450f5d22b600a02081dceef47966ffaf36a3af  # [aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
-    sha256: 9379441ea310de000f33a4dc767bd966e72ab2826270e038e78b2c53c2e7802d  # [linux and x86_64]
+    sha256: cb2396bae64183cdccf81a9a6df0aea3bce9511fc21469fb89a0c00470088073  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 0f817201e83d78ddbfa27f5f78d9b72450b92cc21d5e045145efacd0d3244a99  # [ppc64le]
+    sha256: 0fb522efcefabae6e37e69bdc444094e75bfe824ea6d4cc3cbc70c7ae1b16858  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: 53fec1586850b2cf5ad6438341ff7adc5f6700dd3ec1cfa3f5e8b141df190243  # [win64]
+    sha256: 95666b551453209a2b8869d29d177285ff9573af10f085d961d7ae5440f645ce  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: 782da50ce8ec5e98fac2cd3cdc6a1d7130d093294fc310038f651444232a3fb0  # [osx]
+    sha256: addbfce2056744962e2d7436313ab93486660cf7a2e066d171b9d6f2da7c7abe  # [osx]
 
 build:
   binary_relocation: false
@@ -109,6 +109,8 @@ outputs:
         - chmod +x {{ go_variant_str }}/test.sh   # [unix]
         - ./{{ go_variant_str }}/test.sh   # [unix]
         - {{ go_variant_str }}/test.bat  # [win]
+        - test "$GOTOOLCHAIN" = "local"   # [unix]
+        - if not "%GOTOOLCHAIN%"=="local" exit /b 1  # [win]
     about:
       home: https://go.dev/
       license: BSD-3-Clause
