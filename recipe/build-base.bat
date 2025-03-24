@@ -46,4 +46,14 @@ for %%f in ("%PREFIX%\go\bin\*.exe") do (
 
 rem all files in bin are gone
 rmdir /q /s "%PREFIX%\go\bin"
+
+if errorlevel 1 exit 1
+
+:: JSON files under '%PREFIX%\etc\conda\env_vars.d\' containing environment variables as key-value pairs
+:: are sourced automatically upon activation.
+:: Ref.: https://github.com/conda/conda/issues/6820#issuecomment-1269581626
+if not exist "%PREFIX%\etc\conda\env_vars.d" mkdir "%PREFIX%\etc\conda\env_vars.d"
+if errorlevel 1 exit 1
+
+copy "%RECIPE_DIR%\env.json" "%PREFIX%\etc\conda\env_vars.d\%PKG_NAME%.json"
 if errorlevel 1 exit 1
