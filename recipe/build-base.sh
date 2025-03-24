@@ -82,3 +82,9 @@ if [[ "${build_platform}" != "${target_platform}" ]]; then
 else
   find ../go/bin -type f -exec ln -s {} . \;
 fi
+
+# JSON files under '$PREFIX/etc/conda/env_vars.d/' containing environment variables as key-value pairs
+# are sourced automatically upon activation.
+# Ref.: https://github.com/conda/conda/issues/6820#issuecomment-1269581626
+mkdir -p "${PREFIX}/etc/conda/env_vars.d"
+cp "${RECIPE_DIR}/env.json" "${PREFIX}/etc/conda/env_vars.d/${PKG_NAME}.json"
