@@ -50,7 +50,7 @@ build:
     - $RPATH/libc.so.6             # [linux and not cgo]
     - /usr/lib/libSystem.B.dylib   # [osx]
     - $SYSROOT\System32\winmm.dll  # [win]
-  number: 0
+  number: 1
   skip: true  # [linux and s390x]
 
 requirements:
@@ -109,6 +109,8 @@ outputs:
         - chmod +x {{ go_variant_str }}/test.sh   # [unix]
         - ./{{ go_variant_str }}/test.sh   # [unix]
         - {{ go_variant_str }}/test.bat  # [win]
+        - test "$GOTOOLCHAIN" = "local"   # [unix]
+        - if not "%GOTOOLCHAIN%"=="local" exit /b 1  # [win]
     about:
       home: https://go.dev/
       license: BSD-3-Clause
