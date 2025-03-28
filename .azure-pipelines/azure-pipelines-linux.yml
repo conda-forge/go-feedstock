@@ -11,31 +11,58 @@ jobs:
       linux_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0:
         CONFIG: linux_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
       linux_64_cgotruego_variant_strcgogo_variant_ver2.3.0:
         CONFIG: linux_64_cgotruego_variant_strcgogo_variant_ver2.3.0
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
       linux_aarch64_cgofalsego_variant_strnocgogo_variant_ver2.2.0:
         CONFIG: linux_aarch64_cgofalsego_variant_strnocgogo_variant_ver2.2.0
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
       linux_aarch64_cgotruego_variant_strcgogo_variant_ver2.3.0:
         CONFIG: linux_aarch64_cgotruego_variant_strcgogo_variant_ver2.3.0
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
       linux_ppc64le_cgofalsego_variant_strnocgogo_variant_ver2.2.0:
         CONFIG: linux_ppc64le_cgofalsego_variant_strnocgogo_variant_ver2.2.0
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
       linux_ppc64le_cgotruego_variant_strcgogo_variant_ver2.3.0:
         CONFIG: linux_ppc64le_cgotruego_variant_strcgogo_variant_ver2.3.0
         UPLOAD_PACKAGES: 'True'
-        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:cos7
+        DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
   timeoutInMinutes: 360
   variables: {}
 
   steps:
+  - script: |
+         sudo mkdir -p /opt/empty_dir || true
+         for d in \
+                  /opt/ghc \
+                  /opt/hostedtoolcache \
+                  /usr/lib/jvm \
+                  /usr/local/.ghcup \
+                  /usr/local/lib/android \
+                  /usr/local/share/powershell \
+                  /usr/share/dotnet \
+                  /usr/share/swift \
+                  ; do
+           sudo rsync --stats -a --delete /opt/empty_dir/ $d || true
+         done
+         sudo apt-get purge -y -f firefox \
+                                  google-chrome-stable \
+                                  microsoft-edge-stable
+         sudo apt-get autoremove -y >& /dev/null
+         sudo apt-get autoclean -y >& /dev/null
+         df -h
+    displayName: Manage disk space
+  - script: |
+         sudo fallocate -l 8GiB /swapfile || true
+         sudo chmod 600 /swapfile || true
+         sudo mkswap /swapfile || true
+         sudo swapon /swapfile || true
+    displayName: Create swap file
   # configure qemu binfmt-misc running.  This allows us to run docker containers
   # embedded qemu-static
   - script: |
