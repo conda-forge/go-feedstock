@@ -63,7 +63,7 @@ popd
 rm -fr ${GOROOT}/pkg/obj
 
 # Don't need the test files from the source
-find ${GOROOT}/src -type d -name "testdata" -exec rm -rf \;
+find ${GOROOT}/src -type d -name "testdata" -exec rm -rf \; -print
 
 # Dropping the verbose option here, +8000 files
 cp -a ${GOROOT} ${PREFIX}/go
@@ -80,9 +80,13 @@ rm -rf "${PREFIX}"/go/test/fixedbugs/issue27836.dir
 mkdir -p ${PREFIX}/bin && pushd $_
 
 if [[ "${build_platform}" != "${target_platform}" ]]; then
-  find ../go/bin/${GOOS}_${GOARCH} -type f -exec ln -s {} . \;
+  # Remove build platform binaries
+  # https://github.com/conda-forge/go-feedstock/issues/266
+  find ../go/bin -maxdepth 1 -type f -exec rm {} \; -print
+  # Symlink target platform binaries to $PREFIX/bin
+  find ../go/bin/${GOOS}_${GOARCH} -type f -exec ln -s {} . \; -print
 else
-  find ../go/bin -type f -exec ln -s {} . \;
+  find ../go/bin -type f -exec ln -s {} . \; -print
 fi
 
 # JSON files under '$PREFIX/etc/conda/env_vars.d/' containing environment variables as key-value pairs
