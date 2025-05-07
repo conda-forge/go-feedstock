@@ -9,7 +9,7 @@ c_stdlib_version:
 cdt_name:
 - conda
 cgo:
-- 'true'
+- true
 channel_sources:
 - conda-forge
 channel_targets:
@@ -31,7 +31,7 @@ go_variant_ver:
 perl:
 - 5.32.1
 target_platform:
-- linux-ppc64le
+- linux-aarch64
 zip_keys:
 - - c_compiler_version
   - cxx_compiler_version
