@@ -2,7 +2,7 @@
 {% set version = "1.24.3" %}
 
 package:
-  name: {{ name }}-{{ go_variant_str }}
+  name: {{ name }}-{{ go_variant_str }}-split
   version: {{ version }}
 
 source:
@@ -39,32 +39,33 @@ source:
     sha256: 13e6fe3fcf65689d77d40e633de1e31c6febbdbcb846eb05fc2434ed2213e92b  # [osx]
 
 build:
-  binary_relocation: false
-  detect_binary_files_with_prefix: false
-  force_ignore_keys:   # [win]
-    - c_compiler        # [win]
-    - cxx_compiler      # [win]
-    - fortran_compiler  # [win]
-  # test data links to these DSOs
-  missing_dso_whitelist:
-    - $RPATH/libc.so.6             # [linux and not cgo]
-    - /usr/lib/libSystem.B.dylib   # [osx]
-    - $SYSROOT\System32\winmm.dll  # [win]
   number: 0
   skip: true  # [linux and s390x]
 
-requirements:
-  run:
-    - {{ pin_subpackage(name, exact=true) }}
-    - {{ compiler('c') }}  # [unix and cgo]
-    - {{ compiler('m2w64_c') }}  # [win and cgo]
-
-test:
-  commands:
-    - go help
-
 outputs:
-  - name: {{ name }}
+  - name: go-{{ go_variant_str }}
+    build:
+      binary_relocation: false
+      detect_binary_files_with_prefix: false
+      force_ignore_keys:   # [win]
+        - c_compiler        # [win]
+        - cxx_compiler      # [win]
+        - fortran_compiler  # [win]
+      # test data links to these DSOs
+      missing_dso_whitelist:
+        - $RPATH/libc.so.6             # [linux and not cgo]
+        - /usr/lib/libSystem.B.dylib   # [osx]
+        - $SYSROOT\System32\winmm.dll  # [win]
+    requirements:
+      run:
+        - {{ pin_subpackage(name, exact=true) }}
+        - {{ compiler('c') }}  # [unix and cgo]
+        - {{ compiler('m2w64_c') }}  # [win and cgo]
+    test:
+      commands:
+        - go help
+
+  - name: go
     script: {{ go_variant_str }}/build.sh  # [unix]
     script: {{ go_variant_str }}/build.bat  # [win]
 
