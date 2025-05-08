@@ -18,8 +18,10 @@ test "$(go env CGO_ENABLED)" == 1
 export CC=$(basename $CC)
 go build -x runtime/cgo
 
-# Drop this as it is anyways part of the flags and the tests are sensitive to linker warnings
-export LDFLAGS="${LDFLAGS/-Wl,-rpath,$CONDA_PREFIX\/lib/ }"
+if [[ "$(go env GOHOSTOS)" == "darwin" ]]; then
+  # Drop this as it is anyways part of the flags and the tests are sensitive to linker warnings
+  export LDFLAGS="${LDFLAGS/-Wl,-rpath,$CONDA_PREFIX\/lib/ }"
+fi
 
 go env
 export
