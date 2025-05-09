@@ -68,10 +68,9 @@ outputs:
   - name: go
     script: {{ go_variant_str }}/build.sh  # [unix]
     script: {{ go_variant_str }}/build.bat  # [win]
-
-    build:   # [linux64 and cgo]
-      binary_relocation: false  # [linux64 and cgo]
-      detect_binary_files_with_prefix: false  # [linux64 and cgo]
+    build:
+      binary_relocation: false
+      detect_binary_files_with_prefix: false
       run_exports:   # [linux64 and cgo]
         strong:   # [linux64 and cgo]
           - __glibc >=2.17                    # [linux64 and cgo]
