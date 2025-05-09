@@ -14,6 +14,7 @@ export FC=false
 
 
 # Print diagnostics
+which gcc || true
 go env
 
 

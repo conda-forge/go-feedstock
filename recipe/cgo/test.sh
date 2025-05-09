@@ -23,6 +23,8 @@ if [[ "$(go env GOHOSTOS)" == "darwin" ]]; then
   export LDFLAGS="${LDFLAGS/-Wl,-rpath,$CONDA_PREFIX\/lib/ }"
 fi
 
+# Debug output to diagnose failing tests
+which gcc || true
 go env
 export
 
