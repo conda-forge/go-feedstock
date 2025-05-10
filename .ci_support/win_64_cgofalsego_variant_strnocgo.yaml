@@ -1,13 +1,13 @@
 cgo:
-- 'true'
+- false
 channel_sources:
 - conda-forge
 channel_targets:
 - conda-forge main
 go_variant_str:
-- cgo
+- nocgo
 go_variant_ver:
-- 2.3.0
+- 2.2.0
 m2w64_c_compiler:
 - gcc
 m2w64_c_compiler_version:
