@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.24.3" %}
+{% set version = "1.24.4" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}-split
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 229c08b600b1446798109fae1f569228102c8473caba8104b6418cb5bc032878
+    sha256: 5a86a83a31f9fa81490b8c5420ac384fd3d95a3e71fba665c7b3f95d1dfef2b4
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -21,22 +21,22 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: a463cb59382bd7ae7d8f4c68846e73c4d589f223c589ac76871b66811ded7836  # [aarch64]
+    sha256: d5501ee5aca0f258d5fe9bfaed401958445014495dc115f202d43d5210b45241  # [aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
-    sha256: 3333f6ea53afa971e9078895eaa4ac7204a8c6b5c68c10e6bc9a33e8e391bdd8  # [linux and x86_64]
+    sha256: 77e5da33bb72aeaef1ba4418b6fe511bc4d041873cbf82e5aa6318740df98717  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 341a749d168f47b1d4dad25e32cae70849b7ceed7c290823b853c9e6b0df0856  # [ppc64le]
+    sha256: 9ca4afef813a2578c23843b640ae0290aa54b2e3c950a6cc4c99e16a57dec2ec  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: be9787cb08998b1860fe3513e48a5fe5b96302d358a321b58e651184fa9638b3  # [win64]
+    sha256: b751a1136cb9d8a2e7ebb22c538c4f02c09b98138c7c8bfb78a54a4566c013b1  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: 13e6fe3fcf65689d77d40e633de1e31c6febbdbcb846eb05fc2434ed2213e92b  # [osx]
+    sha256: 69bef555e114b4a2252452b6e7049afc31fbdf2d39790b669165e89525cd3f5c  # [osx]
 
 build:
   number: 0
