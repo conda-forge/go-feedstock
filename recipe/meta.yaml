@@ -27,7 +27,7 @@ source:
     sha256: 80899df77459e0b551d2eb8800ad6eb47023b99cccbf8129e7b5786770b948c5  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 3ffc310bfd11fd0bcc713a764a0f7252c4d52d03f12abebfaebaaae77e027028  # [ppc64le]
+    sha256: 0e2fcb735fae945aa141833ad0e50abadb970b827aeb55553d649ae1d9142ba8  # [ppc64le]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
     sha256: 1dbcf0b4183066550964b22890fe119b0b867b51f12c1eea4445c71494d98cbb  # [win64]
