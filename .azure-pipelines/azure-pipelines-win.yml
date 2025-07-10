@@ -8,11 +8,11 @@ jobs:
     vmImage: windows-2022
   strategy:
     matrix:
-      win_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0:
-        CONFIG: win_64_cgofalsego_variant_strnocgogo_variant_ver2.2.0
+      win_64_cgofalsego_variant_strnocgo:
+        CONFIG: win_64_cgofalsego_variant_strnocgo
         UPLOAD_PACKAGES: 'True'
-      win_64_cgotruego_variant_strcgogo_variant_ver2.3.0:
-        CONFIG: win_64_cgotruego_variant_strcgogo_variant_ver2.3.0
+      win_64_cgotruego_variant_strcgo:
+        CONFIG: win_64_cgotruego_variant_strcgo
         UPLOAD_PACKAGES: 'True'
   timeoutInMinutes: 360
   variables:
