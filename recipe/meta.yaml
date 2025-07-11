@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.23.7" %}
+{% set version = "1.23.11" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 7cfabd46b73eb4c26b19d69515dd043d7183a6559acccd5cfdb25eb6b266a458
+    sha256: 296381607a483a8a8667d7695331752f94a1f231c204e2527d2f22e1e3d1247d
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -19,24 +19,18 @@ source:
       - patches/0006-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
       - patches/0007-Mark-ftree-as-a-safe-compiler-flag.patch
   # Update this with a release from https://go.dev/dl/
-  - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
-    url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: 597acbd0505250d4d98c4c83adf201562a8c812cbcd7b341689a07087a87a541  # [aarch64]
-
-    url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
-    sha256: 4741525e69841f2e22f9992af25df0c1112b07501f61f741c12c6389fcb119f3  # [linux and x86_64]
-
-    url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 3ffc310bfd11fd0bcc713a764a0f7252c4d52d03f12abebfaebaaae77e027028  # [ppc64le]
+  - folder: go-bootstrap
+    url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [build_platform == "linux-64"]
+    sha256: 80899df77459e0b551d2eb8800ad6eb47023b99cccbf8129e7b5786770b948c5  # [build_platform == "linux-64"]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: eba0477381037868738b47b0198d120a535eb9a8a17b2babb9ab0d5e912a2171  # [win64]
+    sha256: 1dbcf0b4183066550964b22890fe119b0b867b51f12c1eea4445c71494d98cbb  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: 3a3d6745286297cd011d2ab071998a85fe82714bf178dc3cd6ecd3d043a59270  # [osx]
+    sha256: 804538b068ebf449789e060d221c7be94d92d5f3e86842071cc70148d677f84d  # [osx]
 
 build:
   binary_relocation: false
