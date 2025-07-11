@@ -19,15 +19,9 @@ source:
       - patches/0006-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
       - patches/0007-Mark-ftree-as-a-safe-compiler-flag.patch
   # Update this with a release from https://go.dev/dl/
-  - folder: go-bootstrap  # [aarch64 or ppc64le or osx or win64 or (linux and x86_64)]
-    url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [aarch64]
-    sha256: d5501ee5aca0f258d5fe9bfaed401958445014495dc115f202d43d5210b45241  # [aarch64]
-
-    url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
-    sha256: 77e5da33bb72aeaef1ba4418b6fe511bc4d041873cbf82e5aa6318740df98717  # [linux and x86_64]
-
-    url: https://go.dev/dl/go{{ version }}.linux-ppc64le.tar.gz  # [ppc64le]
-    sha256: 9ca4afef813a2578c23843b640ae0290aa54b2e3c950a6cc4c99e16a57dec2ec  # [ppc64le]
+  - folder: go-bootstrap
+    url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [build_platform == "linux-64"]
+    sha256: 77e5da33bb72aeaef1ba4418b6fe511bc4d041873cbf82e5aa6318740df98717  # [build_platform == "linux-64"]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
     sha256: b751a1136cb9d8a2e7ebb22c538c4f02c09b98138c7c8bfb78a54a4566c013b1  # [win64]
@@ -39,7 +33,7 @@ source:
     sha256: 69bef555e114b4a2252452b6e7049afc31fbdf2d39790b669165e89525cd3f5c  # [osx]
 
 build:
-  number: 0
+  number: 1
   skip: true  # [linux and s390x]
 
 outputs:
