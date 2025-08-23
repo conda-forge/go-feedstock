@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.24.6" %}
+{% set version = "1.25.0" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}-split
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: e1cb5582aab588668bc04c07de18688070f6b8c9b2aaf361f821e19bd47cfdbd
+    sha256: 4bd01e91297207bfa450ea40d4d5a93b1b531a5e438473b2a06e18e077227225
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -21,16 +21,16 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [build_platform == "linux-64"]
-    sha256: bbca37cc395c974ffa4893ee35819ad23ebb27426df87af92e93a9ec66ef8712  # [build_platform == "linux-64"]
+    sha256: 2852af0cb20a13139b3448992e69b868e50ed0f8a1e5940ee1de9e19a123b613  # [build_platform == "linux-64"]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: 4fbc8af2cfca9e5059019b5150a426eb78e1e57718bf08f0e52b1c942a2782bf  # [win64]
+    sha256: 89efb4f9b30812eee083cc1770fdd2913c14d301064f6454851428f9707d190b  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: 4a8d7a32052f223e71faab424a69430455b27b3fff5f4e651f9d97c3e51a8746  # [osx]
+    sha256: 5bd60e823037062c2307c71e8111809865116714d6f6b410597cf5075dfd80ef  # [osx]
 
 build:
   number: 0
