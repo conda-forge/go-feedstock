@@ -90,3 +90,6 @@ fi
 # Ref.: https://github.com/conda/conda/issues/6820#issuecomment-1269581626
 mkdir -p "${PREFIX}/etc/conda/env_vars.d"
 cp "${RECIPE_DIR}/env.json" "${PREFIX}/etc/conda/env_vars.d/${PKG_NAME}.json"
+
+# The autocgo tests fails as we bake in the compiler path
+echo skip > "${PREFIX}/go/src/cmd/go/testdata/script/autocgo.txt"
