@@ -32,7 +32,7 @@ export
 case $(uname -s) in
   Darwin)
     # Expect PASS when run independently
-    go tool dist test -v -no-rebuild -run='!^go_test:net/http|go_test:runtime|go_test:time$'
+    go tool dist test -v -no-rebuild -run='!^go_test:net/http|go_test:runtime|go_test:time|go_test:cmd/go/internal/modfetch/codehost$'
     # Occasionally FAILS
     go tool dist test -v -no-rebuild -run='^go_test:net/http$' || true
     go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true

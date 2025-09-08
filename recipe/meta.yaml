@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.24.6" %}
+{% set version = "1.25.1" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}-split
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: e1cb5582aab588668bc04c07de18688070f6b8c9b2aaf361f821e19bd47cfdbd
+    sha256: d010c109cee94d80efe681eab46bdea491ac906bf46583c32e9f0dbb0bd1a594
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -21,16 +21,16 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [build_platform == "linux-64"]
-    sha256: bbca37cc395c974ffa4893ee35819ad23ebb27426df87af92e93a9ec66ef8712  # [build_platform == "linux-64"]
+    sha256: 7716a0d940a0f6ae8e1f3b3f4f36299dc53e31b16840dbd171254312c41ca12e  # [build_platform == "linux-64"]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: 4fbc8af2cfca9e5059019b5150a426eb78e1e57718bf08f0e52b1c942a2782bf  # [win64]
+    sha256: 4a974de310e7ee1d523d2fcedb114ba5fa75408c98eb3652023e55ccf3fa7cab  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: 4a8d7a32052f223e71faab424a69430455b27b3fff5f4e651f9d97c3e51a8746  # [osx]
+    sha256: 1d622468f767a1b9fe1e1e67bd6ce6744d04e0c68712adc689748bbeccb126bb  # [osx]
 
 build:
   number: 0
@@ -65,9 +65,10 @@ outputs:
     build:
       binary_relocation: false
       detect_binary_files_with_prefix: false
-      run_exports:   # [linux64 and cgo]
-        strong:   # [linux64 and cgo]
-          - __glibc >=2.17                    # [linux64 and cgo]
+      run_exports:                            # [unix and cgo]
+        strong:                               # [unix and cgo]
+          - __glibc >={{ c_stdlib_version }}  # [linux and cgo]
+          - __osx >=12                        # [osx and cgo]
     requirements:
       build:
         - {{ compiler('c') }}        # [unix and cgo]
@@ -95,7 +96,8 @@ outputs:
       requires:
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('m2w64_c') }}  # [win and cgo]
-        - git  # [linux]
+        - git  # [unix]
+        - binutils  # [osx]
         - perl
       files:
         - {{ go_variant_str }}
