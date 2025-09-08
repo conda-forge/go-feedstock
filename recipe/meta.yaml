@@ -65,9 +65,10 @@ outputs:
     build:
       binary_relocation: false
       detect_binary_files_with_prefix: false
-      run_exports:   # [linux64 and cgo]
-        strong:   # [linux64 and cgo]
-          - __glibc >=2.17                    # [linux64 and cgo]
+      run_exports:                            # [unix and cgo]
+        strong:                               # [unix and cgo]
+          - __glibc >={{ c_stdlib_version }}  # [linux64 and cgo]
+          - __osx >=12                        # [osx and cgo]
     requirements:
       build:
         - {{ compiler('c') }}        # [unix and cgo]

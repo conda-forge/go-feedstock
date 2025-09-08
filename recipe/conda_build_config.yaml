@@ -8,10 +8,10 @@
 # This will change depending on the version of go
 # For the correct deployment target, please see go's Release notes
 # c.f.: https://golang.org/doc/go1.16#darwin
-MACOSX_SDK_VERSION:        # [osx and x86_64]
-  - '10.14'                # [osx and x86_64]
-c_stdlib_version:          # [osx and x86_64]
-  - '10.14'                # [osx and x86_64]
+MACOSX_SDK_VERSION:       # [osx]
+  - '12.3'                # [osx]
+c_stdlib_version:         # [osx]
+  - '12.3'                # [osx]
 
 # Select the GO variants that we are building
 # The variant names, and versions come from
