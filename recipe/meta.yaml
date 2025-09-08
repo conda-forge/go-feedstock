@@ -96,7 +96,7 @@ outputs:
       requires:
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('m2w64_c') }}  # [win and cgo]
-        - git  # [linux]
+        - git  # [unix]
         - perl
       files:
         - {{ go_variant_str }}
