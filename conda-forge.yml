@@ -3,7 +3,9 @@ azure:
   settings_linux:
     swapfile_size: 8GiB
 bot:
+  automerge: true
   abi_migration_branches:
+  - 1.24.x
   - 1.23.x
   - 1.22.x
 build_platform:
