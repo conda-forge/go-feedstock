@@ -68,6 +68,13 @@ find ${GOROOT}/src -type d -name "testdata" -exec rm -rf \;
 # Dropping the verbose option here, +8000 files
 cp -a ${GOROOT} ${PREFIX}/go
 
+# When cross-compiling, remove the host platform binaries from go/bin/
+# The target platform binaries are in go/bin/${GOOS}_${GOARCH}/
+# This prevents confusion with tools that look for go/bin/go directly
+# c.f. https://github.com/conda-forge/go-feedstock/issues/266
+if [[ "${build_platform}" != "${target_platform}" ]]; then
+  rm -f "${PREFIX}"/go/bin/go "${PREFIX}"/go/bin/gofmt
+fi
 
 # Remove Invalid UTF-8 Filename and conflict with libarchive
 # c.f. https://github.com/conda-forge/staged-recipes/pull/9535#discussion_r403512142
