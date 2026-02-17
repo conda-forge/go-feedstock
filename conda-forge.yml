@@ -3,11 +3,11 @@ azure:
   settings_linux:
     swapfile_size: 8GiB
 bot:
-  automerge: true
   abi_migration_branches:
   - 1.24.x
   - 1.23.x
   - 1.22.x
+  automerge: true
 build_platform:
   linux_aarch64: linux_64
   linux_ppc64le: linux_64
@@ -18,4 +18,7 @@ conda_forge_output_validation: true
 github:
   branch_name: main
   tooling_branch_name: main
+provider:
+  linux_aarch64: default
+  linux_ppc64le: default
 test: native
