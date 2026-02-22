@@ -5,6 +5,7 @@ azure:
 bot:
   automerge: true
   abi_migration_branches:
+  - 1.25.x
   - 1.24.x
   - 1.23.x
   - 1.22.x
