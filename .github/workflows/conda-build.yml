@@ -23,31 +23,37 @@ jobs:
       matrix:
         include:
           - CONFIG: linux_64_cgofalsego_variant_strnocgo
+            STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['ubuntu-latest']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
           - CONFIG: linux_64_cgotruego_variant_strcgo
+            STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['ubuntu-latest']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
           - CONFIG: linux_aarch64_cgofalsego_variant_strnocgo
+            STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['ubuntu-latest']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
           - CONFIG: linux_aarch64_cgotruego_variant_strcgo
+            STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['ubuntu-latest']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
           - CONFIG: linux_ppc64le_cgofalsego_variant_strnocgo
+            STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['ubuntu-latest']
             DOCKER_IMAGE: quay.io/condaforge/linux-anvil-x86_64:alma9
           - CONFIG: linux_ppc64le_cgotruego_variant_strcgo
+            STORE_BUILD_ARTIFACTS: False
             UPLOAD_PACKAGES: True
             os: ubuntu
             runs_on: ['ubuntu-latest']
@@ -124,7 +130,7 @@ jobs:
       env:
         # default value; make it explicit, as it needs to match with artefact
         # generation below. Not configurable for now, can be revisited later
-        CONDA_BLD_DIR: C:\bld
+        CONDA_BLD_PATH: C:\bld
         MINIFORGE_HOME: ${{ contains(runner.arch, 'ARM') && 'C' || 'D' }}:\Miniforge
         PYTHONUNBUFFERED: 1
         CONFIG: ${{ matrix.CONFIG }}
