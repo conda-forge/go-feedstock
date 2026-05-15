@@ -134,6 +134,7 @@ about:
 extra:
   feedstock-name: go
   recipe-maintainers:
+    - pavelzw
     - nehaljwani
     - scopatz
     - sodre
