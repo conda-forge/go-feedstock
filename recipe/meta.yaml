@@ -20,10 +20,10 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [linux and aarch64]
-    sha256: 9d89a3ea57d141c2b22d70083f2c8459ba3890f2d9e818e7e933b75614936565  # [linux and aarch64]
+    sha256: ef758ae7c6cf9267c9c0ef080b8965f453d89ab2d25d9eb22de4405925238768  # [linux and aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
-    sha256: 2b2cfc7148493da5e73981bffbf3353af381d5f93e789c82c79aff64962eb556  # [linux and x86_64]
+    sha256: 1153d3d50e0ac764b447adfe05c2bcf08e889d42a02e0fe0259bd47f6733ad7f  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
     sha256: 3ca8fb4630b07c419cbdd51f754e31363cfcfb83b3a5354d9e895c90be2cc345  # [win64]
