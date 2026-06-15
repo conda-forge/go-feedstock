@@ -93,3 +93,9 @@ cp "${RECIPE_DIR}/env.json" "${PREFIX}/etc/conda/env_vars.d/${PKG_NAME}.json"
 
 # The autocgo tests fails as we bake in the compiler path
 echo skip > "${PREFIX}/go/src/cmd/go/testdata/script/autocgo.txt"
+
+# cgo_suspect_flag_force_external fails because conda-forge's CGO flags
+# (e.g., -ftree-vectorize, -fstack-protector-strong, -fno-plt, etc.)
+# are detected as "suspicious" by Go, causing it to emit preferlinkext
+# unexpectedly for programs that only use runtime/cgo indirectly.
+echo skip > "${PREFIX}/go/src/cmd/go/testdata/script/cgo_suspect_flag_force_external.txt"

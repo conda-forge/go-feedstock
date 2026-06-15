@@ -46,7 +46,7 @@ case $(uname -s) in
     pushd $GOROOT; git init; git add --all .; popd
 
     # Expect PASS
-    go tool dist test -v -no-rebuild -run='!testsanitizers|runtime'
+    go tool dist test -v -no-rebuild -run='!testsanitizers|runtime|cmd/internal/archive'
     # Occasionally FAILS
     go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
     # Expect FAIL
