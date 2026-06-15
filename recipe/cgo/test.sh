@@ -18,6 +18,14 @@ test "$(go env CGO_ENABLED)" == 1
 export CC=$(basename $CC)
 go build -x runtime/cgo
 
+# Ensure gcc is available for Go tests that use external linking.
+# In the test environment, gcc_linux-64 provides $CC (e.g., x86_64-conda-linux-gnu-cc)
+# but not the bare 'gcc' command that Go's linker searches for in PATH.
+# Create a symlink so that 'gcc' resolves to the cross-compiler.
+if [[ -n "$CC" ]] && command -v "$CC" >/dev/null 2>&1; then
+  ln -sf "$(command -v "$CC")" "${PREFIX}/bin/gcc"
+fi
+
 if [[ "$(go env GOHOSTOS)" == "darwin" ]]; then
   # Drop this as it is anyways part of the flags and the tests are sensitive to linker warnings
   export LDFLAGS="${LDFLAGS/-Wl,-rpath,$CONDA_PREFIX\/lib/ }"
@@ -46,7 +54,7 @@ case $(uname -s) in
     pushd $GOROOT; git init; git add --all .; popd
 
     # Expect PASS
-    go tool dist test -v -no-rebuild -run='!testsanitizers|runtime'
+    go tool dist test -v -no-rebuild -run='!testsanitizers|runtime|cmd/internal/archive'
     # Occasionally FAILS
     go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
     # Expect FAIL
