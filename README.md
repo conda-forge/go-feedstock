@@ -118,6 +118,20 @@ Current build status
                 </a>
               </td>
             </tr><tr>
+              <td>osx_arm64_cgofalsego_variant_strnocgo</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_cgofalsego_variant_strnocgo" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64_cgotruego_variant_strcgo</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_cgotruego_variant_strcgo" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
               <td>win_64_cgofalsego_variant_strnocgo</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">

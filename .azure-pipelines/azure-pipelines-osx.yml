@@ -31,7 +31,7 @@ jobs:
       osx_arm64_cgofalsego_variant_strnocgo:
         CONFIG: osx_arm64_cgofalsego_variant_strnocgo
         UPLOAD_PACKAGES: 'True'
-        VMIMAGE: macOS-15
+        VMIMAGE: macOS-15-arm64
         build_workspace_dir: ~/miniforge3/conda-bld
         free_disk_space: quick
         pagefile_size: 0
@@ -41,7 +41,7 @@ jobs:
       osx_arm64_cgotruego_variant_strcgo:
         CONFIG: osx_arm64_cgotruego_variant_strcgo
         UPLOAD_PACKAGES: 'True'
-        VMIMAGE: macOS-15
+        VMIMAGE: macOS-15-arm64
         build_workspace_dir: ~/miniforge3/conda-bld
         free_disk_space: quick
         pagefile_size: 0
