@@ -28,14 +28,14 @@ source:
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [build_platform == "linux-aarch64"]
     sha256: fe4789e92b1f33358680864bbe8704289e7bb5fc207d80623c308935bd696d49  # [build_platform == "linux-aarch64"]
 
-    url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: 97e6b2a833b6d89f9ff17d25419ac0a7e3b482a044e9ab18cdef834bd834fd38  # [win64]
+    url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [build_platform == "win-64"]
+    sha256: 97e6b2a833b6d89f9ff17d25419ac0a7e3b482a044e9ab18cdef834bd834fd38  # [build_platform == "win-64"]
 
-    # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
-    # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
+    url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [build_platform == "osx-64"]
+    sha256: 6231d8d3b8f5552ec6cbf6d685bdd5482e1e703214b120e89b3bf0d7bf1ef725  # [build_platform == "osx-64"]
 
-    url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: 6231d8d3b8f5552ec6cbf6d685bdd5482e1e703214b120e89b3bf0d7bf1ef725  # [osx]
+    url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [build_platform == "osx-arm64"]
+    sha256: efb87ff28af9a188d0536ef5d42e63dd52ba8263cd7344a993cc48dd11dedb6a  # [build_platform == "osx-arm64"]
 
 build:
   number: 0
@@ -46,7 +46,7 @@ outputs:
     build:
       binary_relocation: false
       detect_binary_files_with_prefix: false
-      force_ignore_keys:   # [win]
+      force_ignore_keys:    # [win]
         - c_compiler        # [win]
         - cxx_compiler      # [win]
         - fortran_compiler  # [win]
@@ -58,14 +58,14 @@ outputs:
     requirements:
       run:
         - {{ pin_subpackage(name, exact=true) }}
-        - {{ compiler('c') }}  # [unix and cgo]
+        - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('m2w64_c') }}  # [win and cgo]
     test:
       commands:
         - go help
 
   - name: go
-    script: {{ go_variant_str }}/build.sh  # [unix]
+    script: {{ go_variant_str }}/build.sh   # [unix]
     script: {{ go_variant_str }}/build.bat  # [win]
     build:
       binary_relocation: false
@@ -101,16 +101,16 @@ outputs:
       requires:
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('m2w64_c') }}  # [win and cgo]
-        - git  # [unix]
-        - binutils  # [osx]
+        - git                        # [unix]
+        - binutils                   # [osx]
         - perl
       files:
         - {{ go_variant_str }}
       commands:
-        - chmod +x {{ go_variant_str }}/test.sh   # [unix]
-        - ./{{ go_variant_str }}/test.sh   # [unix]
-        - {{ go_variant_str }}/test.bat  # [win]
-        - test "$GOTOOLCHAIN" = "local"   # [unix]
+        - chmod +x {{ go_variant_str }}/test.sh      # [unix]
+        - ./{{ go_variant_str }}/test.sh             # [unix]
+        - {{ go_variant_str }}/test.bat              # [win]
+        - test "$GOTOOLCHAIN" = "local"              # [unix]
         - if not "%GOTOOLCHAIN%"=="local" exit /b 1  # [win]
     about:
       home: https://go.dev/
