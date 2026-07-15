@@ -1,0 +1,24 @@
+From e72fb497625ce26ebab83abb938532fe7ad509dc Mon Sep 17 00:00:00 2001
+From: conda-forge <conda-forge@users.noreply.github.com>
+Date: Wed, 15 Jul 2026 17:34:21 +0900
+Subject: [PATCH] cmd/go: allow merge-constants compiler flags
+
+---
+ src/cmd/go/internal/work/security.go | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/cmd/go/internal/work/security.go b/src/cmd/go/internal/work/security.go
+index 160d564..7dd8938 100644
+--- a/src/cmd/go/internal/work/security.go
++++ b/src/cmd/go/internal/work/security.go
+@@ -73,6 +73,7 @@ var validCompilerFlags = []*lazyregexp.Regexp{
+ 	re(`-f(no-)?keep-inline-dllexport`),
+ 	re(`-f(no-)?lto`),
+ 	re(`-fmacro-backtrace-limit=(.+)`),
++	re(`-f(no-)?merge-constants`),
+ 	re(`-fmessage-length=(.+)`),
+ 	re(`-f(no-)?modules`),
+ 	re(`-f(no-)?objc-arc`),
+-- 
+2.50.1 (Apple Git-155)
+
