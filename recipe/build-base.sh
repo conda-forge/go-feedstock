@@ -63,7 +63,7 @@ popd
 rm -fr ${GOROOT}/pkg/obj
 
 # Don't need the test files from the source
-find ${GOROOT}/src -type d -name "testdata" -exec rm -rf \;
+find ${GOROOT}/src -type d -name "testdata" -prune -exec rm -rf {} +
 
 # Dropping the verbose option here, +8000 files
 cp -a ${GOROOT} ${PREFIX}/go
@@ -99,5 +99,6 @@ mkdir -p "${PREFIX}/etc/conda/env_vars.d"
 cp "${RECIPE_DIR}/env.json" "${PREFIX}/etc/conda/env_vars.d/${PKG_NAME}.json"
 
 # These tests fail as we bake in the compiler path
+mkdir -p "${PREFIX}/go/src/cmd/go/testdata/script"
 echo skip > "${PREFIX}/go/src/cmd/go/testdata/script/autocgo.txt"
 echo skip > "${PREFIX}/go/src/cmd/go/testdata/script/build_darwin_cc_arch.txt"
