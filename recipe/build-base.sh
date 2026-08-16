@@ -98,5 +98,6 @@ fi
 mkdir -p "${PREFIX}/etc/conda/env_vars.d"
 cp "${RECIPE_DIR}/env.json" "${PREFIX}/etc/conda/env_vars.d/${PKG_NAME}.json"
 
-# The autocgo tests fails as we bake in the compiler path
+# These tests fail as we bake in the compiler path
 echo skip > "${PREFIX}/go/src/cmd/go/testdata/script/autocgo.txt"
+echo skip > "${PREFIX}/go/src/cmd/go/testdata/script/build_darwin_cc_arch.txt"
