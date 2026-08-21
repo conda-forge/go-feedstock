@@ -13,3 +13,4 @@ upstream_sources:
       - go_osx-64
       - go_win-32
       - go_win-64
+      - go_win-arm64

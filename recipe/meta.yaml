@@ -31,8 +31,11 @@ source:
     url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx]
     sha256: 2dc95ce4675829f2df0e86b28bcef3283635902062a5f0580ca659bf570f3204  # [osx]
 
+    url: https://go.dev/dl/go{{ version }}.windows-arm64.zip  # [win and arm64]
+    sha256: 06dbe785743d534ef8a469dad88adf7f1b2b438507ccfef9b98e7cf8c97b4b68  # [win and arm64]
+
 build:
-  number: 0
+  number: 1
 
 outputs:
   - name: {{ name }}-{{ go_variant_str }}
@@ -48,7 +51,9 @@ outputs:
       run:
         - {{ pin_subpackage(name, exact=true) }}
         - {{ compiler('c') }}        # [unix and cgo]
-        - {{ compiler('ucrt64_c') }}  # [win and cgo]
+        - {{ compiler('ucrt64_c') }}  # [win and x86_64 and cgo]
+        - clangarm64-clang-toolchain_win-arm64  # [win and arm64 and cgo]
+        - clangarm64-flang  # [win and arm64 and cgo]
     test:
       commands:
         - go help
@@ -78,9 +83,11 @@ outputs:
         - {{ compiler('cxx') }}      # [unix and cgo]
         - {{ compiler('fortran') }}  # [unix and cgo]
 
-        - {{ compiler('ucrt64_c') }}        # [win and cgo]
-        - {{ compiler('ucrt64_cxx') }}      # [win and cgo]
-        - {{ compiler('ucrt64_fortran') }}  # [win and cgo]
+        - {{ compiler('ucrt64_c') }}        # [win and x86_64 and cgo]
+        - {{ compiler('ucrt64_cxx') }}      # [win and x86_64 and cgo]
+        - {{ compiler('ucrt64_fortran') }}  # [win and x86_64]
+        - clangarm64-clang-toolchain_win-arm64  # [win and arm64 and cgo]
+        - clangarm64-flang  # [win and arm64 and cgo]
       run:
         - _go_select =={{ go_variant_ver }}={{ go_variant_str }}
       run_constrained:
@@ -90,13 +97,17 @@ outputs:
         - {{ pin_compatible(compiler('cxx')) }}      # [unix and cgo]
         - {{ pin_compatible(compiler('fortran')) }}  # [unix and cgo]
 
-        - {{ pin_compatible(compiler('ucrt64_c')) }}        # [win and cgo]
-        - {{ pin_compatible(compiler('ucrt64_cxx')) }}      # [win and cgo]
-        - {{ pin_compatible(compiler('ucrt64_fortran')) }}  # [win and cgo]
+        - {{ pin_compatible(compiler('ucrt64_c')) }}        # [win and x86_64]]
+        - {{ pin_compatible(compiler('ucrt64_cxx')) }}      # [win and x86_64]]
+        - {{ pin_compatible(compiler('ucrt64_fortran')) }}  # [win and x86_64]]
+        - clangarm64-clang-toolchain_win-arm64 >=22.1.8  # [win and arm64 and cgo]
+        - clangarm64-flang >=22.1.8  # [win and arm64 and cgo]
     test:
       requires:
         - {{ compiler('c') }}        # [unix and cgo]
-        - {{ compiler('ucrt64_c') }}  # [win and cgo]
+        - {{ compiler('ucrt64_c') }}  # [win and x86_64]]
+        - clangarm64-clang-toolchain_win-arm64  # [win and arm64 and cgo]
+        - clangarm64-flang  # [win and arm64 and cgo]
         - git  # [unix]
         - binutils  # [osx]
         - perl
