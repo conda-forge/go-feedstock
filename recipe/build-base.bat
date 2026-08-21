@@ -12,6 +12,11 @@ set
 rem Set go bootstrap for windows sources
 set "GOROOT_BOOTSTRAP=%SRC_DIR%\go-bootstrap"
 
+if /I "%TARGET_PLATFORM%"=="win-arm64" (
+  set "GOOS=windows"
+  set "GOARCH=arm64"
+)
+
 pushd "%GOROOT%\src"
 call make.bat
 if errorlevel 1 exit 1
