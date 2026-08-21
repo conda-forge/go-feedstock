@@ -35,7 +35,7 @@ source:
     sha256: 06dbe785743d534ef8a469dad88adf7f1b2b438507ccfef9b98e7cf8c97b4b68  # [win and arm64]
 
 build:
-  number: 0
+  number: 1
 
 outputs:
   - name: {{ name }}-{{ go_variant_str }}
