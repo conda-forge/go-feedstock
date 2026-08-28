@@ -101,7 +101,9 @@ outputs:
       requires:
         - {{ compiler('c') }}        # [unix and cgo]
         - {{ compiler('m2w64_c') }}  # [win and cgo]
+        - git                        # [unix]
         - binutils                   # [osx]
+        - perl
       files:
         - {{ go_variant_str }}
       commands:
