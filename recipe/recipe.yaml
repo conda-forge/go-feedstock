@@ -1,15 +1,14 @@
 schema_version: 1
 
 context:
-  name: go
   version: "1.27.1"
 
 recipe:
-  name: ${{ name }}-${{ go_variant_str }}-split
+  name: go-${{ go_variant_str }}-split
   version: ${{ version }}
 
 source:
-  - url: https://dl.google.com/${{ name }}/go${{ version }}.src.tar.gz
+  - url: https://dl.google.com/go/go${{ version }}.src.tar.gz
     sha256: 4e408abae126d916b6164627193f2c54f0e3ca1312d693b86db45f862ab238b1
     target_directory: go
     patches:
@@ -56,7 +55,7 @@ build:
 
 outputs:
   - package:
-      name: ${{ name }}
+      name: go
     build:
       script:
         file: ${{ go_variant_str }}/build
@@ -133,7 +132,7 @@ outputs:
       summary: The Go Programming Language
 
   - package:
-      name: ${{ name }}-${{ go_variant_str }}
+      name: go-${{ go_variant_str }}
     build:
       dynamic_linking:
         binary_relocation: false
@@ -149,7 +148,7 @@ outputs:
         ignore_binary_files: true
     requirements:
       run:
-        - ${{ pin_subpackage(name, exact=True) }}
+        - ${{ pin_subpackage('go', exact=True) }}
         - if: unix and cgo
           then: ${{ compiler('c') }}
         - if: win and cgo
