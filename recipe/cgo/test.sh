@@ -14,17 +14,29 @@ go env
 test "$(go env CGO_ENABLED)" == 1
 
 # $SRC_DIR is not set in the test environment, so the compiler activation
-# scripts expand `-fdebug-prefix-map=$SRC_DIR=...` to `-fdebug-prefix-map==...`.
-# Go's cgo flag allow-list (cmd/go/internal/work/security.go) requires a
-# non-empty old-path, so that flag is rejected and the whole CGO_CFLAGS set is
-# treated as "suspicious". Go then forces external linking for every cgo build,
-# which breaks many cmd/link, cmd/nm and cmd/objdump tests.
+# scripts expand `-fdebug-prefix-map=$SRC_DIR=...` into `-fdebug-prefix-map==...`,
+# i.e. with an empty old-path. Go's cgo flag allow-list requires a non-empty
+# old-path (`-fdebug-prefix-map=([^@]+)=([^@]+)` in
+# cmd/go/internal/work/security.go), so the flag is rejected and the whole flag
+# set is treated as "suspicious". Go then emits a `preferlinkext` token that
+# forces *external* linking for every cgo build, which breaks the many
+# cmd/link, cmd/nm, cmd/objdump and cmd/internal/archive tests that assume
+# internal linking.
+#
+# Note this has to scrub CFLAGS/CXXFLAGS/FFLAGS, not just the CGO_* variants:
+# patch 0003 makes Go fall back to CFLAGS when CGO_CFLAGS is empty, so clearing
+# only CGO_CFLAGS would just reintroduce the same flag from CFLAGS.
 strip_empty_prefix_map() {
   printf '%s' "$1" | sed -E 's/-f(debug|file)-prefix-map==[^[:space:]]*//g'
 }
-export CGO_CFLAGS="$(strip_empty_prefix_map "${CGO_CFLAGS:-}")"
-export CGO_CXXFLAGS="$(strip_empty_prefix_map "${CGO_CXXFLAGS:-}")"
-export CGO_FFLAGS="$(strip_empty_prefix_map "${CGO_FFLAGS:-}")"
+for _var in CFLAGS CXXFLAGS FFLAGS CPPFLAGS \
+            CGO_CFLAGS CGO_CXXFLAGS CGO_FFLAGS CGO_CPPFLAGS; do
+  eval "_val=\${$_var:-}"
+  if [ -n "$_val" ]; then
+    eval "export $_var=\"\$(strip_empty_prefix_map \"\$_val\")\""
+  fi
+done
+unset _var _val
 
 # Ensure runtime/cgo is not stale.
 # This will be assumed as stale as we have changed the value of CC since the build.
