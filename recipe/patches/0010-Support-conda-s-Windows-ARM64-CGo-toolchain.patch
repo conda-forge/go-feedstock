@@ -1,0 +1,97 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: conda-forge go-feedstock maintainers <noreply@conda-forge.org>
+Date: Thu, 3 Sep 2026 00:00:00 +0000
+Subject: [PATCH 10/10] Support conda's Windows ARM64 CGo toolchain
+
+Go's MSVC-target Clang support requires lld-link, but Clang selects
+link.exe by default. Add the supported linker selection to conda's
+Windows ARM64 defaults and make Go's lld probe inspect the same effective
+linker flags that the final host-link command receives.
+---
+ src/cmd/go/internal/work/exec.go          |  6 ++++++
+ src/cmd/go/internal/work/security.go      |  7 ++++++-
+ src/cmd/go/internal/work/security_test.go | 10 ++++++++++
+ src/cmd/link/internal/ld/lib.go           |  3 ++-
+ 4 files changed, 24 insertions(+), 2 deletions(-)
+
+diff --git a/src/cmd/go/internal/work/exec.go b/src/cmd/go/internal/work/exec.go
+--- a/src/cmd/go/internal/work/exec.go
++++ b/src/cmd/go/internal/work/exec.go
+@@ -2644,6 +2644,7 @@ func (b *Builder) gccArchArgs() []string {
+ // using conda based compilers, or return the unmodified default no environment variable is found.
+ // On linux, it will disable the linker's gc-sections option.
+ // On mac/darwin, it will change/reset the macosx minimal version, and set the isysroot if available.
++// On Windows ARM64, it will select lld-link for CGo.
+ func condaGetCompilerFlags(key, def string) string {
+ 	if value, ok := os.LookupEnv(key); ok {
+ 		switch cfg.Goos {
+@@ -2667,6 +2668,11 @@ func condaGetCompilerFlags(key, def string) string {
+ 					value = value + " -isysroot " + sysroot
+ 				}
+ 			}
++		case "windows":
++			// Go's MSVC-target Clang support requires lld-link.
++			if key == "LDFLAGS" && cfg.Goarch == "arm64" {
++				value += " -fuse-ld=lld"
++			}
+ 		}
+ 		return value
+ 	}
+diff --git a/src/cmd/go/internal/work/security.go b/src/cmd/go/internal/work/security.go
+--- a/src/cmd/go/internal/work/security.go
++++ b/src/cmd/go/internal/work/security.go
+@@ -242,6 +242,11 @@ var validLinkerFlags = []*lazyregexp.Regexp{
+ 	re(`\./.*\.(a|o|obj|dll|dylib|so|tbd)`),
+ }
+ 
++var validLinkerFlagsForInternalLink = append(
++	[]*lazyregexp.Regexp{re(`-fuse-ld=lld`)},
++	validLinkerFlags...,
++)
++
+ var validLinkerFlagsWithNextArg = []string{
+ 	"-arch",
+ 	"-F",
+@@ -354,7 +359,7 @@ func checkCompilerFlagsForInternalLink(name, source string, list []string) erro
+ // contains linker flags that are not compatible with internal linking.
+ func checkLinkerFlagsForInternalLink(name, source string, list []string) error {
+ 	checkOverrides := false
+-	if err := checkFlags(name, source, list, nil, validLinkerFlags, validLinkerFlagsWithNextArg, checkOverrides); err != nil {
++	if err := checkFlags(name, source, list, nil, validLinkerFlagsForInternalLink, validLinkerFlagsWithNextArg, checkOverrides); err != nil {
+ 		return err
+ 	}
+ 	// Flags that force static linking require the external linker
+diff --git a/src/cmd/go/internal/work/security_test.go b/src/cmd/go/internal/work/security_test.go
+--- a/src/cmd/go/internal/work/security_test.go
++++ b/src/cmd/go/internal/work/security_test.go
+@@ -304,6 +304,16 @@ func TestCheckLinkerFlags(t *testing.T) {
+ 	}
+ }
+ 
++func TestCondaLinkerFlagScope(t *testing.T) {
++	flags := []string{"-fuse-ld=lld"}
++	if err := checkLinkerFlags("test", "test", flags); err == nil {
++		t.Fatal("package-source linker validation unexpectedly accepted -fuse-ld=lld")
++	}
++	if err := checkLinkerFlagsForInternalLink("test", "test", flags); err != nil {
++		t.Fatalf("internal-link compatibility rejected -fuse-ld=lld: %v", err)
++	}
++}
++
+ func TestCheckFlagAllowDisallow(t *testing.T) {
+ 	if err := checkCompilerFlags("TEST", "test", []string{"-disallow"}); err == nil {
+ 		t.Fatalf("missing error for -disallow")
+diff --git a/src/cmd/link/internal/ld/lib.go b/src/cmd/link/internal/ld/lib.go
+--- a/src/cmd/link/internal/ld/lib.go
++++ b/src/cmd/link/internal/ld/lib.go
+@@ -3187,6 +3187,7 @@ func (ctxt *Link) isLLD() bool {
+ 	extld := ctxt.extld()
+ 	name, args := extld[0], extld[1:]
+-	args = append(args, trimLinkerArgv(flagExtldflags)...)
++	linkerFlags := slices.Concat(ldflag, flagExtldflags)
++	args = append(args, trimLinkerArgv(linkerFlags)...)
+ 	args = append(args, "-Wl,--version")
+ 	cmd := exec.Command(name, args...)
+ 	if out, err := cmd.CombinedOutput(); err == nil {
+-- 
+2.51.0

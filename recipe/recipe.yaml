@@ -22,6 +22,7 @@ source:
       - patches/0007-Mark-ftree-as-a-safe-compiler-flag.patch
       - patches/0008-Mark-merge-constants-as-a-safe-compiler-flag.patch
       - patches/0009-Mark-conda-s-linker-flags-as-safe-for-internal-link.patch
+      - patches/0010-Support-conda-s-Windows-ARM64-CGo-toolchain.patch
 
   # Update this with a release from https://go.dev/dl/
   - if: build_platform == "linux-64"
@@ -57,9 +58,6 @@ source:
 
 build:
   number: 4
-  # Native Windows ARM64 Go is independently bootstrappable with CGO disabled.
-  # The following commit adds the Clang-based CGo variant.
-  skip: target_platform == "win-arm64" and cgo
 
 outputs:
   - package:
@@ -79,12 +77,16 @@ outputs:
             - ${{ stdlib("c") }}
             - ${{ compiler('cxx') }}
             - ${{ compiler('fortran') }}
-        - if: win and cgo
+        - if: target_platform == "win-64" and cgo
           then:
             - ${{ compiler('m2w64_c') }}
             - ${{ stdlib("m2w64_c") }}
             - ${{ compiler('m2w64_cxx') }}
             - ${{ compiler('m2w64_fortran') }}
+        - if: target_platform == "win-arm64" and cgo
+          then:
+            - ${{ compiler('c') }}
+            - ${{ stdlib("c") }}
       run:
         - _go_select ==${{ go_variant_ver }} ${{ go_variant_str }}
       run_constraints:
@@ -94,11 +96,13 @@ outputs:
             - ${{ compiler('c') }}
             - ${{ compiler('cxx') }}
             - ${{ compiler('fortran') }}
-        - if: win and cgo
+        - if: target_platform == "win-64" and cgo
           then:
             - ${{ compiler('m2w64_c') }}
             - ${{ compiler('m2w64_cxx') }}
             - ${{ compiler('m2w64_fortran') }}
+        - if: target_platform == "win-arm64" and cgo
+          then: ${{ compiler('c') }}
       run_exports:
         strong:
           - if: linux and cgo
@@ -113,8 +117,10 @@ outputs:
           run:
             - if: unix and cgo
               then: ${{ compiler('c') }}
-            - if: win and cgo
+            - if: target_platform == "win-64" and cgo
               then: ${{ compiler('m2w64_c') }}
+            - if: target_platform == "win-arm64" and cgo
+              then: ${{ compiler('c') }}
         script:
           # telemetry counter files are written asynchronously into $HOME, which
           # races with the test directory cleanup
@@ -126,8 +132,6 @@ outputs:
           - if: win
             then:
               - call ${{ go_variant_str }}\test.bat
-              - if: target_platform == "win-arm64" and not cgo
-                then: call ${{ go_variant_str }}\test_win_arm64.bat
               - if not "%GOTOOLCHAIN%"=="local" exit /b 1
     about:
       homepage: https://go.dev/
@@ -155,8 +159,10 @@ outputs:
         - ${{ pin_subpackage('go', exact=True) }}
         - if: unix and cgo
           then: ${{ compiler('c') }}
-        - if: win and cgo
+        - if: target_platform == "win-64" and cgo
           then: ${{ compiler('m2w64_c') }}
+        - if: target_platform == "win-arm64" and cgo
+          then: ${{ compiler('c') }}
     tests:
       - script:
           # telemetry counter files are written asynchronously into $HOME, which
