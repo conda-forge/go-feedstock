@@ -24,4 +24,4 @@ go tool dist test -v -no-rebuild -run=!^^go_test:os^|go_test:cmd/go^|go_test:cmd
 if errorlevel 1 exit 1
 
 
-exit 0
+exit /b 0

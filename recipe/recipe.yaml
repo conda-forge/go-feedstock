@@ -39,6 +39,11 @@ source:
       url: https://go.dev/dl/go${{ version }}.windows-amd64.zip
       sha256: a3911b5e0e1b1053f25ed0675f4c1c6aad1e2bfcf253df2b9be4caabd2edd95d
       target_directory: go-bootstrap
+  - if: build_platform == "win-arm64"
+    then:
+      url: https://go.dev/dl/go${{ version }}.windows-arm64.zip
+      sha256: 13b69b87bb0e83f96bc68560a8cace7f0343b1e03469f1110ea18d17e3234069
+      target_directory: go-bootstrap
   - if: build_platform == "osx-64"
     then:
       url: https://go.dev/dl/go${{ version }}.darwin-amd64.tar.gz
@@ -51,7 +56,10 @@ source:
       target_directory: go-bootstrap
 
 build:
-  number: 3
+  number: 4
+  # Native Windows ARM64 Go is independently bootstrappable with CGO disabled.
+  # The following commit adds the Clang-based CGo variant.
+  skip: target_platform == "win-arm64" and cgo
 
 outputs:
   - package:
@@ -117,7 +125,9 @@ outputs:
               - test "$GOTOOLCHAIN" = "local"
           - if: win
             then:
-              - ${{ go_variant_str }}\test.bat
+              - call ${{ go_variant_str }}\test.bat
+              - if: target_platform == "win-arm64" and not cgo
+                then: call ${{ go_variant_str }}\test_win_arm64.bat
               - if not "%GOTOOLCHAIN%"=="local" exit /b 1
     about:
       homepage: https://go.dev/
