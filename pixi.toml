@@ -9,7 +9,7 @@ version = "2026.9.1"  # conda-smithy version used to generate this file
 description = "Pixi configuration for conda-forge/go-feedstock"
 authors = ["@conda-forge/go"]
 channels = ["conda-forge"]
-platforms = ["linux-64", "linux-aarch64", "osx-64", "osx-arm64", "win-64"]
+platforms = ["linux-64", "linux-aarch64", "osx-64", "osx-arm64", "win-64", "win-arm64"]
 requires-pixi = ">=0.59.0"
 
 [tasks.build-locally]
@@ -163,6 +163,24 @@ description = "Debug go-feedstock with variant win_64_cgotruego_variant_strcgo d
 [feature.build.tasks."inspect-win_64_cgotruego_variant_strcgo"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/win_64_cgotruego_variant_strcgo.yaml"
 description = "List contents of go-feedstock packages built for variant win_64_cgotruego_variant_strcgo"
+[feature.build.tasks."build-win_arm64_cgofalsego_variant_strnocgo"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/win_arm64_cgofalsego_variant_strnocgo.yaml --target-platform win-arm64"
+description = "Build go-feedstock with variant win_arm64_cgofalsego_variant_strnocgo directly (without setup scripts)"
+[feature.build.tasks."debug-win_arm64_cgofalsego_variant_strnocgo"]
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/win_arm64_cgofalsego_variant_strnocgo.yaml --target-platform win-arm64"
+description = "Debug go-feedstock with variant win_arm64_cgofalsego_variant_strnocgo directly (without setup scripts)"
+[feature.build.tasks."inspect-win_arm64_cgofalsego_variant_strnocgo"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/win_arm64_cgofalsego_variant_strnocgo.yaml"
+description = "List contents of go-feedstock packages built for variant win_arm64_cgofalsego_variant_strnocgo"
+[feature.build.tasks."build-win_arm64_cgotruego_variant_strcgo"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/win_arm64_cgotruego_variant_strcgo.yaml --target-platform win-arm64"
+description = "Build go-feedstock with variant win_arm64_cgotruego_variant_strcgo directly (without setup scripts)"
+[feature.build.tasks."debug-win_arm64_cgotruego_variant_strcgo"]
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/win_arm64_cgotruego_variant_strcgo.yaml --target-platform win-arm64"
+description = "Debug go-feedstock with variant win_arm64_cgotruego_variant_strcgo directly (without setup scripts)"
+[feature.build.tasks."inspect-win_arm64_cgotruego_variant_strcgo"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/win_arm64_cgotruego_variant_strcgo.yaml"
+description = "List contents of go-feedstock packages built for variant win_arm64_cgotruego_variant_strcgo"
 
 [environments]
 build = ["build"]

@@ -1,0 +1,22 @@
+c_compiler:
+- clang
+c_compiler_version:
+- '23'
+c_stdlib:
+- vs
+cgo:
+- true
+channel_sources:
+- conda-forge
+channel_targets:
+- conda-forge main
+go_variant_str:
+- cgo
+go_variant_ver:
+- 2.3.0
+target_platform:
+- win-arm64
+zip_keys:
+- - go_variant_str
+  - go_variant_ver
+  - cgo
