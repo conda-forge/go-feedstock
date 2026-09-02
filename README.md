@@ -11,7 +11,7 @@ Home: https://go.dev/
 
 Package license: BSD-3-Clause
 
-Summary: The Go Programming Language (go_variant_str)
+Summary: The Go Programming Language
 
 Development: https://github.com/golang/
 
@@ -24,16 +24,6 @@ modular program construction. Go compiles quickly to machine code yet has
 the convenience of garbage collection and the power of run-time reflection.
 It's a fast, statically typed, compiled language that feels like a
 dynamically typed, interpreted language.
-
-
-About go
---------
-
-Home: https://go.dev/
-
-Package license: BSD-3-Clause
-
-Summary: The Go Programming Language
 
 About go-cgo
 ------------
@@ -56,7 +46,6 @@ the convenience of garbage collection and the power of run-time reflection.
 It's a fast, statically typed, compiled language that feels like a
 dynamically typed, interpreted language.
 
-
 About go-nocgo
 --------------
 
@@ -77,7 +66,6 @@ modular program construction. Go compiles quickly to machine code yet has
 the convenience of garbage collection and the power of run-time reflection.
 It's a fast, statically typed, compiled language that feels like a
 dynamically typed, interpreted language.
-
 
 Current build status
 ====================
