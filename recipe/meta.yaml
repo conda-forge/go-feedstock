@@ -40,7 +40,6 @@ source:
 
 build:
   number: 1
-  skip: true  # [linux and s390x]
 
 outputs:
   - name: go-{{ go_variant_str }}
