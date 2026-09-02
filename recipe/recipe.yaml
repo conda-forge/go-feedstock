@@ -108,6 +108,9 @@ outputs:
             - if: win and cgo
               then: ${{ compiler('m2w64_c') }}
         script:
+          # telemetry counter files are written asynchronously into $HOME, which
+          # races with the test directory cleanup
+          - go telemetry off
           - if: unix
             then:
               - chmod +x ${{ go_variant_str }}/test.sh
@@ -146,7 +149,11 @@ outputs:
         - if: win and cgo
           then: ${{ compiler('m2w64_c') }}
     tests:
-      - script: go help
+      - script:
+          # telemetry counter files are written asynchronously into $HOME, which
+          # races with the test directory cleanup
+          - go telemetry off
+          - go help
 
 about:
   homepage: https://go.dev/
