@@ -19,6 +19,7 @@ source:
       - patches/0006-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
       - patches/0007-Mark-ftree-as-a-safe-compiler-flag.patch
       - patches/0008-Mark-merge-constants-as-a-safe-compiler-flag.patch
+      - patches/0009-Mark-conda-s-linker-flags-as-safe-for-internal-link.patch
 
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap
