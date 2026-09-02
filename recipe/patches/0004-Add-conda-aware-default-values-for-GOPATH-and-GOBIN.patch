@@ -28,20 +28,20 @@ scripts for unix and windows. It also means, that the end-users can
 override these defaults, which was not possible before while still
 maintaining compatibilit with the current case.
 ---
- src/cmd/go/go_test.go                         | 33 +++++++++++++++++++
+ src/cmd/go/go_test.go                         | 34 ++++++++++++++++++
  src/cmd/go/internal/cfg/cfg.go                | 28 +++++++++++++++-
  .../gopath/src/go-cmd-test/helloworld.go      |  5 +++
  src/go/build/build.go                         | 19 ++++++++++-
- 4 files changed, 83 insertions(+), 2 deletions(-)
+ 4 files changed, 84 insertions(+), 2 deletions(-)
  create mode 100644 src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go
 
 diff --git a/src/cmd/go/go_test.go b/src/cmd/go/go_test.go
-index 1df7cf8..11d31be 100644
+index 47839e02..ee151a5f 100644
 --- a/src/cmd/go/go_test.go
 +++ b/src/cmd/go/go_test.go
-@@ -2802,3 +2802,36 @@ func TestExecInDeletedDir(t *testing.T) {
- 	// `go version` should not fail
- 	tg.run("version")
+@@ -2654,3 +2654,37 @@ func TestCoverpkgTestOnly(t *testing.T) {
+ 	tg.grepStderrNot("no packages being tested depend on matches", "bad match message")
+ 	tg.grepStdout("coverage: 100", "no coverage")
  }
 +
 +// Test that without $GOBIN set, binaries get installed
@@ -49,6 +49,7 @@ index 1df7cf8..11d31be 100644
 +func TestInstallIntoGOBINWithCondaCompiler(t *testing.T) {
 +	tg := testgo(t)
 +	defer tg.cleanup()
++	tg.parallel()
 +	tg.setenv("CONDA_GO_COMPILER", "1")
 +	tg.setenv("CONDA_BUILD", "")
 +	tg.makeTempdir()
@@ -65,6 +66,7 @@ index 1df7cf8..11d31be 100644
 +func TestInstallIntoGOBINWithCondaBuild(t *testing.T) {
 +	tg := testgo(t)
 +	defer tg.cleanup()
++	tg.parallel()
 +	tg.setenv("CONDA_GO_COMPILER", "1")
 +	tg.setenv("CONDA_BUILD", "1")
 +	tg.makeTempdir()
@@ -75,21 +77,20 @@ index 1df7cf8..11d31be 100644
 +	tg.run("install", "go-cmd-test")
 +	tg.wantExecutable(filepath.Join(prefix, "bin/go-cmd-test"+exeSuffix), "go install go-cmd-test did not write to testdata/conda_build_prefix/bin/go-cmd-test")
 +}
-+
 diff --git a/src/cmd/go/internal/cfg/cfg.go b/src/cmd/go/internal/cfg/cfg.go
-index 3b9f27e..2566aee 100644
+index 78cbbb94..2230a51a 100644
 --- a/src/cmd/go/internal/cfg/cfg.go
 +++ b/src/cmd/go/internal/cfg/cfg.go
-@@ -425,7 +425,7 @@ var (
+@@ -460,7 +460,7 @@ var (
  	GOROOTpkg string
  	GOROOTsrc string
  
--	GOBIN                           = Getenv("GOBIN")
-+	GOBIN                           = envOr("GOBIN", defaultCondaGOBIN())
+-	GOBIN, GOBINChanged             = EnvOrAndChanged("GOBIN", "")
++	GOBIN, GOBINChanged             = EnvOrAndChanged("GOBIN", defaultCondaGOBIN())
  	GOCACHEPROG, GOCACHEPROGChanged = EnvOrAndChanged("GOCACHEPROG", "")
  	GOMODCACHE, GOMODCACHEChanged   = EnvOrAndChanged("GOMODCACHE", gopathDir("pkg/mod"))
  
-@@ -469,6 +469,32 @@ func EnvOrAndChanged(name, def string) (v string, changed bool) {
+@@ -504,6 +504,32 @@ func EnvOrAndChanged(name, def string) (v string, changed bool) {
  
  var SumdbDir = gopathDir("pkg/sumdb")
  
@@ -124,7 +125,7 @@ index 3b9f27e..2566aee 100644
  // If the current architecture has no GOARCH-specific variable,
 diff --git a/src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go b/src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go
 new file mode 100644
-index 0000000..002a5c7
+index 00000000..002a5c74
 --- /dev/null
 +++ b/src/cmd/go/testdata/gopath/src/go-cmd-test/helloworld.go
 @@ -0,0 +1,5 @@
@@ -134,7 +135,7 @@ index 0000000..002a5c7
 +	println("hello world")
 +}
 diff --git a/src/go/build/build.go b/src/go/build/build.go
-index 9ffffda..166b5d5 100644
+index 4c6be413..87688b5b 100644
 --- a/src/go/build/build.go
 +++ b/src/go/build/build.go
 @@ -288,6 +288,16 @@ func (ctxt *Context) SrcDirs() []string {
