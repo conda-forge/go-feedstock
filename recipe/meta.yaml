@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.26.7" %}
+{% set version = "1.27.1" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}-split
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 0ed24eac755105085b89fe9cabc2742b91a0ad7b94b59d3ad364918ebc8956ad
+    sha256: 4e408abae126d916b6164627193f2c54f0e3ca1312d693b86db45f862ab238b1
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -23,19 +23,19 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [build_platform == "linux-64"]
-    sha256: ffb5f8de10c62550dfddab66b36b57030721e0a44a3218e9e1181d7b59f121ca  # [build_platform == "linux-64"]
+    sha256: 63d339f0da5ab53635a56f2490a7984dfe12dfcff22ad749f63edaf590168445  # [build_platform == "linux-64"]
 
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [build_platform == "linux-aarch64"]
-    sha256: 5a4ec883379d51ee9ce1040d5e87f8d35e20387574dd8c947feb01eabc3c1b37  # [build_platform == "linux-aarch64"]
+    sha256: 3450b45a3f9ee8568792736a5c5e70a1f2e9b36c35a8f74958c03e51d7d92bec  # [build_platform == "linux-aarch64"]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [build_platform == "win-64"]
-    sha256: f4f534a486e4bc3387fa18f08208f2f854b7aaea8a08f2a2d829a914a05abb11  # [build_platform == "win-64"]
+    sha256: a3911b5e0e1b1053f25ed0675f4c1c6aad1e2bfcf253df2b9be4caabd2edd95d  # [build_platform == "win-64"]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [build_platform == "osx-64"]
-    sha256: 92e8b34bff3c89ab16404c595669ac8cb004cc2f676dcbd1f5b87a6b8def3b47  # [build_platform == "osx-64"]
+    sha256: 8f8f52c6649542cf027bbc9b9c68d1ec042f9f34808a40413f0b8b3f66f3caa4  # [build_platform == "osx-64"]
 
     url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [build_platform == "osx-arm64"]
-    sha256: 020a1e8224811be75163e920bc77e0926a1390a6aeea19bdcf23f74b9d749f6d  # [build_platform == "osx-arm64"]
+    sha256: ee215d57e0ec269c60cc9ceca68e6bda321ba9ee5afe24f4b0988703c2d87d12  # [build_platform == "osx-arm64"]
 
 build:
   number: 0
