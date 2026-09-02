@@ -15,13 +15,15 @@ test "$(go env CGO_ENABLED)" == 1
 
 # $SRC_DIR is not set in the test environment, so the compiler activation
 # scripts expand `-fdebug-prefix-map=$SRC_DIR=...` into `-fdebug-prefix-map==...`,
-# i.e. with an empty old-path. Go's cgo flag allow-list requires a non-empty
-# old-path (`-fdebug-prefix-map=([^@]+)=([^@]+)` in
-# cmd/go/internal/work/security.go), so the flag is rejected and the whole flag
-# set is treated as "suspicious". Go then emits a `preferlinkext` token that
-# forces *external* linking for every cgo build, which breaks the many
-# cmd/link, cmd/nm, cmd/objdump and cmd/internal/archive tests that assume
-# internal linking.
+# i.e. with an empty old-path.
+# See https://github.com/prefix-dev/rattler-build/issues/2793
+#
+# Go's cgo flag allow-list requires a non-empty old-path
+# (`-fdebug-prefix-map=([^@]+)=([^@]+)` in cmd/go/internal/work/security.go), so
+# the flag is rejected and the whole flag set is treated as "suspicious". Go then
+# emits a `preferlinkext` token that forces *external* linking for every cgo
+# build, which breaks the many cmd/link, cmd/nm, cmd/objdump and
+# cmd/internal/archive tests that assume internal linking.
 #
 # Note this has to scrub CFLAGS/CXXFLAGS/FFLAGS, not just the CGO_* variants:
 # patch 0003 makes Go fall back to CFLAGS when CGO_CFLAGS is empty, so clearing
