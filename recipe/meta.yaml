@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.25.11" %}
+{% set version = "1.25.12" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}-split
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 7b4e5b079b3c9bc420373ca68621a296b4d13c10735d4acac4171928d70f5480
+    sha256: f90dcee4bd023fa376374ea0a5a6ebe553537b39c426ffd8c689469b45519932
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -21,19 +21,19 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [build_platform == "linux-64"]
-    sha256: 34f14304e856893f4ba30c2cacfe93906e9de7915c5f6aaaf3a81cdccd7ba30b  # [build_platform == "linux-64"]
+    sha256: 234828b7a89e0e303d2556310ee549fbcf253d28de937bac3da13d6294262ac1  # [build_platform == "linux-64"]
 
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [build_platform == "linux-aarch64"]
-    sha256: c30bf9e156a54ea4e31fbbbf31a712b32734b58cc9a22426fa5ee632d0885124  # [build_platform == "linux-aarch64"]
+    sha256: 8b5884aef89600aef5b0b051fb971f11f49bb996521e911f30f02a66884f7bd2  # [build_platform == "linux-aarch64"]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: b7401f1b41517428e537493316256fb7cf03c66a130a0103ab07f3a2152e2112  # [win64]
+    sha256: d5dc82da351b00e5eedd04f41356817d674cc4308131f0f638a5b14c5c3af4cb  # [win64]
 
     # url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx and arm64]
     # sha256: 49e394ab92bc6fa3df3d27298ddf3e4491f99477bee9dd4934525a526f3a391c  # [osx and arm64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-amd64.tar.gz  # [osx]
-    sha256: 26d0ee4071de42b5c332337db9fdd234072877697c547e46e85efb0f59507c66  # [osx]
+    sha256: 00a2e743b82bccec03c51c4b0f7e46d5fec52184075fd6c5183c3bb39ae9fb00  # [osx]
 
 build:
   number: 0
