@@ -79,12 +79,16 @@ find ${GOROOT}/src -type d -name "testdata" -exec rm -rf \;
 # Dropping the verbose option here, +8000 files
 cp -a ${GOROOT} ${PREFIX}/go
 
-# When cross-compiling, remove the host platform binaries from go/bin/
-# The target platform binaries are in go/bin/${GOOS}_${GOARCH}/
-# This prevents confusion with tools that look for go/bin/go directly
+# When cross-compiling, make.bash puts the build platform binaries in go/bin/
+# and the target platform ones in go/bin/${GOOS}_${GOARCH}/. Replace the former
+# with the latter, so that we neither ship binaries for the wrong platform nor
+# confuse tools that look for $GOROOT/bin/go directly (e.g. `go tool dist test`).
 # c.f. https://github.com/conda-forge/go-feedstock/issues/266
 if [[ "${build_platform}" != "${target_platform}" ]]; then
   rm -f "${PREFIX}"/go/bin/go "${PREFIX}"/go/bin/gofmt
+  # Note: globbing is disabled (set -f), hence find instead of a wildcard
+  find "${PREFIX}"/go/bin/${GOOS}_${GOARCH} -type f -exec mv {} "${PREFIX}"/go/bin/ \;
+  rmdir "${PREFIX}"/go/bin/${GOOS}_${GOARCH}
 fi
 
 # Remove Invalid UTF-8 Filename and conflict with libarchive
@@ -97,11 +101,7 @@ rm -rf "${PREFIX}"/go/test/fixedbugs/issue27836.dir
 # We don't move files, and instead rely on soft-links
 mkdir -p ${PREFIX}/bin && pushd $_
 
-if [[ "${build_platform}" != "${target_platform}" ]]; then
-  find ../go/bin/${GOOS}_${GOARCH} -type f -exec ln -s {} . \;
-else
-  find ../go/bin -type f -exec ln -s {} . \;
-fi
+find ../go/bin -type f -exec ln -s {} . \;
 
 # JSON files under '$PREFIX/etc/conda/env_vars.d/' containing environment variables as key-value pairs
 # are sourced automatically upon activation.
