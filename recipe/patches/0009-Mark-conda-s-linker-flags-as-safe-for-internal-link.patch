@@ -1,0 +1,54 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: conda-forge go-feedstock maintainers <noreply@conda-forge.org>
+Date: Tue, 2 Sep 2026 00:00:00 +0000
+Subject: [PATCH 9/9] Mark conda's linker flags as safe for internal linking
+
+Go 1.27 started running CGO_LDFLAGS through the internal-linking
+compatibility check (checkLinkerFlagsForInternalLink, added for #77768).
+Any flag that is not on the validLinkerFlags allow list now makes cmd/go
+emit a "preferlinkext" token, which forces external linking.
+
+Conda's LDFLAGS contain three flags that are absent from the allow list:
+
+  - -Wl,--sort-common      (linux)
+  - -Wl,--no-gc-sections   (linux, added by this feedstock, see README.md)
+  - -Wl,-dead_strip_dylibs (osx)
+
+All three are pure link-time flags that have no effect on the host
+objects cgo produces, so they do not actually stand in the way of
+internal linking. Left unlisted they break the tests that require
+internal linking (cmd/link, cmd/nm), the archive layout expected by
+cmd/internal/archive (the empty preferlinkext token becomes an archive
+member) and cmd/go's cgo_suspect_flag_force_external script test.
+---
+ src/cmd/go/internal/work/security.go | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/cmd/go/internal/work/security.go b/src/cmd/go/internal/work/security.go
+index c61bf6d8..18932b28 100644
+--- a/src/cmd/go/internal/work/security.go
++++ b/src/cmd/go/internal/work/security.go
+@@ -208,6 +208,7 @@ var validLinkerFlags = []*lazyregexp.Regexp{
+ 	re(`-Wl,-Bsymbolic-functions`),
+ 	re(`-Wl,-O[0-9]+`),
+ 	re(`-Wl,-d[ny]`),
++	re(`-Wl,-dead_strip_dylibs`),
+ 	re(`-Wl,--disable-new-dtags`),
+ 	re(`-Wl,-e[=,][a-zA-Z0-9]+`),
+ 	re(`-Wl,--enable-new-dtags`),
+@@ -215,6 +216,7 @@ var validLinkerFlags = []*lazyregexp.Regexp{
+ 	re(`-Wl,--(no-)?export-dynamic`),
+ 	re(`-Wl,-E`),
+ 	re(`-Wl,-framework,[^,@\-][^,]*`),
++	re(`-Wl,--(no-)?gc-sections`),
+ 	re(`-Wl,--hash-style=(sysv|gnu|both)`),
+ 	re(`-Wl,-headerpad_max_install_names`),
+ 	re(`-Wl,--no-undefined`),
+@@ -226,6 +228,7 @@ var validLinkerFlags = []*lazyregexp.Regexp{
+ 	re(`-Wl,-s`),
+ 	re(`-Wl,-search_paths_first`),
+ 	re(`-Wl,-sectcreate,([^,@\-][^,]*),([^,@\-][^,]*),([^,@\-][^,]*)`),
++	re(`-Wl,--sort-common`),
+ 	re(`-Wl,--start-group`),
+ 	re(`-Wl,-?-static`),
+ 	re(`-Wl,-?-subsystem,(native|windows|console|posix|xbox)`),

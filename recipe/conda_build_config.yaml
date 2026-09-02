@@ -9,8 +9,10 @@
 # For the correct deployment target, please see go's Release notes
 # c.f.: https://golang.org/doc/go1.16#darwin
 #       https://github.com/conda-forge/conda-forge-pinning-feedstock/pull/8162
+# Go 1.27 links macOS binaries against a minimum of 13.0
+# c.f. src/cmd/link/internal/ld/macho.go: macOS = macVersionFlag{13, 0, 0}
 c_stdlib_version:         # [osx]
-  - '12.0'                # [osx]
+  - '13.0'                # [osx]
 
 # Select the GO variants that we are building
 # The variant names, and versions come from
