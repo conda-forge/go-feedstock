@@ -12,6 +12,7 @@ bot:
   - 1.22.x
 build_platform:
   linux_ppc64le: linux_64
+  linux_riscv64: linux_64
 provider:
   osx_arm64: default
   linux_aarch64: default
@@ -23,4 +24,4 @@ conda_forge_output_validation: true
 github:
   branch_name: main
   tooling_branch_name: main
-test: native
+test: native_and_emulated
