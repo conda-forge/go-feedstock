@@ -17,6 +17,9 @@ elif [[ "${target_platform}" == "linux-aarch64" ]]; then
 elif [[ "${target_platform}" == "linux-ppc64le" ]]; then
   export GOOS=linux
   export GOARCH=ppc64le
+elif [[ "${target_platform}" == "linux-riscv64" ]]; then
+  export GOOS=linux
+  export GOARCH=riscv64
 fi
 
 sed -ie "s/\${GOOS}/${GOOS}/" "${RECIPE_DIR}/compiler/activate.sh"

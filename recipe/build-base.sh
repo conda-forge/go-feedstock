@@ -28,6 +28,11 @@ if [[ ${CGO_ENABLED} == 1 ]]; then
     if [[ "${target_platform}" == "linux-ppc64le" ]]; then
       export CGO_CFLAGS="${CGO_CFLAGS/-mtune=power8 /}"
       export CGO_CFLAGS="${CGO_CFLAGS/-mcpu=power8 /}"
+    elif [[ "${target_platform}" == "linux-riscv64" ]]; then
+      # -march=rv64imafdc / -mabi=lp64d are rejected by the build platform's
+      # compiler, which builds runtime/cgo during bootstrapping.
+      export CGO_CFLAGS="$(echo "${CGO_CFLAGS}" | sed -E 's/-m(arch|abi)=[^ ]+ ?//g')"
+      export CGO_CXXFLAGS="$(echo "${CGO_CXXFLAGS}" | sed -E 's/-m(arch|abi)=[^ ]+ ?//g')"
     fi
   fi
 fi
@@ -44,9 +49,15 @@ elif [[ "${target_platform}" == "linux-aarch64" ]]; then
 elif [[ "${target_platform}" == "linux-ppc64le" ]]; then
   export GOOS=linux
   export GOARCH=ppc64le
+elif [[ "${target_platform}" == "linux-riscv64" ]]; then
+  export GOOS=linux
+  export GOARCH=riscv64
 elif [[ "${target_platform}" == "linux-64" ]]; then
   export GOOS=linux
   export GOARCH=amd64
+else
+  echo "Unsupported target_platform: ${target_platform}"
+  exit 1
 fi
 
 # Print diagnostics before building
