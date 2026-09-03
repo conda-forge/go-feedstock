@@ -2,7 +2,6 @@
 
 The go-feedstock builds 2 versions of the go compiler, cgo and nocgo.
 The end-user is only allowed to install one in any given conda environment.
-This constraint is enforced by conda using the `_go_select` **mutex** package.
 
 The cgo version is built with `CGO_ENABLED=1` and it ties to the conda-forge compilers. 
 This is the version that most closely matches the upstream release, with the difference that we use our compilers.
