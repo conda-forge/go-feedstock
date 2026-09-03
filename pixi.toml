@@ -91,6 +91,24 @@ description = "Debug go-feedstock with variant linux_ppc64le_cgotruego_variant_s
 [feature.build.tasks."inspect-linux_ppc64le_cgotruego_variant_strcgo"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_ppc64le_cgotruego_variant_strcgo.yaml"
 description = "List contents of go-feedstock packages built for variant linux_ppc64le_cgotruego_variant_strcgo"
+[feature.build.tasks."build-linux_riscv64_cgofalsego_variant_strnocgo"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_riscv64_cgofalsego_variant_strnocgo.yaml --target-platform linux-riscv64"
+description = "Build go-feedstock with variant linux_riscv64_cgofalsego_variant_strnocgo directly (without setup scripts)"
+[feature.build.tasks."debug-linux_riscv64_cgofalsego_variant_strnocgo"]
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_riscv64_cgofalsego_variant_strnocgo.yaml --target-platform linux-riscv64"
+description = "Debug go-feedstock with variant linux_riscv64_cgofalsego_variant_strnocgo directly (without setup scripts)"
+[feature.build.tasks."inspect-linux_riscv64_cgofalsego_variant_strnocgo"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_riscv64_cgofalsego_variant_strnocgo.yaml"
+description = "List contents of go-feedstock packages built for variant linux_riscv64_cgofalsego_variant_strnocgo"
+[feature.build.tasks."build-linux_riscv64_cgotruego_variant_strcgo"]
+cmd = "rattler-build build --recipe recipe -m .ci_support/linux_riscv64_cgotruego_variant_strcgo.yaml --target-platform linux-riscv64"
+description = "Build go-feedstock with variant linux_riscv64_cgotruego_variant_strcgo directly (without setup scripts)"
+[feature.build.tasks."debug-linux_riscv64_cgotruego_variant_strcgo"]
+cmd = "rattler-build debug setup --recipe recipe -m .ci_support/linux_riscv64_cgotruego_variant_strcgo.yaml --target-platform linux-riscv64"
+description = "Debug go-feedstock with variant linux_riscv64_cgotruego_variant_strcgo directly (without setup scripts)"
+[feature.build.tasks."inspect-linux_riscv64_cgotruego_variant_strcgo"]
+cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_riscv64_cgotruego_variant_strcgo.yaml"
+description = "List contents of go-feedstock packages built for variant linux_riscv64_cgotruego_variant_strcgo"
 [feature.build.tasks."build-osx_64_cgofalsego_variant_strnocgo"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/osx_64_cgofalsego_variant_strnocgo.yaml --target-platform osx-64"
 description = "Build go-feedstock with variant osx_64_cgofalsego_variant_strnocgo directly (without setup scripts)"

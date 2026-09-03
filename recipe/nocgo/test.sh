@@ -30,13 +30,24 @@ case $(uname -s) in
     # Expect FAIL
     ;;
   Linux)
-    case $ARCH in
-      ppc64le)
-        # Expect PASS
-        go tool dist test -v -no-rebuild -run='!^runtime|crypto/internal/fips140test'
-        # Occasionally FAILS
-        go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
-        # Expect FAIL
+    case $(go env GOARCH) in
+      ppc64le|riscv64)
+        # These are cross-compiled, so the test suite runs under qemu, where
+        # `go tool dist test` is not viable: ptrace and waitid are
+        # unimplemented, getcwd truncates long paths, QEMU_LD_PREFIX redirects
+        # / into the sysroot, and the emulator faults in time's tests.
+        # Smoke test that the target binaries actually run instead.
+        go version
+        mkdir -p smoke && pushd smoke
+        go mod init smoke
+        cat > main.go <<'EOF'
+package main
+
+func main() { println("ok") }
+EOF
+        go build -o hello .
+        ./hello
+        popd
         ;;
       *)
         # Expect PASS
