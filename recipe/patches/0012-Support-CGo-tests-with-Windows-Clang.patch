@@ -7,18 +7,21 @@ The CGo test suite assumes the MinGW compatibility headers, library
 names, and WIN32 macro used by Go's existing Windows CGo builder. Clang
 targeting the MSVC ABI instead defines _WIN32, has no unistd.h, and maps
 -lm to an m.lib that MSVC does not provide. Its math functions come from
-the UCRT.
+the UCRT. UCRT's math header also maps complex to its legacy _complex
+struct, while these tests require the C99 complex type supported by
+Clang.
 
 Normalize the Windows macro for the suite's existing guards, and provide
 the two timing tests with an equivalent Sleep-based usleep function.
 This keeps the issue 27660 scheduler stress test and the issue 3775
-callback test active instead of skipping them. Preserve -lm for the
-existing MinGW targets while excluding it from Windows ARM64.
+callback test active instead of skipping them. Restore Clang's _Complex
+spelling after the Windows headers, and preserve -lm for the existing
+MinGW targets while excluding it from Windows ARM64.
 ---
  src/cmd/cgo/internal/test/issue8756.go           |  3 ++-
  src/cmd/cgo/internal/test/issue8756/issue8756.go |  3 ++-
- src/cmd/cgo/internal/test/test.go                | 19 ++++++++++++++++++-
- 3 files changed, 22 insertions(+), 3 deletions(-)
+ src/cmd/cgo/internal/test/test.go                | 24 +++++++++++++++++++++++-
+ 3 files changed, 27 insertions(+), 3 deletions(-)
 
 diff --git a/src/cmd/cgo/internal/test/issue8756.go b/src/cmd/cgo/internal/test/issue8756.go
 --- a/src/cmd/cgo/internal/test/issue8756.go
@@ -49,7 +52,7 @@ diff --git a/src/cmd/cgo/internal/test/issue8756/issue8756.go b/src/cmd/cgo/inte
 diff --git a/src/cmd/cgo/internal/test/test.go b/src/cmd/cgo/internal/test/test.go
 --- a/src/cmd/cgo/internal/test/test.go
 +++ b/src/cmd/cgo/internal/test/test.go
-@@ -20,11 +20,29 @@ package cgotest
+@@ -20,11 +20,34 @@ package cgotest
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
@@ -61,6 +64,11 @@ diff --git a/src/cmd/cgo/internal/test/test.go b/src/cmd/cgo/internal/test/test.
 +#if defined(_MSC_VER) && defined(__clang__)
 +#define WIN32_LEAN_AND_MEAN
 +#include <windows.h>
++// UCRT maps complex to its legacy _complex struct.
++#ifdef complex
++#undef complex
++#endif
++#define complex _Complex
 +#else
  #include <unistd.h>
 +#endif

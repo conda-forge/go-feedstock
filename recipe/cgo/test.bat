@@ -20,6 +20,9 @@ where go
 go env
 
 
+if /I "%target_platform%"=="win-arm64" goto :win_arm64_tests
+
+
 rem Run go's built-in tests
 rem Expect FAIL, we run them to obtain logs
 go tool dist test -k -v -no-rebuild -run=^^go_test:os$ || cmd /K "exit /b 0"
@@ -31,7 +34,29 @@ rem Expect PASS
 go tool dist test -v -no-rebuild -run=!^^go_test:os^|go_test:cmd/go^|go_test:cmd/gofmt$  || cmd /K "exit /b 0"
 if errorlevel 1 exit 1
 
-if /I not "%target_platform%"=="win-arm64" goto :done
+goto :done
+
+:win_arm64_tests
+rem cmd/dist resolves go and gofmt under GOROOT, while the conda package
+rem exposes them from PREFIX\bin. Restore the canonical layout only in this
+rem disposable test prefix.
+set "GO_ROOT="
+for /f "delims=" %%G in ('go env GOROOT') do set "GO_ROOT=%%G"
+if not defined GO_ROOT exit /b 1
+if not exist "%GO_ROOT%\bin" mkdir "%GO_ROOT%\bin"
+if errorlevel 1 exit /b 1
+copy /Y "%PREFIX%\bin\go.exe" "%GO_ROOT%\bin\go.exe"
+if errorlevel 1 exit /b 1
+copy /Y "%PREFIX%\bin\gofmt.exe" "%GO_ROOT%\bin\gofmt.exe"
+if errorlevel 1 exit /b 1
+
+rem Retain the historically tolerated Windows diagnostics, but make the
+rem complementary expected-pass suite authoritative for win-arm64.
+go tool dist test -k -v -no-rebuild -run=^^go_test:os$ || cmd /K "exit /b 0"
+go tool dist test -k -v -no-rebuild -run=^^go_test:cmd/go$ || cmd /K "exit /b 0"
+go tool dist test -k -v -no-rebuild -run=^^go_test:cmd/gofmt$ || cmd /K "exit /b 0"
+go tool dist test -v -no-rebuild -run=!^^go_test:os^|go_test:cmd/go^|go_test:cmd/gofmt$
+if errorlevel 1 exit /b 1
 
 for /f "delims=" %%G in ('go env GOHOSTOS') do if /I not "%%G"=="windows" exit /b 1
 for /f "delims=" %%G in ('go env GOHOSTARCH') do if /I not "%%G"=="arm64" exit /b 1
@@ -86,6 +111,8 @@ rem Keep the focused upstream CGo checks unmasked.
 go test -count=1 runtime/cgo
 if errorlevel 1 exit /b 1
 go test -count=1 cmd/cgo/internal/test
+if errorlevel 1 exit /b 1
+go test -count=1 -run=^^Test8694$ -v cmd/cgo/internal/test
 if errorlevel 1 exit /b 1
 go test -count=1 -ldflags="-linkmode=external" cmd/cgo/internal/test
 if errorlevel 1 exit /b 1
