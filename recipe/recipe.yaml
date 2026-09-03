@@ -2,6 +2,7 @@ schema_version: 1
 
 context:
   version: "1.27.1"
+  build: 3
 
 recipe:
   name: go-${{ go_variant_str }}-split
@@ -51,12 +52,13 @@ source:
       target_directory: go-bootstrap
 
 build:
-  number: 3
+  number: ${{ build }}
 
 outputs:
   - package:
       name: go
     build:
+      string: ${{ hash }}_${{ go_variant_str }}_${{ build }}
       script:
         file: ${{ go_variant_str }}/build
       dynamic_linking:
@@ -77,9 +79,9 @@ outputs:
             - ${{ stdlib("m2w64_c") }}
             - ${{ compiler('m2w64_cxx') }}
             - ${{ compiler('m2w64_fortran') }}
-      run:
-        - _go_select ==${{ go_variant_ver }} ${{ go_variant_str }}
       run_constraints:
+        # TODO: remove on next go version (>1.27.1), this is just to not accidentally select the wrong activation script
+        - _go_select <0.0a0
         # https://github.com/prefix-dev/rattler-build/issues/2792
         - if: unix and cgo
           then:
@@ -165,7 +167,7 @@ outputs:
           - go help
 
 about:
-  homepage: https://go.dev/
+  homepage: https://go.dev
   license: BSD-3-Clause
   license_file: go/LICENSE
   summary: The Go Programming Language (${{ go_variant_str }})
@@ -178,7 +180,7 @@ about:
     It's a fast, statically typed, compiled language that feels like a
     dynamically typed, interpreted language.
   documentation: https://go.dev/doc
-  repository: https://github.com/golang/
+  repository: https://github.com/golang/go
 
 extra:
   feedstock-name: go
