@@ -23,6 +23,7 @@ source:
       - patches/0008-Mark-merge-constants-as-a-safe-compiler-flag.patch
       - patches/0009-Mark-conda-s-linker-flags-as-safe-for-internal-link.patch
       - patches/0010-Support-conda-s-Windows-ARM64-CGo-toolchain.patch
+      - patches/0011-Fix-cgo-complex-test-for-Windows-Clang.patch
 
   # Update this with a release from https://go.dev/dl/
   - if: build_platform == "linux-64"
