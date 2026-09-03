@@ -38,7 +38,7 @@ source:
     sha256: 020a1e8224811be75163e920bc77e0926a1390a6aeea19bdcf23f74b9d749f6d  # [build_platform == "osx-arm64"]
 
 build:
-  number: 0
+  number: 1
   skip: true  # [linux and s390x]
 
 outputs:
