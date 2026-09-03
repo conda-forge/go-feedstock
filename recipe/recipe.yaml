@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   version: "1.27.1"
-  build: 3
+  build: 4
 
 recipe:
   name: go-${{ go_variant_str }}-split
