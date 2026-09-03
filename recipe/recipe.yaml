@@ -51,7 +51,7 @@ source:
       target_directory: go-bootstrap
 
 build:
-  number: 2
+  number: 3
 
 outputs:
   - package:
