@@ -67,7 +67,7 @@ case $(uname -s) in
     # Expect FAIL
     ;;
   Linux)
-    case $ARCH in
+    case $(go env GOARCH) in
       ppc64le | riscv64)
         # These are cross-compiled, so the test suite runs under qemu, where
         # `go tool dist test` is not viable: ptrace and waitid are unimplemented,
