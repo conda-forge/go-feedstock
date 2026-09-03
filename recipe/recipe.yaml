@@ -58,7 +58,7 @@ outputs:
   - package:
       name: go
     build:
-      string: ${{ hash }}_${{ go_variant_str }}_${{ build }}
+      string: ${{ go_variant_str }}_h${{ hash }}_${{ build }}
       script:
         file: ${{ go_variant_str }}/build
       dynamic_linking:
