@@ -106,8 +106,16 @@ find ../go/bin -type f -exec ln -s {} . \;
 # JSON files under '$PREFIX/etc/conda/env_vars.d/' containing environment variables as key-value pairs
 # are sourced automatically upon activation.
 # Ref.: https://github.com/conda/conda/issues/6820#issuecomment-1269581626
+#
+# The build prefix is written out literally; conda rewrites it to the
+# installation prefix when the package is unpacked (text prefix replacement).
 mkdir -p "${PREFIX}/etc/conda/env_vars.d"
-cp "${RECIPE_DIR}/env.json" "${PREFIX}/etc/conda/env_vars.d/${PKG_NAME}.json"
+cat > "${PREFIX}/etc/conda/env_vars.d/${PKG_NAME}.json" <<EOF
+{
+  "GOROOT": "${PREFIX}/go",
+  "GOTOOLCHAIN": "local"
+}
+EOF
 
 # These tests fail as we bake in the compiler path
 echo skip > "${PREFIX}/go/src/cmd/go/testdata/script/autocgo.txt"

@@ -13,7 +13,7 @@ Package license: BSD-3-Clause
 
 Summary: The Go Programming Language
 
-Development: https://github.com/golang/
+Development: https://github.com/golang/go
 
 Documentation: https://go.dev/doc
 
@@ -34,7 +34,7 @@ Package license: BSD-3-Clause
 
 Summary: The Go Programming Language (cgo)
 
-Development: https://github.com/golang/
+Development: https://github.com/golang/go
 
 Documentation: https://go.dev/doc
 
@@ -55,7 +55,7 @@ Package license: BSD-3-Clause
 
 Summary: The Go Programming Language (nocgo)
 
-Development: https://github.com/golang/
+Development: https://github.com/golang/go
 
 Documentation: https://go.dev/doc
 

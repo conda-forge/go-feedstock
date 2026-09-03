@@ -52,5 +52,11 @@ if errorlevel 1 exit 1
 :: JSON files under '%PREFIX%\etc\conda\env_vars.d\' containing environment variables as key-value pairs
 :: are sourced automatically upon activation.
 :: Ref.: https://github.com/conda/conda/issues/6820#issuecomment-1269581626
+::
+:: The build prefix is written out literally; conda rewrites it to the
+:: installation prefix when the package is unpacked (text prefix replacement).
+:: Forward slashes are used so that the paths need no JSON escaping.
 if not exist "%PREFIX%\etc\conda\env_vars.d" mkdir "%PREFIX%\etc\conda\env_vars.d"
-copy "%RECIPE_DIR%\env.json" "%PREFIX%\etc\conda\env_vars.d\%PKG_NAME%.json"
+set "FWD_PREFIX=%PREFIX:\=/%"
+echo {"GOROOT": "%FWD_PREFIX%/go", "GOTOOLCHAIN": "local"} > "%PREFIX%\etc\conda\env_vars.d\%PKG_NAME%.json"
+if errorlevel 1 exit 1
