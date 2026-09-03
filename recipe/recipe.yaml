@@ -114,11 +114,21 @@ outputs:
           - if: unix
             then:
               - ./${{ go_variant_str }}/test.sh
+              # etc/conda/env_vars.d/go.json is activated and its baked-in build
+              # prefix was rewritten to the installation prefix
               - test "$GOTOOLCHAIN" = "local"
+              - test "$GOROOT" = "$CONDA_PREFIX/go"
+              - test "$(go env GOROOT)" = "$CONDA_PREFIX/go"
           - if: win
             then:
               - ${{ go_variant_str }}\test.bat
+              # etc/conda/env_vars.d/go.json is activated and its baked-in build
+              # prefix was rewritten to the installation prefix. The JSON stores
+              # forward slashes, so compare slash-insensitively.
               - if not "%GOTOOLCHAIN%"=="local" exit /b 1
+              - 'if not "%GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
+              - 'for /f "delims=" %%i in (''go env GOROOT'') do set "GO_GOROOT=%%i"'
+              - 'if not "%GO_GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
     about:
       homepage: https://go.dev/
       license: BSD-3-Clause
