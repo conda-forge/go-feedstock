@@ -6,8 +6,6 @@ channel_targets:
 - conda-forge main
 go_variant_str:
 - cgo
-go_variant_ver:
-- 2.3.0
 m2w64_c_compiler:
 - gcc
 m2w64_c_compiler_version:
@@ -28,5 +26,4 @@ target_platform:
 - win-64
 zip_keys:
 - - go_variant_str
-  - go_variant_ver
   - cgo
