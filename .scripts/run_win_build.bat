@@ -75,7 +75,9 @@ if EXIST LICENSE.txt (
     copy LICENSE.txt "recipe\\recipe-scripts-license.txt"
 )
 if NOT [%HOST_PLATFORM%] == [%BUILD_PLATFORM%] (
-    set "EXTRA_CB_OPTIONS=%EXTRA_CB_OPTIONS% --test skip"
+    if [%CROSSCOMPILING_EMULATOR%] == [] (
+        set "EXTRA_CB_OPTIONS=%EXTRA_CB_OPTIONS% --test skip"
+    )
 )
 
 if NOT [%flow_run_id%] == [] (
