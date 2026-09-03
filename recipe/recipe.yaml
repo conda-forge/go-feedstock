@@ -22,6 +22,9 @@ source:
       - patches/0007-Mark-ftree-as-a-safe-compiler-flag.patch
       - patches/0008-Mark-merge-constants-as-a-safe-compiler-flag.patch
       - patches/0009-Mark-conda-s-linker-flags-as-safe-for-internal-link.patch
+      - patches/0010-Support-conda-s-Windows-ARM64-CGo-toolchain.patch
+      - patches/0011-Fix-cgo-complex-test-for-Windows-Clang.patch
+      - patches/0012-Support-CGo-tests-with-Windows-Clang.patch
 
   # Update this with a release from https://go.dev/dl/
   - if: build_platform == "linux-64"
@@ -39,6 +42,11 @@ source:
       url: https://go.dev/dl/go${{ version }}.windows-amd64.zip
       sha256: a3911b5e0e1b1053f25ed0675f4c1c6aad1e2bfcf253df2b9be4caabd2edd95d
       target_directory: go-bootstrap
+  - if: build_platform == "win-arm64"
+    then:
+      url: https://go.dev/dl/go${{ version }}.windows-arm64.zip
+      sha256: 13b69b87bb0e83f96bc68560a8cace7f0343b1e03469f1110ea18d17e3234069
+      target_directory: go-bootstrap
   - if: build_platform == "osx-64"
     then:
       url: https://go.dev/dl/go${{ version }}.darwin-amd64.tar.gz
@@ -51,7 +59,7 @@ source:
       target_directory: go-bootstrap
 
 build:
-  number: 3
+  number: 4
 
 outputs:
   - package:
@@ -71,12 +79,16 @@ outputs:
             - ${{ stdlib("c") }}
             - ${{ compiler('cxx') }}
             - ${{ compiler('fortran') }}
-        - if: win and cgo
+        - if: target_platform == "win-64" and cgo
           then:
             - ${{ compiler('m2w64_c') }}
             - ${{ stdlib("m2w64_c") }}
             - ${{ compiler('m2w64_cxx') }}
             - ${{ compiler('m2w64_fortran') }}
+        - if: target_platform == "win-arm64" and cgo
+          then:
+            - ${{ compiler('c') }}
+            - ${{ stdlib("c") }}
       run:
         - _go_select ==${{ go_variant_ver }} ${{ go_variant_str }}
       run_constraints:
@@ -86,11 +98,13 @@ outputs:
             - ${{ compiler('c') }}
             - ${{ compiler('cxx') }}
             - ${{ compiler('fortran') }}
-        - if: win and cgo
+        - if: target_platform == "win-64" and cgo
           then:
             - ${{ compiler('m2w64_c') }}
             - ${{ compiler('m2w64_cxx') }}
             - ${{ compiler('m2w64_fortran') }}
+        - if: target_platform == "win-arm64" and cgo
+          then: ${{ compiler('c') }}
       run_exports:
         strong:
           - if: linux and cgo
@@ -105,8 +119,10 @@ outputs:
           run:
             - if: unix and cgo
               then: ${{ compiler('c') }}
-            - if: win and cgo
+            - if: target_platform == "win-64" and cgo
               then: ${{ compiler('m2w64_c') }}
+            - if: target_platform == "win-arm64" and cgo
+              then: ${{ compiler('c') }}
         script:
           # telemetry counter files are written asynchronously into $HOME, which
           # races with the test directory cleanup
@@ -117,7 +133,7 @@ outputs:
               - test "$GOTOOLCHAIN" = "local"
           - if: win
             then:
-              - ${{ go_variant_str }}\test.bat
+              - call ${{ go_variant_str }}\test.bat
               - if not "%GOTOOLCHAIN%"=="local" exit /b 1
     about:
       homepage: https://go.dev/
@@ -145,8 +161,10 @@ outputs:
         - ${{ pin_subpackage('go', exact=True) }}
         - if: unix and cgo
           then: ${{ compiler('c') }}
-        - if: win and cgo
+        - if: target_platform == "win-64" and cgo
           then: ${{ compiler('m2w64_c') }}
+        - if: target_platform == "win-arm64" and cgo
+          then: ${{ compiler('c') }}
     tests:
       - script:
           # telemetry counter files are written asynchronously into $HOME, which
