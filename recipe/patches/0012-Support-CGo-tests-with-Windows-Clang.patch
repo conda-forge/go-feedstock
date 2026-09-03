@@ -1,0 +1,84 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: conda-forge go-feedstock maintainers <noreply@conda-forge.org>
+Date: Thu, 3 Sep 2026 00:00:00 +0000
+Subject: [PATCH] cmd/cgo/internal/test: support MSVC-target Clang
+
+The CGo test suite assumes the MinGW compatibility headers, library
+names, and WIN32 macro used by Go's existing Windows CGo builder. Clang
+targeting the MSVC ABI instead defines _WIN32, has no unistd.h, and maps
+-lm to an m.lib that MSVC does not provide. Its math functions come from
+the UCRT.
+
+Normalize the Windows macro for the suite's existing guards, and provide
+the two timing tests with an equivalent Sleep-based usleep function.
+This keeps the issue 27660 scheduler stress test and the issue 3775
+callback test active instead of skipping them. Preserve -lm for the
+existing MinGW targets while excluding it from Windows ARM64.
+---
+ src/cmd/cgo/internal/test/issue8756.go           |  3 ++-
+ src/cmd/cgo/internal/test/issue8756/issue8756.go |  3 ++-
+ src/cmd/cgo/internal/test/test.go                | 19 ++++++++++++++++++-
+ 3 files changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/src/cmd/cgo/internal/test/issue8756.go b/src/cmd/cgo/internal/test/issue8756.go
+--- a/src/cmd/cgo/internal/test/issue8756.go
++++ b/src/cmd/cgo/internal/test/issue8756.go
+@@ -5,7 +5,8 @@
+ package cgotest
+ 
+ /*
+-#cgo !darwin LDFLAGS: -lm
++#cgo !darwin,!windows LDFLAGS: -lm
++#cgo windows,!arm64 LDFLAGS: -lm
+ #include <math.h>
+ */
+ import "C"
+diff --git a/src/cmd/cgo/internal/test/issue8756/issue8756.go b/src/cmd/cgo/internal/test/issue8756/issue8756.go
+--- a/src/cmd/cgo/internal/test/issue8756/issue8756.go
++++ b/src/cmd/cgo/internal/test/issue8756/issue8756.go
+@@ -5,7 +5,8 @@
+ package issue8756
+ 
+ /*
+-#cgo !darwin LDFLAGS: -lm
++#cgo !darwin,!windows LDFLAGS: -lm
++#cgo windows,!arm64 LDFLAGS: -lm
+ #include <math.h>
+ */
+ import "C"
+diff --git a/src/cmd/cgo/internal/test/test.go b/src/cmd/cgo/internal/test/test.go
+--- a/src/cmd/cgo/internal/test/test.go
++++ b/src/cmd/cgo/internal/test/test.go
+@@ -20,11 +20,29 @@ package cgotest
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++
++#if defined(_WIN32) && !defined(WIN32)
++#define WIN32
++#endif
++
++#if defined(_MSC_VER) && defined(__clang__)
++#define WIN32_LEAN_AND_MEAN
++#include <windows.h>
++#else
+ #include <unistd.h>
++#endif
+ #include <sys/stat.h>
+ #include <errno.h>
+-#cgo !darwin LDFLAGS: -lm
++#cgo !darwin,!windows LDFLAGS: -lm
++#cgo windows,!arm64 LDFLAGS: -lm
+ 
++#if defined(_MSC_VER) && defined(__clang__)
++int usleep(unsigned usec) {
++	Sleep(usec / 1000 + (usec % 1000 != 0));
++	return 0;
++}
++#endif
++
+ #ifndef WIN32
+ #include <pthread.h>
+ #include <signal.h>
+-- 
+2.51.0
