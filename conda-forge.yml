@@ -1,7 +1,5 @@
-azure:
-  free_disk_space: true
-  settings_linux:
-    swapfile_size: 8GiB
+workflow_settings:
+  free_disk_space: quick
 bot:
   automerge: true
   abi_migration_branches:
