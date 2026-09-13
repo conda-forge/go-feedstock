@@ -14,13 +14,15 @@
 c_stdlib_version:         # [osx]
   - '13.0'                # [osx]
 
+# cgo needs a mingw-w64 toolchain on Windows, which conda-forge only provides
+# for win-64 (the m2w64_* compilers). Ship nocgo only on win-arm64.
 go_variant_str:
-  - cgo
+  - cgo                   # [not (win and arm64)]
   - nocgo
 
 # One-hot-encoding of the variant selection above
 cgo:
-  - true
+  - true                  # [not (win and arm64)]
   - false
 
 #
