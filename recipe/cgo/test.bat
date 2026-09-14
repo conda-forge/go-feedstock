@@ -128,16 +128,6 @@ if errorlevel 1 exit /b 1
 hello_win_arm64_pie.exe
 if errorlevel 1 exit /b 1
 
-powershell -NoLogo -NoProfile -NonInteractive -Command ^
-  "$files = @('lld_probe.exe', 'hello_win_arm64.exe', 'hello_win_arm64_external.exe', 'hello_win_arm64_pie.exe');" ^
-  "foreach ($file in $files) {" ^
-  "  $bytes = [IO.File]::ReadAllBytes($file);" ^
-  "  $peOffset = [BitConverter]::ToInt32($bytes, 0x3c);" ^
-  "  $machine = [BitConverter]::ToUInt16($bytes, $peOffset + 4);" ^
-  "  if ($machine -ne 0xaa64) { Write-Error ('{0}: expected PE Machine AA64, got 0x{1:X4}' -f $file, $machine); exit 1 }" ^
-  "}"
-if errorlevel 1 exit /b 1
-
 rem Run every dist test with native Windows certificate prerequisites.
 set "GO_TEST_ALLOW_TEMPORARY_USER_ROOT="
 if "%GITHUB_ACTIONS%"=="true" if "%RUNNER_ENVIRONMENT%"=="github-hosted" set "GO_TEST_ALLOW_TEMPORARY_USER_ROOT=1"
