@@ -1,0 +1,228 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ClayWarren <warren.clay@icloud.com>
+Date: Fri, 4 Sep 2026 00:00:00 +0000
+Subject: [PATCH] cmd/link/internal/loadpe: handle no-duplicates COMDATs
+
+MSVC-target Clang emits IMAGE_COMDAT_SELECT_NODUPLICATES (strategy 1)
+for function sections. A single definition is valid; repeated definitions
+must be rejected. Route these definitions through the existing ordinary
+symbol duplicate checks instead of treating them as deduplicable COMDATs.
+
+Clang can also emit several sections named .text in the same COFF object.
+Include the section index in each outer symbol name so those sections keep
+distinct data and symbol lists.
+
+Exercise the full PE loader with portable ARM64 COFF fixtures, including
+repeated section names, retained section contents, duplicate and mixed
+NODUPLICATES selections, ANY, SAME_SIZE, and unsupported strategies.
+---
+diff --git a/src/cmd/link/internal/loadpe/ldpe.go b/src/cmd/link/internal/loadpe/ldpe.go
+index fe39fad4..1fc21bb8 100644
+--- a/src/cmd/link/internal/loadpe/ldpe.go
++++ b/src/cmd/link/internal/loadpe/ldpe.go
+@@ -264,7 +264,7 @@ func Load(l *loader.Loader, arch *sys.Arch, localSymVersion int, input *bio.Read
+ 	// TODO return error if found .cormeta
+ 
+ 	// create symbols for mapped sections
+-	for _, sect := range f.Sections {
++	for i, sect := range f.Sections {
+ 		if sect.Characteristics&pe.IMAGE_SCN_MEM_DISCARDABLE != 0 {
+ 			continue
+ 		}
+@@ -275,7 +275,10 @@ func Load(l *loader.Loader, arch *sys.Arch, localSymVersion int, input *bio.Read
+ 			continue
+ 		}
+ 
+-		name := fmt.Sprintf("%s(%s)", pkg, sect.Name)
++		// COFF permits multiple sections with the same name. Clang uses
++		// this for function COMDATs, so include the section index in the
++		// outer symbol's identity.
++		name := fmt.Sprintf("%s(%s:%d)", pkg, sect.Name, i)
+ 		s := state.l.LookupOrCreateCgoExport(name, localSymVersion)
+ 		bld := l.MakeSymbolUpdater(s)
+ 
+@@ -799,6 +802,11 @@ func (state *peLoaderState) preprocessSymbols() error {
+ 		} else if auxsymp.Selection == pe.IMAGE_COMDAT_SELECT_ANY {
+ 			// Also supported.
+ 			state.comdats[uint16(pesym.SectionNumber-1)] = int64(-1)
++		} else if auxsymp.Selection == pe.IMAGE_COMDAT_SELECT_NODUPLICATES {
++			// A single definition is allowed, but duplicates must be
++			// diagnosed. Use the ordinary symbol duplicate checks instead
++			// of the COMDAT deduplication path.
++			delete(state.comdats, uint16(pesym.SectionNumber-1))
+ 		} else {
+ 			// We don't support any of the other strategies at the
+ 			// moment. I suspect that we may need to also support
+
+diff --git a/src/cmd/link/internal/loadpe/ldpe_test.go b/src/cmd/link/internal/loadpe/ldpe_test.go
+new file mode 100644
+--- /dev/null
++++ b/src/cmd/link/internal/loadpe/ldpe_test.go
+@@ -0,0 +1,165 @@
++// Copyright 2026 The Go Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style
++// license that can be found in the LICENSE file.
++
++package loadpe
++
++import (
++	"bytes"
++	"cmd/internal/bio"
++	"cmd/internal/sys"
++	"cmd/link/internal/loader"
++	"cmd/link/internal/sym"
++	"debug/pe"
++	"encoding/binary"
++	"fmt"
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++)
++
++func TestCOMDATSelection(t *testing.T) {
++	type definition struct {
++		selection int // -1 denotes an ordinary, non-COMDAT definition
++		size      int
++	}
++	const (
++		noDuplicates = pe.IMAGE_COMDAT_SELECT_NODUPLICATES
++		any          = pe.IMAGE_COMDAT_SELECT_ANY
++		sameSize     = pe.IMAGE_COMDAT_SELECT_SAME_SIZE
++	)
++	for _, test := range []struct {
++		name string
++		defs []definition
++		want string
++	}{
++		{"no duplicates single", []definition{{noDuplicates, 4}}, ""},
++		{"no duplicates repeated", []definition{{noDuplicates, 4}, {noDuplicates, 4}}, "duplicate symbol"},
++		{"no duplicates different sizes", []definition{{noDuplicates, 4}, {noDuplicates, 8}}, "duplicate symbol"},
++		{"no duplicates then any", []definition{{noDuplicates, 4}, {any, 4}}, "duplicate symbol"},
++		{"any then no duplicates", []definition{{any, 4}, {noDuplicates, 4}}, "duplicate symbol"},
++		{"no duplicates then same size", []definition{{noDuplicates, 4}, {sameSize, 4}}, "duplicate symbol"},
++		{"same size then no duplicates", []definition{{sameSize, 4}, {noDuplicates, 4}}, "duplicate symbol"},
++		{"ordinary then no duplicates", []definition{{-1, 4}, {noDuplicates, 4}}, "duplicate symbol"},
++		{"no duplicates then ordinary", []definition{{noDuplicates, 4}, {-1, 4}}, "duplicate symbol"},
++		{"any repeated", []definition{{any, 4}, {any, 4}}, ""},
++		{"any different sizes", []definition{{any, 4}, {any, 8}}, ""},
++		{"same size repeated", []definition{{sameSize, 4}, {sameSize, 4}}, ""},
++		{"same size mismatch", []definition{{sameSize, 4}, {sameSize, 8}}, "duplicate symbol"},
++		{"exact match unsupported", []definition{{pe.IMAGE_COMDAT_SELECT_EXACT_MATCH, 4}}, "unsupported COMDAT selection strategy"},
++		{"associative unsupported", []definition{{pe.IMAGE_COMDAT_SELECT_ASSOCIATIVE, 4}}, "unsupported COMDAT selection strategy"},
++		{"largest unsupported", []definition{{pe.IMAGE_COMDAT_SELECT_LARGEST, 4}}, "unsupported COMDAT selection strategy"},
++		{"newest unsupported", []definition{{7, 4}}, "unsupported COMDAT selection strategy"},
++		{"zero unsupported", []definition{{0, 4}}, "unsupported COMDAT selection strategy"},
++		{"unknown unsupported", []definition{{255, 4}}, "unsupported COMDAT selection strategy"},
++	} {
++		t.Run(test.name, func(t *testing.T) {
++			// Load retains import and COMDAT state across objects in a link.
++			// Give each case a separate link, but preserve that state within it.
++			savedImports, savedCOMDATs := importSymsState, comdatDefinitions
++			importSymsState, comdatDefinitions = nil, nil
++			t.Cleanup(func() {
++				importSymsState, comdatDefinitions = savedImports, savedCOMDATs
++			})
++			l := loader.NewLoader(0, &loader.ErrorReporter{AfterErrorAction: func() {
++				t.Fatal("unexpected loader error")
++			}})
++			dir := t.TempDir()
++			var err error
++			for i, def := range test.defs {
++				path := filepath.Join(dir, fmt.Sprintf("%d.obj", i))
++				data := comdatObject(t, def.selection, def.size)
++				if err := os.WriteFile(path, data, 0600); err != nil {
++					t.Fatal(err)
++				}
++				r, openErr := bio.Open(path)
++				if openErr != nil {
++					t.Fatal(openErr)
++				}
++				_, err = Load(l, sys.ArchARM64, sym.SymVerStatic+i, r, path, int64(len(data)), path)
++				r.Close()
++				if err != nil {
++					if i != len(test.defs)-1 {
++						t.Fatalf("definition %d failed before the expected duplicate: %v", i, err)
++					}
++					break
++				}
++			}
++			if test.want == "" {
++				if err != nil {
++					t.Fatal(err)
++				}
++				s := l.Lookup("foo", 0)
++				if s == 0 || l.OuterSym(s) == 0 {
++					t.Fatal("foo definition was not loaded")
++				}
++				outer := l.OuterSym(s)
++				if got := l.SymSize(outer); got != int64(test.defs[0].size) {
++					t.Fatalf("retained section size = %d, want %d", got, test.defs[0].size)
++				}
++				if got := l.Data(outer); len(got) != test.defs[0].size || binary.LittleEndian.Uint32(got) != 0xd65f03c0 {
++					t.Fatalf("retained section data = %x, want original ARM64 RET instructions", got)
++				}
++			} else if err == nil || !strings.Contains(err.Error(), test.want) {
++				t.Fatalf("Load error = %v, want %q", err, test.want)
++			}
++		})
++	}
++}
++
++// comdatObject constructs an ARM64 COFF object with an empty .text section
++// followed by another .text section and the section/auxiliary/leader symbol
++// records required by the PE specification. This repeated section name matches
++// the output of clang --target=aarch64-windows-msvc -ffunction-sections.
++// Building the fixture here keeps the selection tests independent of a host
++// compiler's target support and COMDAT defaults.
++func comdatObject(t *testing.T, selection, size int) []byte {
++	t.Helper()
++	var data bytes.Buffer
++	write := func(value any) {
++		if err := binary.Write(&data, binary.LittleEndian, value); err != nil {
++			t.Fatal(err)
++		}
++	}
++	const rawDataOffset = 20 + 2*40 // COFF file header and two section headers
++	write(pe.FileHeader{
++		Machine: pe.IMAGE_FILE_MACHINE_ARM64, NumberOfSections: 2,
++		PointerToSymbolTable: uint32(rawDataOffset + size), NumberOfSymbols: 5,
++	})
++	sectionName := [8]byte{'.', 't', 'e', 'x', 't'}
++	flags := uint32(pe.IMAGE_SCN_CNT_CODE | pe.IMAGE_SCN_MEM_EXECUTE | pe.IMAGE_SCN_MEM_READ)
++	write(pe.SectionHeader32{
++		Name: sectionName, PointerToRawData: rawDataOffset, Characteristics: flags,
++	})
++	if selection >= 0 {
++		flags |= pe.IMAGE_SCN_LNK_COMDAT
++	}
++	write(pe.SectionHeader32{
++		Name: sectionName, SizeOfRawData: uint32(size),
++		PointerToRawData: rawDataOffset, Characteristics: flags,
++	})
++	for i := 0; i < size; i += 4 {
++		write(uint32(0xd65f03c0)) // ARM64 RET
++	}
++	write(pe.COFFSymbol{
++		Name: sectionName, SectionNumber: 1,
++		StorageClass: IMAGE_SYM_CLASS_STATIC, NumberOfAuxSymbols: 1,
++	})
++	write(pe.COFFSymbolAuxFormat5{SecNum: 1})
++	write(pe.COFFSymbol{
++		Name: sectionName, SectionNumber: 2,
++		StorageClass: IMAGE_SYM_CLASS_STATIC, NumberOfAuxSymbols: 1,
++	})
++	aux := pe.COFFSymbolAuxFormat5{Size: uint32(size), SecNum: 2}
++	if selection >= 0 {
++		aux.Selection = uint8(selection)
++	}
++	write(aux)
++	write(pe.COFFSymbol{
++		Name: [8]byte{'f', 'o', 'o'}, SectionNumber: 2,
++		Type: IMAGE_SYM_DTYPE_FUNCTION << 4, StorageClass: IMAGE_SYM_CLASS_EXTERNAL,
++	})
++	write(uint32(4)) // Empty COFF string table, including its size field.
++	return data.Bytes()
++}
+-- 
+2.54.0

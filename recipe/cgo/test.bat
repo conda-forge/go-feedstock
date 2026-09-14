@@ -6,8 +6,10 @@ set "GO_TEST_TIMEOUT_SCALE=4"
 rem Put TMP on the same drive as the conda prefix (the D drive),
 rem to avoid a known issue in the go test suite:
 rem https://github.com/golang/go/issues/24846#issuecomment-381380628
-set TMP=%PREFIX%\tmp
-mkdir "%TMP%"
+if /I not "%target_platform%"=="win-arm64" (
+  set "TMP=%PREFIX%\tmp"
+  mkdir "%PREFIX%\tmp"
+)
 
 
 rem Batch equivalent to backticks
@@ -50,12 +52,11 @@ if errorlevel 1 exit /b 1
 copy /Y "%PREFIX%\bin\gofmt.exe" "%GO_ROOT%\bin\gofmt.exe"
 if errorlevel 1 exit /b 1
 
-rem Retain the historically tolerated Windows diagnostics, but make the
-rem complementary expected-pass suite authoritative for win-arm64.
-go tool dist test -k -v -no-rebuild -run=^^go_test:os$ || cmd /K "exit /b 0"
-go tool dist test -k -v -no-rebuild -run=^^go_test:cmd/go$ || cmd /K "exit /b 0"
-go tool dist test -k -v -no-rebuild -run=^^go_test:cmd/gofmt$ || cmd /K "exit /b 0"
-go tool dist test -v -no-rebuild -run=!^^go_test:os^|go_test:cmd/go^|go_test:cmd/gofmt$
+rem Use native Git and the runner-owned temporary directory for vcweb fixtures.
+if not exist "%ProgramFiles%\Git\bin\git.exe" exit /b 1
+set "PATH=%ProgramFiles%\Git\bin;%PATH%"
+where git
+git version --build-options
 if errorlevel 1 exit /b 1
 
 for /f "delims=" %%G in ('go env GOHOSTOS') do if /I not "%%G"=="windows" exit /b 1
@@ -136,6 +137,12 @@ powershell -NoLogo -NoProfile -NonInteractive -Command ^
   "  if ($machine -ne 0xaa64) { Write-Error ('{0}: expected PE Machine AA64, got 0x{1:X4}' -f $file, $machine); exit 1 }" ^
   "}"
 if errorlevel 1 exit /b 1
+
+rem Run every dist test with native Windows certificate prerequisites.
+set "GO_TEST_ALLOW_TEMPORARY_USER_ROOT="
+if "%GITHUB_ACTIONS%"=="true" if "%RUNNER_ENVIRONMENT%"=="github-hosted" set "GO_TEST_ALLOW_TEMPORARY_USER_ROOT=1"
+powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%~dp0..\windows\run_dist_tests.ps1"
+if errorlevel 1 exit /b %ERRORLEVEL%
 
 :done
 exit /b 0

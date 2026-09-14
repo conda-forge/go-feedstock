@@ -1,0 +1,941 @@
+Subject: [PATCH] Support ARM64 host unwind records and MSVC linker options
+
+diff --git a/src/cmd/link/internal/ld/lib.go b/src/cmd/link/internal/ld/lib.go
+index 8e29b8c..b7ed728 100644
+--- a/src/cmd/link/internal/ld/lib.go
++++ b/src/cmd/link/internal/ld/lib.go
+@@ -56,6 +56,7 @@ import (
+ 	"cmd/internal/goobj"
+ 	"cmd/internal/hash"
+ 	"cmd/internal/objabi"
++	"cmd/internal/quoted"
+ 	"cmd/internal/sys"
+ 	"cmd/link/internal/loadelf"
+ 	"cmd/link/internal/loader"
+@@ -487,16 +488,36 @@ func (ctxt *Link) extld() []string {
+ 		// Return the default external linker for the platform.
+ 		// This only matters when link tool is called directly without explicit -extld,
+ 		// go tool already passes the correct linker in other cases.
+-		switch buildcfg.GOOS {
+-		case "darwin", "freebsd", "openbsd":
+-			flagExtld = []string{"clang"}
+-		default:
+-			flagExtld = []string{"gcc"}
++		var err error
++		flagExtld, err = defaultExternalLinker(buildcfg.GOOS, buildcfg.GOARCH, os.Getenv("CC"))
++		if err != nil {
++			Exitf("invalid CC for the default external linker: %v", err)
+ 		}
+ 	}
+ 	return flagExtld
+ }
+ 
++func defaultExternalLinker(goos, goarch, cc string) ([]string, error) {
++	if goos == "windows" && goarch == "arm64" {
++		// Conda's native ARM64 C compiler is Clang, not MinGW GCC.
++		// Honor the active compiler when tests invoke go tool link directly.
++		args, err := quoted.Split(cc)
++		if err != nil {
++			return nil, err
++		}
++		if len(args) != 0 {
++			return args, nil
++		}
++		return []string{"clang.exe"}, nil
++	}
++	switch goos {
++	case "darwin", "freebsd", "openbsd":
++		return []string{"clang"}, nil
++	default:
++		return []string{"gcc"}, nil
++	}
++}
++
+ // findLibPathCmd uses cmd command to find gcc library libname.
+ // It returns library full path if found, or "none" if not found.
+ func (ctxt *Link) findLibPathCmd(cmd, libname string) string {
+@@ -1444,7 +1465,15 @@ func (ctxt *Link) hostlink() {
+ 	argv = append(argv, ctxt.extld()...)
+ 	argv = append(argv, hostlinkArchArgs(ctxt.Arch)...)
+ 
+-	if *FlagS || debug_s {
++	var isMSVC, isLLD bool // used on Windows
++	if ctxt.IsWindows() {
++		isMSVC = ctxt.isMSVC()
++		isLLD = ctxt.isLLD()
++	}
++
++	if isMSVC && isLLD {
++		argv = append(argv, msvcDebugFlags(*FlagS || debug_s, *FlagW)...)
++	} else if *FlagS || debug_s {
+ 		if ctxt.HeadType == objabi.Hdarwin {
+ 			// Recent versions of macOS print
+ 			//	ld: warning: option -s is obsolete and being ignored
+@@ -1462,7 +1491,6 @@ func (ctxt *Link) hostlink() {
+ 	// Only macOS supports unmapped segments such as our __DWARF segment.
+ 	combineDwarf := ctxt.IsDarwin() && !*FlagW && machoPlatform == PLATFORM_MACOS
+ 
+-	var isMSVC, isLLD bool // used on Windows
+ 	wlPrefix := "-Wl,--"
+ 
+ 	switch ctxt.HeadType {
+@@ -1515,8 +1543,6 @@ func (ctxt *Link) hostlink() {
+ 			argv = append(argv, "-Wl,--no-execute-only")
+ 		}
+ 	case objabi.Hwindows:
+-		isMSVC = ctxt.isMSVC()
+-		isLLD = ctxt.isLLD()
+ 		if isMSVC {
+ 			// For various options, MSVC lld-link only accepts one dash.
+ 			// TODO: It seems mingw clang supports one or two dashes,
+@@ -1981,7 +2007,7 @@ func (ctxt *Link) hostlink() {
+ 	if ctxt.HeadType == objabi.Hwindows {
+ 		// use gcc linker script to work around gcc bug
+ 		// (see https://golang.org/issue/20183 for details).
+-		if !isLLD {
++		if windowsNeedsGDBLinkerScript(isMSVC, isLLD) {
+ 			p := writeGDBLinkerScript()
+ 			argv = append(argv, "-Wl,-T,"+p)
+ 		}
+@@ -2467,9 +2493,7 @@ func ldobj(ctxt *Link, f *bio.Reader, lib *sym.Library, length int64, pn string,
+ 				setpersrc(ctxt, ls.Resources)
+ 			}
+ 			sehp.pdata = append(sehp.pdata, ls.PData...)
+-			if ls.XData != 0 {
+-				sehp.xdata = append(sehp.xdata, ls.XData)
+-			}
++			sehp.xdata = append(sehp.xdata, ls.XData...)
+ 			ctxt.Textp = append(ctxt.Textp, ls.Textp...)
+ 		}
+ 		return ldhostobj(ldpe, ctxt.HeadType, f, pkg, length, pn, file)
+@@ -3173,6 +3197,27 @@ func (ctxt *Link) findExtLinkTool(toolname string) string {
+ 	return cmdpath
+ }
+ 
++// windowsNeedsGDBLinkerScript limits the GNU ld workaround to its toolchain.
++// LLD does not need the workaround, and Microsoft LINK cannot read GNU scripts.
++func windowsNeedsGDBLinkerScript(isMSVC, isLLD bool) bool {
++	return !isMSVC && !isLLD
++}
++
++// msvcDebugFlags preserves Go's symbol and DWARF settings with lld-link.
++// Unlike GNU ld, lld-link omits the COFF symbol table and DWARF by default,
++// and MSVC-target Clang does not accept the GNU -s and -Wl,-S options.
++func msvcDebugFlags(stripSymbols, stripDWARF bool) []string {
++	if stripSymbols {
++		return []string{"-Wl,-debug:none"}
++	}
++	if stripDWARF {
++		return []string{"-Wl,-debug:symtab", "-Wl,-debug:nodwarf", "-Wl,-opt:ref"}
++	}
++	// /debug changes lld-link's default to /opt:noref. Preserve the normal
++	// removal of unreferenced COMDATs while retaining symbols and DWARF.
++	return []string{"-Wl,-debug:dwarf", "-Wl,-opt:ref"}
++}
++
+ // isMSVC reports whether the C toolchain is clang with a -msvc target,
+ // e.g. the clang bundled in MSVC.
+ func (ctxt *Link) isMSVC() bool {
+diff --git a/src/cmd/link/internal/ld/pe_msvc_test.go b/src/cmd/link/internal/ld/pe_msvc_test.go
+new file mode 100644
+index 0000000..84d43f6
+--- /dev/null
++++ b/src/cmd/link/internal/ld/pe_msvc_test.go
+@@ -0,0 +1,252 @@
++// Copyright 2026 The Go Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style
++// license that can be found in the LICENSE file.
++
++package ld
++
++import (
++	"bytes"
++	"cmd/internal/quoted"
++	"debug/pe"
++	"internal/testenv"
++	"os"
++	"path/filepath"
++	"runtime"
++	"slices"
++	"strings"
++	"testing"
++)
++
++func TestWindowsGDBLinkerScript(t *testing.T) {
++	for _, test := range []struct {
++		name            string
++		msvc, lld, want bool
++	}{
++		{"GNU ld", false, false, true},
++		{"MinGW LLD", false, true, false},
++		{"Microsoft LINK", true, false, false},
++		{"MSVC LLD", true, true, false},
++	} {
++		t.Run(test.name, func(t *testing.T) {
++			if got := windowsNeedsGDBLinkerScript(test.msvc, test.lld); got != test.want {
++				t.Fatalf("windowsNeedsGDBLinkerScript() = %v, want %v", got, test.want)
++			}
++		})
++	}
++}
++
++func TestMSVCDebugFlags(t *testing.T) {
++	for _, test := range []struct {
++		name                     string
++		stripSymbols, stripDWARF bool
++		want                     []string
++	}{
++		{"default", false, false, []string{"-Wl,-debug:dwarf", "-Wl,-opt:ref"}},
++		{"symbols only", false, true, []string{"-Wl,-debug:symtab", "-Wl,-debug:nodwarf", "-Wl,-opt:ref"}},
++		{"stripped", true, true, []string{"-Wl,-debug:none"}},
++		{"strip symbols implies no DWARF", true, false, []string{"-Wl,-debug:none"}},
++	} {
++		t.Run(test.name, func(t *testing.T) {
++			if got := msvcDebugFlags(test.stripSymbols, test.stripDWARF); !slices.Equal(got, test.want) {
++				t.Fatalf("msvcDebugFlags() = %q, want %q", got, test.want)
++			}
++		})
++	}
++}
++
++func TestDefaultExternalLinker(t *testing.T) {
++	for _, test := range []struct {
++		name, goos, goarch, cc string
++		want                   []string
++	}{
++		{"native ARM64 default", "windows", "arm64", "", []string{"clang.exe"}},
++		{"native ARM64 activation", "windows", "arm64", "clang.exe", []string{"clang.exe"}},
++		{"quoted compiler", "windows", "arm64", `"C:\Program Files\LLVM\bin\clang.exe" -fuse-ld=lld`, []string{`C:\Program Files\LLVM\bin\clang.exe`, "-fuse-ld=lld"}},
++		{"Windows x64 unchanged", "windows", "amd64", "clang.exe", []string{"gcc"}},
++		{"Windows x86 unchanged", "windows", "386", "clang.exe", []string{"gcc"}},
++		{"Linux unchanged", "linux", "arm64", "clang", []string{"gcc"}},
++		{"Darwin unchanged", "darwin", "arm64", "gcc", []string{"clang"}},
++		{"FreeBSD unchanged", "freebsd", "amd64", "gcc", []string{"clang"}},
++		{"OpenBSD unchanged", "openbsd", "amd64", "gcc", []string{"clang"}},
++	} {
++		t.Run(test.name, func(t *testing.T) {
++			got, err := defaultExternalLinker(test.goos, test.goarch, test.cc)
++			if err != nil || !slices.Equal(got, test.want) {
++				t.Fatalf("defaultExternalLinker() = %q, %v; want %q", got, err, test.want)
++			}
++		})
++	}
++	if _, err := defaultExternalLinker("windows", "arm64", `"unterminated`); err == nil {
++		t.Error("malformed CC did not return an error")
++	}
++
++	saved := flagExtld
++	defer func() { flagExtld = saved }()
++	want := []string{"explicit-linker", "explicit-argument"}
++	flagExtld = slices.Clone(want)
++	if got := new(Link).extld(); !slices.Equal(got, want) {
++		t.Fatalf("explicit -extld was replaced: %q", got)
++	}
++}
++
++func mustHaveMSVC(t *testing.T) string {
++	t.Helper()
++	if runtime.GOOS != "windows" {
++		t.Skip("Windows PE executable test")
++	}
++	testenv.MustHaveGoBuild(t)
++	testenv.MustHaveCGO(t)
++	goTool := testenv.GoToolPath(t)
++	ccOutput, err := testenv.Command(t, goTool, "env", "CC").Output()
++	if err != nil {
++		t.Fatal(err)
++	}
++	cc, err := quoted.Split(strings.TrimSpace(string(ccOutput)))
++	if err != nil || len(cc) == 0 {
++		t.Fatalf("invalid CC %q: %v", ccOutput, err)
++	}
++	version, err := testenv.Command(t, cc[0], append(cc[1:], "--version")...).CombinedOutput()
++	if err != nil {
++		t.Fatalf("querying CC: %v\n%s", err, version)
++	}
++	if !bytes.Contains(version, []byte("-msvc")) {
++		t.Skip("requires MSVC-target Clang")
++	}
++	return goTool
++}
++
++func TestWindowsMSVCExternalDebugInfo(t *testing.T) {
++	goTool := mustHaveMSVC(t)
++	dir := t.TempDir()
++	src := filepath.Join(dir, "main.go")
++	if err := os.WriteFile(src, []byte(`package main
++// int answer(void) { return 42; }
++import "C"
++func main() { if C.answer() != 42 { panic("incorrect C result") } }
++`), 0666); err != nil {
++		t.Fatal(err)
++	}
++	for _, test := range []struct {
++		name, flags    string
++		symbols, dwarf bool
++	}{
++		{"default", "", true, true},
++		{"w", "-w", true, false},
++		{"s", "-s", false, false},
++	} {
++		t.Run(test.name, func(t *testing.T) {
++			exe := filepath.Join(dir, test.name+".exe")
++			out, err := testenv.Command(t, goTool, "build", "-ldflags=-linkmode=external "+test.flags, "-o", exe, src).CombinedOutput()
++			if err != nil || len(out) != 0 {
++				t.Fatalf("external build: %v\n%s", err, out)
++			}
++			f, err := pe.Open(exe)
++			if err != nil {
++				t.Fatal(err)
++			}
++			defer f.Close()
++			if got := len(f.Symbols) != 0; got != test.symbols {
++				t.Errorf("COFF symbols present = %v, want %v", got, test.symbols)
++			}
++			if test.symbols {
++				for _, name := range []string{"main.main", "runtime.pclntab", "runtime.types"} {
++					if !slices.ContainsFunc(f.Symbols, func(s *pe.Symbol) bool { return s.Name == name }) {
++						t.Errorf("missing Go symbol %q", name)
++					}
++				}
++			}
++			if got := f.Section(".debug_info") != nil; got != test.dwarf {
++				t.Errorf("DWARF present = %v, want %v", got, test.dwarf)
++			}
++			if test.dwarf {
++				if _, err := f.DWARF(); err != nil {
++					t.Errorf("reading DWARF: %v", err)
++				}
++			}
++			if out, err := testenv.Command(t, exe).CombinedOutput(); err != nil || len(out) != 0 {
++				t.Fatalf("executing CGo program: %v\n%s", err, out)
++			}
++		})
++	}
++}
++
++func TestWindowsMSVCLinkerNoGDBScript(t *testing.T) {
++	goTool := mustHaveMSVC(t)
++	if runtime.GOARCH != "arm64" {
++		t.Skip("Windows ARM64 MSVC linker regression")
++	}
++	testenv.MustHaveExecPath(t, "link.exe")
++	dir := t.TempDir()
++	src := filepath.Join(dir, "main.go")
++	if err := os.WriteFile(src, []byte(`package main
++// int answer(void) { return 42; }
++import "C"
++func main() { if C.answer() != 42 { panic("incorrect C result") } }
++`), 0666); err != nil {
++		t.Fatal(err)
++	}
++	exe := filepath.Join(dir, "main.exe")
++	cmd := testenv.Command(t, goTool, "build", "-ldflags=-linkmode=external -extldflags=-fuse-ld=link -v", "-o", exe, src)
++	// A consumer can replace CGO_LDFLAGS without retaining conda's LLD
++	// default. Exercise that supported environment override with a plain
++	// CGo program, selecting Microsoft LINK explicitly for this test.
++	cmd.Env = append(cmd.Environ(), "CGO_LDFLAGS=-Wno-such-warning -Wno-unknown-warning-option")
++	out, err := cmd.CombinedOutput()
++	if err != nil {
++		t.Fatalf("Microsoft LINK build: %v\n%s", err, out)
++	}
++	if bytes.Contains(out, []byte("fix_debug_gdb_scripts.ld")) ||
++		!bytes.Contains(out, []byte("-fuse-ld=link")) || !bytes.Contains(out, []byte("-Wno-such-warning")) {
++		t.Fatalf("incorrect Microsoft LINK command:\n%s", out)
++	}
++	f, err := pe.Open(exe)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer f.Close()
++	if f.Machine != pe.IMAGE_FILE_MACHINE_ARM64 {
++		t.Fatalf("PE machine = %#x, want ARM64", f.Machine)
++	}
++	if out, err := testenv.Command(t, exe).CombinedOutput(); err != nil || len(out) != 0 {
++		t.Fatalf("Microsoft LINK CGo execution: %v\n%s", err, out)
++	}
++}
++
++func TestWindowsMSVCSharedInitializer(t *testing.T) {
++	goTool := mustHaveMSVC(t)
++	testenv.MustHaveBuildMode(t, "c-shared")
++	dir := t.TempDir()
++	src := filepath.Join(dir, "main.go")
++	if err := os.WriteFile(src, []byte(`package main
++import "C"
++//export Answer
++func Answer() int { return 42 }
++func main() {}
++`), 0666); err != nil {
++		t.Fatal(err)
++	}
++	linktmp := filepath.Join(dir, "linktmp")
++	if err := os.Mkdir(linktmp, 0777); err != nil {
++		t.Fatal(err)
++	}
++	dll := filepath.Join(dir, "test.dll")
++	out, err := testenv.Command(t, goTool, "build", "-buildmode=c-shared", "-ldflags=-tmpdir="+linktmp, "-o", dll, src).CombinedOutput()
++	if err != nil {
++		t.Fatalf("building shared library: %v\n%s", err, out)
++	}
++	f, err := pe.Open(filepath.Join(linktmp, "go.o"))
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer f.Close()
++	if f.Section(".ctors") != nil {
++		t.Error("MSVC shared library still uses a MinGW initializer")
++	}
++	init := f.Section(".CRT$XCU")
++	if init == nil {
++		t.Fatal("MSVC shared library has no CRT initializer")
++	}
++	if len(init.Relocs) != 1 {
++		t.Errorf("CRT initializer has %d relocations, want 1", len(init.Relocs))
++	}
++}
+diff --git a/src/cmd/link/internal/ld/seh.go b/src/cmd/link/internal/ld/seh.go
+index 2bee6d4..da406d3 100644
+--- a/src/cmd/link/internal/ld/seh.go
++++ b/src/cmd/link/internal/ld/seh.go
+@@ -23,6 +23,8 @@ func collectSEH(ctxt *Link) {
+ 	switch ctxt.Arch.Family {
+ 	case sys.AMD64:
+ 		collectSEHAMD64(ctxt)
++	case sys.ARM64:
++		sortHostARM64SEH(ctxt)
+ 	}
+ }
+ 
+@@ -94,3 +96,21 @@ func collectSEHAMD64(ctxt *Link) {
+ 		sehp.xdata = append(sehp.xdata, xdata.Sym())
+ 	}
+ }
++
++// Each ARM64 host entry is split by loadpe so its function RVA can determine
++// final ordering even when function sections have been reordered by the linker.
++func sortHostARM64SEH(ctxt *Link) {
++	ldr := ctxt.loader
++	sehp.pdata = slices.DeleteFunc(sehp.pdata, func(s loader.Sym) bool { return !ldr.AttrReachable(s) })
++	start := func(s loader.Sym) int64 {
++		rs := ldr.Relocs(s)
++		for i := 0; i < rs.Count(); i++ {
++			r := rs.At(i)
++			if r.Off() == 0 {
++				return ldr.SymAddr(r.Sym()) + r.Add()
++			}
++		}
++		return 0
++	}
++	slices.SortStableFunc(sehp.pdata, func(a, b loader.Sym) int { return cmp.Compare(start(a), start(b)) })
++}
+diff --git a/src/cmd/link/internal/ld/seh_arm64_test.go b/src/cmd/link/internal/ld/seh_arm64_test.go
+new file mode 100644
+index 0000000..fce0004
+--- /dev/null
++++ b/src/cmd/link/internal/ld/seh_arm64_test.go
+@@ -0,0 +1,35 @@
++// Copyright 2026 The Go Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style
++// license that can be found in the LICENSE file.
++
++package ld
++
++import (
++	"cmd/internal/objabi"
++	"cmd/link/internal/loader"
++	"testing"
++)
++
++func TestARM64HostUnwindOrdering(t *testing.T) {
++	saved := sehp
++	t.Cleanup(func() { sehp = saved })
++	l := loader.NewLoader(0, &loader.ErrorReporter{})
++	var records []loader.Sym
++	for _, v := range []int64{200, 0, 100} {
++		fn := l.MakeSymbolBuilder("")
++		fn.SetValue(v)
++		pd := l.MakeSymbolBuilder("")
++		r, _ := pd.AddRel(objabi.R_PEIMAGEOFF)
++		r.SetSym(fn.Sym())
++		r.SetSiz(4)
++		l.SetAttrReachable(fn.Sym(), v != 0)
++		l.SetAttrReachable(pd.Sym(), v != 0)
++		records = append(records, pd.Sym())
++	}
++	first, last := records[2], records[0]
++	sehp.pdata = records
++	sortHostARM64SEH(&Link{loader: l})
++	if len(sehp.pdata) != 2 || sehp.pdata[0] != first || sehp.pdata[1] != last {
++		t.Fatalf("unwind records not filtered and sorted: %v", sehp.pdata)
++	}
++}
+diff --git a/src/cmd/link/internal/loadpe/ldpe.go b/src/cmd/link/internal/loadpe/ldpe.go
+index 1fc21bb..5d1c30b 100644
+--- a/src/cmd/link/internal/loadpe/ldpe.go
++++ b/src/cmd/link/internal/loadpe/ldpe.go
+@@ -211,6 +211,8 @@ type peLoaderState struct {
+ 	comdats         map[uint16]int64 // key is section index, val is size
+ 	sectdata        map[*pe.Section][]byte
+ 	localSymVersion int
++	associative     map[uint16]uint16
++	discarded       map[uint16]bool
+ }
+ 
+ // comdatDefinitions records the names of symbols for which we've
+@@ -223,7 +225,7 @@ type Symbols struct {
+ 	Textp     []loader.Sym // text symbols
+ 	Resources []loader.Sym // .rsrc section or set of .rsrc$xx sections
+ 	PData     []loader.Sym
+-	XData     loader.Sym
++	XData     []loader.Sym
+ }
+ 
+ // Load loads the PE file pn from input.
+@@ -258,7 +260,7 @@ func Load(l *loader.Loader, arch *sys.Arch, localSymVersion int, input *bio.Read
+ 
+ 	var (
+ 		ls    Symbols
+-		pdata loader.Sym
++		pdata []loader.Sym
+ 	)
+ 
+ 	// TODO return error if found .cormeta
+@@ -318,9 +320,9 @@ func Load(l *loader.Loader, arch *sys.Arch, localSymVersion int, input *bio.Read
+ 			ls.Resources = append(ls.Resources, s)
+ 		} else if bld.Type() == sym.SSEHSECT {
+ 			if sect.Name == ".pdata" {
+-				pdata = s
++				pdata = append(pdata, s)
+ 			} else if sect.Name == ".xdata" {
+-				ls.XData = s
++				ls.XData = append(ls.XData, s)
+ 			}
+ 		}
+ 	}
+@@ -330,6 +332,13 @@ func Load(l *loader.Loader, arch *sys.Arch, localSymVersion int, input *bio.Read
+ 		return nil, err
+ 	}
+ 
++	if err := state.selectAssociativeSections(); err != nil {
++		return nil, err
++	}
++	for i := range state.discarded {
++		delete(state.sectsyms, f.Sections[i])
++	}
++
+ 	// load relocations
+ 	for _, rsect := range f.Sections {
+ 		if _, found := state.sectsyms[rsect]; !found {
+@@ -515,6 +524,9 @@ func Load(l *loader.Loader, arch *sys.Arch, localSymVersion int, input *bio.Read
+ 			}
+ 		}
+ 
++		if pesym.SectionNumber > 0 && state.discarded[uint16(pesym.SectionNumber-1)] {
++			continue
++		}
+ 		bld, s, err := state.readpesym(pesym)
+ 		if err != nil {
+ 			return nil, err
+@@ -602,12 +614,36 @@ func Load(l *loader.Loader, arch *sys.Arch, localSymVersion int, input *bio.Read
+ 		}
+ 	}
+ 
+-	if pdata != 0 {
+-		subs, err := processSEH(l, arch, pdata)
++	liveSection := make(map[loader.Sym]bool)
++	for _, ss := range state.sectsyms {
++		liveSection[ss] = true
++	}
++	for child, parent := range state.associative {
++		cs, ps := state.sectsyms[f.Sections[child]], state.sectsyms[f.Sections[parent]]
++		if cs != 0 && ps != 0 && !issehsect(arch, f.Sections[child]) {
++			r, _ := l.MakeSymbolUpdater(ps).AddRel(objabi.R_KEEP)
++			r.SetSym(cs)
++		}
++	}
++	var xdata []loader.Sym
++	for _, xs := range ls.XData {
++		if liveSection[xs] {
++			xdata = append(xdata, xs)
++		}
++	}
++	ls.XData = xdata
++	for _, pd := range pdata {
++		if !liveSection[pd] {
++			continue
++		}
++		if l.SymSize(pd) == 0 {
++			continue
++		}
++		subs, err := processSEH(l, arch, pd)
+ 		if err != nil {
+ 			return nil, err
+ 		}
+-		ls.PData = subs
++		ls.PData = append(ls.PData, subs...)
+ 	}
+ 
+ 	return &ls, nil
+@@ -692,7 +728,7 @@ func PostProcessImports() error {
+ }
+ 
+ func issehsect(arch *sys.Arch, s *pe.Section) bool {
+-	return arch.Family == sys.AMD64 && (s.Name == ".pdata" || s.Name == ".xdata")
++	return (arch.Family == sys.AMD64 || arch.Family == sys.ARM64) && (s.Name == ".pdata" || s.Name == ".xdata")
+ }
+ 
+ func issect(s *pe.COFFSymbol) bool {
+@@ -768,6 +804,7 @@ func (state *peLoaderState) preprocessSymbols() error {
+ 
+ 	// Locate comdat sections.
+ 	state.comdats = make(map[uint16]int64)
++	state.associative = make(map[uint16]uint16)
+ 	for i, s := range state.f.Sections {
+ 		if s.Characteristics&uint32(pe.IMAGE_SCN_LNK_COMDAT) != 0 {
+ 			state.comdats[uint16(i)] = int64(s.Size)
+@@ -807,6 +844,13 @@ func (state *peLoaderState) preprocessSymbols() error {
+ 			// diagnosed. Use the ordinary symbol duplicate checks instead
+ 			// of the COMDAT deduplication path.
+ 			delete(state.comdats, uint16(pesym.SectionNumber-1))
++		} else if auxsymp.Selection == pe.IMAGE_COMDAT_SELECT_ASSOCIATIVE {
++			child := uint16(pesym.SectionNumber - 1)
++			if auxsymp.SecNum == 0 || int(auxsymp.SecNum) > len(state.f.Sections) {
++				return fmt.Errorf("invalid associative COMDAT parent %d", auxsymp.SecNum)
++			}
++			state.associative[child] = auxsymp.SecNum - 1
++			delete(state.comdats, child)
+ 		} else {
+ 			// We don't support any of the other strategies at the
+ 			// moment. I suspect that we may need to also support
+@@ -837,3 +881,65 @@ func LookupBaseFromImport(s loader.Sym, ldr *loader.Loader, arch *sys.Arch) (loa
+ 	}
+ 	return isym, nil
+ }
++
++// selectAssociativeSections follows COFF section associations before loading
++// relocations. Children of a discarded COMDAT must not survive independently.
++func (state *peLoaderState) selectAssociativeSections() error {
++	state.discarded = make(map[uint16]bool)
++	for i, n := 0, 0; i < len(state.f.COFFSymbols); i += n + 1 {
++		s := &state.f.COFFSymbols[i]
++		n = int(s.NumberOfAuxSymbols)
++		if s.SectionNumber <= 0 || s.StorageClass != IMAGE_SYM_CLASS_EXTERNAL {
++			continue
++		}
++		sec := uint16(s.SectionNumber - 1)
++		size, ok := state.comdats[sec]
++		if !ok {
++			continue
++		}
++		name, err := s.FullName(state.f.StringTable)
++		if err != nil {
++			return err
++		}
++		if state.arch.Family == sys.I386 && strings.HasPrefix(name, "_") && name != "_main" && !strings.HasPrefix(name, "__imp_") {
++			name = name[1:]
++		}
++		if i := strings.LastIndex(name, "@"); i >= 0 {
++			name = name[:i]
++		}
++		if old, found := comdatDefinitions[name]; found && old == size {
++			state.discarded[sec] = true
++		}
++	}
++	visiting, done := make(map[uint16]bool), make(map[uint16]bool)
++	var visit func(uint16) error
++	visit = func(child uint16) error {
++		if done[child] {
++			return nil
++		}
++		if visiting[child] {
++			return fmt.Errorf("cyclic associative COMDAT section %d", child+1)
++		}
++		visiting[child] = true
++		if parent, ok := state.associative[child]; ok {
++			if state.f.Sections[parent].Characteristics&pe.IMAGE_SCN_LNK_COMDAT == 0 {
++				return fmt.Errorf("associative COMDAT parent %d is not COMDAT", parent+1)
++			}
++			if err := visit(parent); err != nil {
++				return err
++			}
++			if state.discarded[parent] {
++				state.discarded[child] = true
++			}
++		}
++		visiting[child] = false
++		done[child] = true
++		return nil
++	}
++	for child := range state.associative {
++		if err := visit(child); err != nil {
++			return err
++		}
++	}
++	return nil
++}
+diff --git a/src/cmd/link/internal/loadpe/ldpe_test.go b/src/cmd/link/internal/loadpe/ldpe_test.go
+index e713f2b..0cf5cbf 100644
+--- a/src/cmd/link/internal/loadpe/ldpe_test.go
++++ b/src/cmd/link/internal/loadpe/ldpe_test.go
+@@ -48,7 +48,7 @@ func TestCOMDATSelection(t *testing.T) {
+ 		{"same size repeated", []definition{{sameSize, 4}, {sameSize, 4}}, ""},
+ 		{"same size mismatch", []definition{{sameSize, 4}, {sameSize, 8}}, "duplicate symbol"},
+ 		{"exact match unsupported", []definition{{pe.IMAGE_COMDAT_SELECT_EXACT_MATCH, 4}}, "unsupported COMDAT selection strategy"},
+-		{"associative unsupported", []definition{{pe.IMAGE_COMDAT_SELECT_ASSOCIATIVE, 4}}, "unsupported COMDAT selection strategy"},
++		{"associative cycle", []definition{{pe.IMAGE_COMDAT_SELECT_ASSOCIATIVE, 4}}, "cyclic associative COMDAT"},
+ 		{"largest unsupported", []definition{{pe.IMAGE_COMDAT_SELECT_LARGEST, 4}}, "unsupported COMDAT selection strategy"},
+ 		{"newest unsupported", []definition{{7, 4}}, "unsupported COMDAT selection strategy"},
+ 		{"zero unsupported", []definition{{0, 4}}, "unsupported COMDAT selection strategy"},
+@@ -163,3 +163,51 @@ func comdatObject(t *testing.T, selection, size int) []byte {
+ 	write(uint32(4)) // Empty COFF string table, including its size field.
+ 	return data.Bytes()
+ }
++
++func TestAssociativeCOMDATSelection(t *testing.T) {
++	for _, tt := range []struct {
++		name                      string
++		associations              map[uint16]uint16
++		duplicate, ordinaryParent bool
++		want                      string
++	}{
++		{"retain child", map[uint16]uint16{1: 0}, false, false, ""},
++		{"discard duplicate child", map[uint16]uint16{1: 0}, true, false, ""},
++		{"retain chain", map[uint16]uint16{1: 0, 2: 1}, false, false, ""},
++		{"discard duplicate chain", map[uint16]uint16{1: 0, 2: 1}, true, false, ""},
++		{"cycle", map[uint16]uint16{1: 2, 2: 1}, false, false, "cyclic"},
++		{"non COMDAT parent", map[uint16]uint16{1: 0}, false, true, "not COMDAT"},
++	} {
++		t.Run(tt.name, func(t *testing.T) {
++			saved := comdatDefinitions
++			defer func() { comdatDefinitions = saved }()
++			comdatDefinitions = map[string]int64{}
++			if tt.duplicate {
++				comdatDefinitions["foo"] = -1
++			}
++			f := &pe.File{COFFSymbols: []pe.COFFSymbol{{Name: [8]byte{'f', 'o', 'o'}, SectionNumber: 1, StorageClass: IMAGE_SYM_CLASS_EXTERNAL}}}
++			for range 3 {
++				f.Sections = append(f.Sections, &pe.Section{SectionHeader: pe.SectionHeader{Characteristics: pe.IMAGE_SCN_LNK_COMDAT}})
++			}
++			if tt.ordinaryParent {
++				f.Sections[0].Characteristics = 0
++			}
++			state := peLoaderState{arch: sys.ArchARM64, f: f, comdats: map[uint16]int64{0: -1}, associative: tt.associations}
++			err := state.selectAssociativeSections()
++			if tt.want != "" {
++				if err == nil || !strings.Contains(err.Error(), tt.want) {
++					t.Fatalf("error = %v, want %s", err, tt.want)
++				}
++				return
++			}
++			if err != nil {
++				t.Fatal(err)
++			}
++			for child := range tt.associations {
++				if state.discarded[child] != tt.duplicate {
++					t.Fatalf("section %d discarded=%v, want %v", child, state.discarded[child], tt.duplicate)
++				}
++			}
++		})
++	}
++}
+diff --git a/src/cmd/link/internal/loadpe/seh.go b/src/cmd/link/internal/loadpe/seh.go
+index 91d67c6..071eb92 100644
+--- a/src/cmd/link/internal/loadpe/seh.go
++++ b/src/cmd/link/internal/loadpe/seh.go
+@@ -9,6 +9,7 @@ import (
+ 	"cmd/internal/sys"
+ 	"cmd/link/internal/loader"
+ 	"cmd/link/internal/sym"
++	"encoding/binary"
+ 	"fmt"
+ 	"sort"
+ )
+@@ -27,6 +28,8 @@ func processSEH(ldr *loader.Loader, arch *sys.Arch, pdata sym.LoaderSym) ([]load
+ 	switch arch.Family {
+ 	case sys.AMD64:
+ 		return processSEHAMD64(ldr, pdata)
++	case sys.ARM64:
++		return processSEHARM64(ldr, pdata)
+ 	default:
+ 		// TODO: support SEH on other architectures.
+ 		return nil, fmt.Errorf("unsupported architecture for SEH: %v", arch.Family)
+@@ -144,3 +147,76 @@ func findHandlerInXDataAMD64(ldr *loader.Loader, xsym sym.LoaderSym, add int64)
+ 	}
+ 	return xrels.At(idx).Sym()
+ }
++
++// ARM64 RUNTIME_FUNCTION is an 8-byte pair: start RVA followed by
++// either a packed unwind word (low bits nonzero) or an xdata RVA.
++// https://learn.microsoft.com/en-us/cpp/build/arm64-exception-handling
++func processSEHARM64(ldr *loader.Loader, pdata sym.LoaderSym) ([]loader.Sym, error) {
++	data, rels := ldr.Data(pdata), ldr.Relocs(pdata)
++	if len(data)%8 != 0 {
++		return nil, fmt.Errorf("invalid ARM64 pdata size %d", len(data))
++	}
++	byOffset := make(map[int32]int)
++	for i := 0; i < rels.Count(); i++ {
++		r := rels.At(i)
++		if r.Off() < 0 || int(r.Off())+4 > len(data) || r.Off()%4 != 0 || r.Siz() != 4 || r.Type() != objabi.R_PEIMAGEOFF {
++			return nil, fmt.Errorf("invalid ARM64 pdata relocation at %d", r.Off())
++		}
++		if _, ok := byOffset[r.Off()]; ok {
++			return nil, fmt.Errorf("duplicate ARM64 pdata relocation at %d", r.Off())
++		}
++		byOffset[r.Off()] = i
++	}
++	var entries []loader.Sym
++	for off := 0; off < len(data); off += 8 {
++		idx, ok := byOffset[int32(off)]
++		if !ok || rels.At(idx).Sym() == 0 {
++			return nil, fmt.Errorf("missing ARM64 pdata function relocation at %d", off)
++		}
++		packed := binary.LittleEndian.Uint32(data[off+4:]) & 3
++		xidx, hasX := byOffset[int32(off+4)]
++		if packed == 3 || (packed == 0) != hasX {
++			return nil, fmt.Errorf("invalid ARM64 unwind encoding at %d", off)
++		}
++		ent := ldr.MakeSymbolBuilder("")
++		ent.SetType(sym.SSEHSECT)
++		ent.SetAlign(4)
++		ent.SetSize(8)
++		ent.SetData(append([]byte(nil), data[off:off+8]...))
++		keep := func(from, to loader.Sym) {
++			if to != 0 {
++				r, _ := ldr.MakeSymbolUpdater(from).AddRel(objabi.R_KEEP)
++				r.SetSym(to)
++			}
++		}
++		keep(rels.At(idx).Sym(), ent.Sym())
++		for _, o := range []int32{int32(off), int32(off + 4)} {
++			if i, ok := byOffset[o]; ok {
++				old := rels.At(i)
++				typ := old.Type()
++				if old.Weak() {
++					typ |= objabi.R_WEAK
++				}
++				r, _ := ent.AddRel(typ)
++				r.SetOff(o - int32(off))
++				r.SetSiz(old.Siz())
++				r.SetSym(old.Sym())
++				r.SetAdd(old.Add())
++			}
++		}
++		if hasX {
++			xs := rels.At(xidx).Sym()
++			if xs == 0 {
++				return nil, fmt.Errorf("missing ARM64 xdata symbol")
++			}
++			keep(ent.Sym(), xs)
++			// Retain handler/filter targets referenced by the retained unwind data.
++			xr := ldr.Relocs(xs)
++			for i := 0; i < xr.Count(); i++ {
++				keep(ent.Sym(), xr.At(i).Sym())
++			}
++		}
++		entries = append(entries, ent.Sym())
++	}
++	return entries, nil
++}
+diff --git a/src/cmd/link/internal/loadpe/seh_arm64_test.go b/src/cmd/link/internal/loadpe/seh_arm64_test.go
+new file mode 100644
+index 0000000..842a4f0
+--- /dev/null
++++ b/src/cmd/link/internal/loadpe/seh_arm64_test.go
+@@ -0,0 +1,96 @@
++// Copyright 2026 The Go Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style
++// license that can be found in the LICENSE file.
++
++package loadpe
++
++import (
++	"cmd/internal/objabi"
++	"cmd/link/internal/loader"
++	"cmd/link/internal/sym"
++	"encoding/binary"
++	"strings"
++	"testing"
++)
++
++func TestARM64UnwindRecords(t *testing.T) {
++	for _, tt := range []struct {
++		name  string
++		word  uint32
++		size  int
++		fn, x bool
++		want  string
++	}{
++		{"packed", 1, 8, true, false, ""},
++		{"packed fragment", 2, 8, true, false, ""},
++		{"unpacked", 0, 8, true, true, ""},
++		{"truncated", 1, 7, true, false, "size"},
++		{"missing function", 1, 8, false, false, "function relocation"},
++		{"reserved", 3, 8, true, false, "encoding"},
++		{"missing xdata", 0, 8, true, false, "encoding"},
++		{"packed with xdata", 1, 8, true, true, "encoding"},
++	} {
++		t.Run(tt.name, func(t *testing.T) {
++			l := loader.NewLoader(0, &loader.ErrorReporter{})
++			f := l.MakeSymbolBuilder("function")
++			f.SetType(sym.STEXT)
++			x := l.MakeSymbolBuilder("unwind")
++			x.SetType(sym.SSEHSECT)
++			h := l.MakeSymbolBuilder("handler")
++			h.SetType(sym.STEXT)
++			hr, _ := x.AddRel(objabi.R_PEIMAGEOFF)
++			hr.SetSym(h.Sym())
++			hr.SetSiz(4)
++			p := l.MakeSymbolBuilder("pdata")
++			p.SetType(sym.SSEHSECT)
++			data := make([]byte, 8)
++			binary.LittleEndian.PutUint32(data[4:], tt.word)
++			p.SetData(data[:tt.size])
++			p.SetSize(int64(tt.size))
++			if tt.fn {
++				r, _ := p.AddRel(objabi.R_PEIMAGEOFF)
++				r.SetSym(f.Sym())
++				r.SetSiz(4)
++				r.SetAdd(12)
++			}
++			if tt.x {
++				r, _ := p.AddRel(objabi.R_PEIMAGEOFF)
++				r.SetSym(x.Sym())
++				r.SetSiz(4)
++				r.SetOff(4)
++			}
++			got, err := processSEHARM64(l, p.Sym())
++			if tt.want != "" {
++				if err == nil || !strings.Contains(err.Error(), tt.want) {
++					t.Fatalf("error = %v, want %s", err, tt.want)
++				}
++				return
++			}
++			if err != nil {
++				t.Fatal(err)
++			}
++			if len(got) != 1 || len(l.Data(got[0])) != 8 {
++				t.Fatalf("invalid records: %v", got)
++			}
++			rs := l.Relocs(got[0])
++			if rs.At(0).Sym() != f.Sym() || rs.At(0).Add() != 12 {
++				t.Fatal("lost function relocation")
++			}
++			fr := l.Relocs(f.Sym())
++			if fr.Count() != 1 || fr.At(0).Type() != objabi.R_KEEP || fr.At(0).Sym() != got[0] {
++				t.Fatal("function does not retain unwind record")
++			}
++			if tt.x {
++				found := false
++				for i := 0; i < rs.Count(); i++ {
++					if rs.At(i).Type() == objabi.R_KEEP && rs.At(i).Sym() == h.Sym() {
++						found = true
++					}
++				}
++				if !found {
++					t.Fatal("unwind handler not retained")
++				}
++			}
++		})
++	}
++}
