@@ -74,6 +74,9 @@ for /f "delims=" %%G in ('clang.exe -dumpmachine') do set "CLANG_TARGET=%%G"
 echo %CLANG_TARGET% | findstr /R /I "^aarch64.*windows-msvc" >nul
 if errorlevel 1 exit /b 1
 
+rem MSVC-target Clang supports external CGo linking, not internal CGo linking.
+set "GO_TEST_MSVC_EXTERNAL_ONLY=1"
+
 rem Test the installed conda defaults exactly as a consumer receives them.
 set "CGO_LDFLAGS="
 set "GO_CGO_LDFLAGS="
@@ -128,7 +131,7 @@ if errorlevel 1 exit /b 1
 hello_win_arm64_pie.exe
 if errorlevel 1 exit /b 1
 
-rem Run every dist test with native Windows certificate prerequisites.
+rem Run dist tests with MSVC CGo capabilities and native certificate prerequisites.
 set "GO_TEST_ALLOW_TEMPORARY_USER_ROOT="
 if "%GITHUB_ACTIONS%"=="true" if "%RUNNER_ENVIRONMENT%"=="github-hosted" set "GO_TEST_ALLOW_TEMPORARY_USER_ROOT=1"
 powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%~dp0..\windows\run_dist_tests.ps1"

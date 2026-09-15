@@ -1,24 +1,18 @@
-## Windows ARM64 CGo follow-through
+## Windows ARM64 external CGo candidate
 
-Patches 0013-0018 cover the malformed-symbol fixture, compiler response-file
-probe, CGo marker handling, DLL initialization, and NODUPLICATES COMDATs.
+This local candidate retains external CGo linking and pure-Go internal linking.
+It removes the COFF COMDAT, ARM64 host-unwind, internal load-config/CRT, and
+internal compiler-runtime additions from patches 0018, 0019, 0023, and 0026.
+Patch 0019 retains only external linker options and their tests. Patch 0010
+no longer treats `-fuse-ld=lld` as internally linkable, so the existing
+`preferlinkext` mechanism selects external linking for the conda defaults.
 
-- 0019 retains associative sections with their selected parent, handles packed
-  and unpacked ARM64 host unwind records, and preserves MSVC linker/debug options.
-- 0020 resolves DLL variable addresses through the C compiler and adapts the
-  enum and shared-library fixtures to MSVC-target Clang.
-- 0021 compares generated CGo flags using their escaped representation,
-  isolates fallback flags in the link-selection fixture, and recognizes empty
-  linker sentinels in the archive test.
-
-- 0022 retains imports during CGo discovery and fixes Windows test prerequisites.
-- 0023 fixes internal PE load configuration and MSVC stack-protection support.
-- 0025 resolves C global addresses outside wrapper-local scopes.
-- 0026 loads the selected Clang runtime archive during internal linking.
-
-The ARM64 recipe runs the complete dist suite. Native Git and temporary
-provisioning of the pinned certificate fixture address runner prerequisites;
-no compiler/linker tests are skipped by these additions.
+Patch 0027 scopes test capabilities through `GO_TEST_MSVC_EXTERNAL_ONLY=1`,
+set after the recipe verifies native Windows ARM64 and MSVC-target Clang.
+It disables dist's forced-internal CGo variants and makes existing CGo
+internal-link guards and the `cgolinkext` script condition recognize this
+unsupported toolchain combination. Pure-Go internal-link guards are unchanged.
+This candidate has not yet passed native Windows validation.
 
 # The initial patches - which were created as described below - were manually ported to newer version.
 The following steps need to be regarded:

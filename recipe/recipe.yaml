@@ -30,14 +30,12 @@ source:
       - patches/0014-Fix-MSVC-response-file-probe.patch
       - patches/0016-Keep-linker-marker-out-of-CGo-probe.patch
       - patches/0017-Initialize-MSVC-Go-DLLs.patch
-      - patches/0018-Handle-no-duplicates-PE-COMDAT-sections.patch
-      - patches/0019-Support-ARM64-host-unwind-and-MSVC-linking.patch
+      - patches/0019-Support-MSVC-external-linker-options.patch
       - patches/0020-Support-MSVC-CGo-variables-and-fixtures.patch
       - patches/0021-Fix-CGo-flag-and-archive-validation.patch
       - patches/0022-Preserve-CGo-imports-and-fix-Windows-test-setup.patch
-      - patches/0023-Fix-MSVC-internal-load-config-and-CRT-support.patch
       - patches/0025-Avoid-C-global-address-wrapper-shadowing.patch
-      - patches/0026-Load-selected-Clang-runtime-for-internal-linking.patch
+      - patches/0027-Scope-MSVC-CGo-test-capabilities.patch
 
   # Update this with a release from https://go.dev/dl/
   - if: build_platform == "linux-64"
