@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   version: "1.27.1"
-  build: 5
+  build: 6
 
 recipe:
   name: go-${{ go_variant_str }}-split
@@ -23,6 +23,19 @@ source:
       - patches/0007-Mark-ftree-as-a-safe-compiler-flag.patch
       - patches/0008-Mark-merge-constants-as-a-safe-compiler-flag.patch
       - patches/0009-Mark-conda-s-linker-flags-as-safe-for-internal-link.patch
+      - patches/0010-Support-conda-s-Windows-ARM64-CGo-toolchain.patch
+      - patches/0011-Fix-cgo-complex-test-for-Windows-Clang.patch
+      - patches/0012-Support-CGo-tests-with-Windows-Clang.patch
+      - patches/0013-Fix-MSVC-BadSymbol-fixture.patch
+      - patches/0014-Fix-MSVC-response-file-probe.patch
+      - patches/0016-Keep-linker-marker-out-of-CGo-probe.patch
+      - patches/0017-Initialize-MSVC-Go-DLLs.patch
+      - patches/0019-Support-MSVC-external-linker-options.patch
+      - patches/0020-Support-MSVC-CGo-variables-and-fixtures.patch
+      - patches/0021-Fix-CGo-flag-and-archive-validation.patch
+      - patches/0022-Preserve-CGo-imports-and-fix-Windows-test-setup.patch
+      - patches/0025-Avoid-C-global-address-wrapper-shadowing.patch
+      - patches/0027-Scope-MSVC-CGo-test-capabilities.patch
 
   # Update this with a release from https://go.dev/dl/
   - if: build_platform == "linux-64"
@@ -78,12 +91,16 @@ outputs:
             - ${{ stdlib("c") }}
             - ${{ compiler('cxx') }}
             - ${{ compiler('fortran') }}
-        - if: win and cgo
+        - if: target_platform == "win-64" and cgo
           then:
             - ${{ compiler('m2w64_c') }}
             - ${{ stdlib("m2w64_c") }}
             - ${{ compiler('m2w64_cxx') }}
             - ${{ compiler('m2w64_fortran') }}
+        - if: target_platform == "win-arm64" and cgo
+          then:
+            - ${{ compiler('c') }}
+            - ${{ stdlib("c") }}
       run_constraints:
         # TODO: remove on next go version (>1.27.1), this is just to not accidentally select the wrong activation script
         - _go_select <0.0a0
@@ -93,11 +110,13 @@ outputs:
             - ${{ compiler('c') }}
             - ${{ compiler('cxx') }}
             - ${{ compiler('fortran') }}
-        - if: win and cgo
+        - if: target_platform == "win-64" and cgo
           then:
             - ${{ compiler('m2w64_c') }}
             - ${{ compiler('m2w64_cxx') }}
             - ${{ compiler('m2w64_fortran') }}
+        - if: target_platform == "win-arm64" and cgo
+          then: ${{ compiler('c') }}
       run_exports:
         strong:
           - if: linux and cgo
@@ -108,34 +127,42 @@ outputs:
       - files:
           recipe:
             - ${{ go_variant_str }}/
+            - windows/
         requirements:
           run:
             - if: unix and cgo
               then: ${{ compiler('c') }}
-            - if: win and cgo
+            - if: target_platform == "win-64" and cgo
               then: ${{ compiler('m2w64_c') }}
+            - if: target_platform == "win-arm64" and cgo
+              then: ${{ compiler('c') }}
         script:
-          # telemetry counter files are written asynchronously into $HOME, which
-          # races with the test directory cleanup
-          - go telemetry off
-          - if: unix
-            then:
-              - ./${{ go_variant_str }}/test.sh
-              # etc/conda/env_vars.d/go.json is activated and its baked-in build
-              # prefix was rewritten to the installation prefix
-              - test "$GOTOOLCHAIN" = "local"
-              - test "$GOROOT" = "$CONDA_PREFIX/go"
-              - test "$(go env GOROOT)" = "$CONDA_PREFIX/go"
-          - if: win
-            then:
-              - ${{ go_variant_str }}\test.bat
-              # etc/conda/env_vars.d/go.json is activated and its baked-in build
-              # prefix was rewritten to the installation prefix. The JSON stores
-              # forward slashes, so compare slash-insensitively.
-              - if not "%GOTOOLCHAIN%"=="local" exit /b 1
-              - 'if not "%GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
-              - 'for /f "delims=" %%i in (''go env GOROOT'') do set "GO_GOROOT=%%i"'
-              - 'if not "%GO_GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
+          # Read runner flags when testing, not when rendering the package.
+          secrets:
+            - GITHUB_ACTIONS
+            - RUNNER_ENVIRONMENT
+          content:
+            # telemetry counter files are written asynchronously into $HOME, which
+            # races with the test directory cleanup
+            - go telemetry off
+            - if: unix
+              then:
+                - ./${{ go_variant_str }}/test.sh
+                # etc/conda/env_vars.d/go.json is activated and its baked-in build
+                # prefix was rewritten to the installation prefix
+                - test "$GOTOOLCHAIN" = "local"
+                - test "$GOROOT" = "$CONDA_PREFIX/go"
+                - test "$(go env GOROOT)" = "$CONDA_PREFIX/go"
+            - if: win
+              then:
+                - call ${{ go_variant_str }}\test.bat
+                # etc/conda/env_vars.d/go.json is activated and its baked-in build
+                # prefix was rewritten to the installation prefix. The JSON stores
+                # forward slashes, so compare slash-insensitively.
+                - if not "%GOTOOLCHAIN%"=="local" exit /b 1
+                - 'if not "%GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
+                - 'for /f "delims=" %%i in (''go env GOROOT'') do set "GO_GOROOT=%%i"'
+                - 'if not "%GO_GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
     about:
       homepage: https://go.dev/
       license: BSD-3-Clause
@@ -150,8 +177,10 @@ outputs:
         - ${{ pin_subpackage('go', exact=true) }}
         - if: unix and cgo
           then: ${{ compiler('c') }}
-        - if: win and cgo
+        - if: target_platform == "win-64" and cgo
           then: ${{ compiler('m2w64_c') }}
+        - if: target_platform == "win-arm64" and cgo
+          then: ${{ compiler('c') }}
     tests:
       - script:
           # telemetry counter files are written asynchronously into $HOME, which
