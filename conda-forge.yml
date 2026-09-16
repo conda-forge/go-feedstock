@@ -1,5 +1,4 @@
 azure:
-  free_disk_space: true
   settings_linux:
     swapfile_size: 8GiB
 bot:
@@ -20,3 +19,5 @@ github:
   branch_name: main
   tooling_branch_name: main
 test: native
+workflow_settings:
+  free_disk_space: max
