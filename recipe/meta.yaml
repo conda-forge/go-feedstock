@@ -33,7 +33,7 @@ source:
     sha256: 6cc6549b06725220b342b740497ffd24e0ebdcef75781a77931ca199f46ad781  # [osx]
 
 build:
-  number: 0
+  number: 1
   skip: true  # [linux and s390x]
 
 outputs:
