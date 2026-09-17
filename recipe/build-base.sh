@@ -90,3 +90,11 @@ fi
 # Ref.: https://github.com/conda/conda/issues/6820#issuecomment-1269581626
 mkdir -p "${PREFIX}/etc/conda/env_vars.d"
 cp "${RECIPE_DIR}/env.json" "${PREFIX}/etc/conda/env_vars.d/${PKG_NAME}.json"
+
+# These tests fail as we bake in the compiler path.
+echo skip > "${PREFIX}/go/src/cmd/go/testdata/script/autocgo.txt"
+echo skip > "${PREFIX}/go/src/cmd/go/testdata/script/build_darwin_cc_arch.txt"
+
+# conda-forge's CGO flags are detected as suspicious by Go, causing it to emit
+# preferlinkext unexpectedly for programs that only use runtime/cgo indirectly.
+echo skip > "${PREFIX}/go/src/cmd/go/testdata/script/cgo_suspect_flag_force_external.txt"

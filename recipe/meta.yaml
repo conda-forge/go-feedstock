@@ -23,6 +23,9 @@ source:
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [build_platform == "linux-64"]
     sha256: 1fc94b57134d51669c72173ad5d49fd62afb0f1db9bf3f798fd98ee423f8d730  # [build_platform == "linux-64"]
 
+    url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [build_platform == "linux-aarch64"]
+    sha256: 74d97be1cc3a474129590c67ebf748a96e72d9f3a2b6fef3ed3275de591d49b3  # [build_platform == "linux-aarch64"]
+
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
     sha256: 40b16bc8f00540a2cb02dff4de72b73e966fdd8d65f95e33d8e4080b48a2459a  # [win64]
 
@@ -33,7 +36,7 @@ source:
     sha256: 6cc6549b06725220b342b740497ffd24e0ebdcef75781a77931ca199f46ad781  # [osx]
 
 build:
-  number: 0
+  number: 1
   skip: true  # [linux and s390x]
 
 outputs:

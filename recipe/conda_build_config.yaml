@@ -1,18 +1,3 @@
-# ########################################################################### #
-# NOTE: If you change this file, you must regenerate the feedstock.           #
-#   - conda smithy regenerate                                                 #
-#   - @conda-forge-admin, please rerender                                     #
-# ########################################################################### #
-
-# Select the MACOSX Deployment target
-# This will change depending on the version of go
-# For the correct deployment target, please see go's Release notes
-# c.f.: https://golang.org/doc/go1.16#darwin
-MACOSX_SDK_VERSION:        # [osx and x86_64]
-  - '10.14'                # [osx and x86_64]
-c_stdlib_version:          # [osx and x86_64]
-  - '10.14'                # [osx and x86_64]
-
 # Select the GO variants that we are building
 # The variant names, and versions come from
 # https://github.com/conda-forge/_go_select-feedstock/blob/main/recipe/conda_build_config.yaml
