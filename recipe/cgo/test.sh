@@ -37,12 +37,16 @@ export
 # Run go's built-in test
 case $(uname -s) in
   Darwin)
-    # Expect PASS when run independently
-    go tool dist test -v -no-rebuild -run='!^go_test:net/http|go_test:runtime|go_test:time$'
+    # `go tool dist test` stopped prefixing run names with `go_test:` in Go 1.21.
+    # The stale names below matched nothing, so the negation ran the whole suite
+    # in the mandatory invocation and the `|| true` re-runs were no-ops. Use the
+    # modern names so the slow/flaky net/http, runtime and time tests are only
+    # run (non-fatally) afterwards.
+    go tool dist test -v -no-rebuild -run='!^net/http|runtime|time'
     # Occasionally FAILS
-    go tool dist test -v -no-rebuild -run='^go_test:net/http$' || true
-    go tool dist test -v -no-rebuild -run='^go_test:runtime$' || true
-    go tool dist test -v -no-rebuild -run='^go_test:time$' || true
+    go tool dist test -v -no-rebuild -run='^net/http$' || true
+    go tool dist test -v -no-rebuild -run='^runtime$' || true
+    go tool dist test -v -no-rebuild -run='^time$' || true
     # Expect FAIL
     ;;
   Linux)
