@@ -26,8 +26,6 @@ go_variant_str:
 - nocgo
 go_variant_ver:
 - 2.2.0
-perl:
-- 5.32.1
 target_platform:
 - linux-64
 zip_keys:
