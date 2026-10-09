@@ -108,34 +108,31 @@ outputs:
           - go telemetry off
           - if: unix
             then:
-              - chmod +x ${{ go_variant_str }}/test.sh
               - ./${{ go_variant_str }}/test.sh
+              # etc/conda/env_vars.d/go.json is activated and its baked-in build
+              # prefix was rewritten to the installation prefix
               - test "$GOTOOLCHAIN" = "local"
+              - test "$GOROOT" = "$CONDA_PREFIX/go"
+              - test "$(go env GOROOT)" = "$CONDA_PREFIX/go"
           - if: win
             then:
               - ${{ go_variant_str }}\test.bat
+              # etc/conda/env_vars.d/go.json is activated and its baked-in build
+              # prefix was rewritten to the installation prefix. The JSON stores
+              # forward slashes, so compare slash-insensitively.
               - if not "%GOTOOLCHAIN%"=="local" exit /b 1
+              - 'if not "%GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
+              - 'for /f "delims=" %%i in (''go env GOROOT'') do set "GO_GOROOT=%%i"'
+              - 'if not "%GO_GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
     about:
       homepage: https://go.dev/
       license: BSD-3-Clause
       license_file: go/LICENSE
       summary: The Go Programming Language
 
+  # meta-package for non-feedstock use
   - package:
       name: go-${{ go_variant_str }}
-    build:
-      dynamic_linking:
-        binary_relocation: false
-        # test data links to these DSOs
-        missing_dso_allowlist:
-          - if: linux and not cgo
-            then: $RPATH/libc.so.6
-          - if: osx
-            then: /usr/lib/libSystem.B.dylib
-          - if: win
-            then: $SYSROOT\System32\winmm.dll
-      prefix_detection:
-        ignore_binary_files: true
     requirements:
       run:
         - ${{ pin_subpackage('go', exact=True) }}
@@ -169,6 +166,7 @@ about:
 extra:
   feedstock-name: go
   recipe-maintainers:
+    - pavelzw
     - nehaljwani
     - scopatz
     - sodre
