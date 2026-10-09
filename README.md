@@ -282,6 +282,7 @@ Feedstock Maintainers
 
 * [@hmaarrfk](https://github.com/hmaarrfk/)
 * [@nehaljwani](https://github.com/nehaljwani/)
+* [@pavelzw](https://github.com/pavelzw/)
 * [@scopatz](https://github.com/scopatz/)
 * [@sodre](https://github.com/sodre/)
 * [@stuarteberg](https://github.com/stuarteberg/)
