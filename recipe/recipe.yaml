@@ -2,6 +2,7 @@ schema_version: 1
 
 context:
   version: "1.22.12"
+  build: 3
 
 recipe:
   name: go-${{ go_variant_str }}-split
@@ -20,6 +21,7 @@ source:
       - patches/0005-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
       - patches/0006-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
       - patches/0007-Mark-ftree-as-a-safe-compiler-flag.patch
+      - patches/0008-runtime-testdata-fix-for-C23-nullptr-keyword.patch
 
   # Update this with a release from https://go.dev/dl/
   # The bootstrap is the target platform's Go distribution. aarch64 and
@@ -52,13 +54,14 @@ source:
       target_directory: go-bootstrap
 
 build:
-  number: 3
+  number: ${{ build }}
   skip: linux and s390x
 
 outputs:
   - package:
       name: go
     build:
+      string: ${{ go_variant_str }}_h${{ hash }}_${{ build }}
       script:
         file: ${{ go_variant_str }}/build
       dynamic_linking:
@@ -79,9 +82,9 @@ outputs:
             - ${{ stdlib("m2w64_c") }}
             - ${{ compiler('m2w64_cxx') }}
             - ${{ compiler('m2w64_fortran') }}
-      run:
-        - _go_select ==${{ go_variant_ver }} ${{ go_variant_str }}
       run_constraints:
+        # TODO: remove on next go version (>1.27.1), this is just to not accidentally select the wrong activation script
+        - _go_select <0.0a0
         # https://github.com/prefix-dev/rattler-build/issues/2792
         - if: unix and cgo
           then:
