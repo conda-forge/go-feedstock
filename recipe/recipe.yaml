@@ -20,6 +20,7 @@ source:
       - patches/0005-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
       - patches/0006-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
       - patches/0007-Mark-ftree-as-a-safe-compiler-flag.patch
+      - patches/0008-runtime-testdata-fix-for-C23-nullptr-keyword.patch
 
   # Update this with a release from https://go.dev/dl/
   # linux-aarch64 and linux-ppc64le are cross-compiled from linux-64
