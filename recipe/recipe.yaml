@@ -24,30 +24,30 @@ source:
       - patches/0008-runtime-testdata-fix-for-C23-nullptr-keyword.patch
 
   # Update this with a release from https://go.dev/dl/
-  # The bootstrap is the target platform's Go distribution. aarch64 and
-  # ppc64le are cross-compiled from linux-64.
-  - if: target_platform == "linux-aarch64"
-    then:
-      url: https://go.dev/dl/go${{ version }}.linux-arm64.tar.gz
-      sha256: fd017e647ec28525e86ae8203236e0653242722a7436929b1f775744e26278e7
-      target_directory: go-bootstrap
-  - if: target_platform == "linux-64"
+  # The bootstrap runs on the build platform. linux-aarch64 and linux-ppc64le
+  # are cross-compiled from linux-64, so they use the amd64 bootstrap there.
+  - if: build_platform == "linux-64"
     then:
       url: https://go.dev/dl/go${{ version }}.linux-amd64.tar.gz
       sha256: 4fa4f869b0f7fc6bb1eb2660e74657fbf04cdd290b5aef905585c86051b34d43
       target_directory: go-bootstrap
-  - if: target_platform == "linux-ppc64le"
+  - if: build_platform == "linux-aarch64"
+    then:
+      url: https://go.dev/dl/go${{ version }}.linux-arm64.tar.gz
+      sha256: fd017e647ec28525e86ae8203236e0653242722a7436929b1f775744e26278e7
+      target_directory: go-bootstrap
+  - if: build_platform == "linux-ppc64le"
     then:
       url: https://go.dev/dl/go${{ version }}.linux-ppc64le.tar.gz
       sha256: 9573d30003b0796717a99d9e2e96c48fddd4fc0f29d840f212c503b03d7de112
       target_directory: go-bootstrap
-  - if: target_platform == "win-64"
+  - if: build_platform == "win-64"
     then:
       url: https://go.dev/dl/go${{ version }}.windows-amd64.zip
       sha256: 2ceda04074eac51f4b0b85a9fcca38bcd49daee24bed9ea1f29958a8e22673a6
       target_directory: go-bootstrap
   # Both osx-64 and osx-arm64 use the amd64 bootstrap
-  - if: target_platform == "osx-64" or target_platform == "osx-arm64"
+  - if: build_platform == "osx-64" or build_platform == "osx-arm64"
     then:
       url: https://go.dev/dl/go${{ version }}.darwin-amd64.tar.gz
       sha256: e7bbe07e96f0bd3df04225090fe1e7852ed33af37c43a23e16edbbb3b90a5b7c
