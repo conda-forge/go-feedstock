@@ -114,9 +114,6 @@ outputs:
               then: git
             - perl
         script:
-          # telemetry counter files are written asynchronously into $HOME, which
-          # races with the test directory cleanup
-          - go telemetry off
           - if: unix
             then:
               - ./${{ go_variant_str }}/test.sh
@@ -153,9 +150,6 @@ outputs:
           then: ${{ compiler('m2w64_c') }}
     tests:
       - script:
-          # telemetry counter files are written asynchronously into $HOME, which
-          # races with the test directory cleanup
-          - go telemetry off
           - go help
 
 about:
