@@ -6,12 +6,10 @@ channel_targets:
 - conda-forge main
 go_variant_str:
 - nocgo
-go_variant_ver:
-- 2.2.0
 m2w64_c_compiler:
 - gcc
 m2w64_c_compiler_version:
-- '14'
+- '15'
 m2w64_c_stdlib:
 - m2w64-sysroot
 m2w64_c_stdlib_version:
@@ -19,16 +17,13 @@ m2w64_c_stdlib_version:
 m2w64_cxx_compiler:
 - gxx
 m2w64_cxx_compiler_version:
-- '14'
+- '15'
 m2w64_fortran_compiler:
 - gfortran
 m2w64_fortran_compiler_version:
-- '14'
-perl:
-- 5.32.1
+- '15'
 target_platform:
 - win-64
 zip_keys:
 - - go_variant_str
-  - go_variant_ver
   - cgo

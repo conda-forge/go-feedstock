@@ -1,0 +1,38 @@
+From 04f054d3347e34c5188e83a848e813253d069e25 Mon Sep 17 00:00:00 2001
+From: Joseph Myers <josmyers@redhat.com>
+Date: Thu, 17 Oct 2024 20:30:37 +0000
+Subject: [PATCH] runtime/testdata: fix for C23 nullptr keyword
+
+src/runtime/testdata/testprogcgo/threadprof.go contains C code with a
+variable called nullptr.  This conflicts with the nullptr keyword in
+the C23 revision of the C standard (showing up as gccgo test build
+failures when updating GCC to use C23 by default when building C
+code).
+
+Rename that variable to nullpointer to avoid the clash with the
+keyword (any other name that's not a keyword would work just as well).
+
+Change-Id: Ida5ef371a3f856c611409884e185c3d5ded8e86c
+GitHub-Last-Rev: 2ec464703be0507a67a077741789a37511d197e4
+GitHub-Pull-Request: golang/go#69927
+Reviewed-on: https://go-review.googlesource.com/c/go/+/620955
+---
+ src/runtime/testdata/testprogcgo/threadprof.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/runtime/testdata/testprogcgo/threadprof.go b/src/runtime/testdata/testprogcgo/threadprof.go
+--- a/src/runtime/testdata/testprogcgo/threadprof.go
++++ b/src/runtime/testdata/testprogcgo/threadprof.go
+@@ -36,10 +36,10 @@ __attribute__((constructor)) void issue9456() {
+ 	}
+ }
+ 
+-void **nullptr;
++void **nullpointer;
+ 
+ void *crash(void *p) {
+-	*nullptr = p;
++	*nullpointer = p;
+ 	return 0;
+ }
+ 

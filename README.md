@@ -11,7 +11,7 @@ Home: https://go.dev/
 
 Package license: BSD-3-Clause
 
-Summary: The Go Programming Language (go_variant_str)
+Summary: The Go Programming Language
 
 Development: https://github.com/golang/
 
@@ -24,16 +24,6 @@ modular program construction. Go compiles quickly to machine code yet has
 the convenience of garbage collection and the power of run-time reflection.
 It's a fast, statically typed, compiled language that feels like a
 dynamically typed, interpreted language.
-
-
-About go
---------
-
-Home: https://go.dev/
-
-Package license: BSD-3-Clause
-
-Summary: The Go Programming Language
 
 About go-cgo
 ------------
@@ -56,7 +46,6 @@ the convenience of garbage collection and the power of run-time reflection.
 It's a fast, statically typed, compiled language that feels like a
 dynamically typed, interpreted language.
 
-
 About go-nocgo
 --------------
 
@@ -78,12 +67,18 @@ the convenience of garbage collection and the power of run-time reflection.
 It's a fast, statically typed, compiled language that feels like a
 dynamically typed, interpreted language.
 
-
 Current build status
 ====================
 
 
-<table>
+<table><tr>
+    <td>GitHub Actions</td>
+    <td>
+      <a href="https://github.com/conda-forge/go-feedstock/actions/workflows/conda-build.yml">
+        <img src="https://github.com/conda-forge/go-feedstock/actions/workflows/conda-build.yml/badge.svg?event=push&branch=main">
+      </a>
+    </td>
+  </tr>
     
   <tr>
     <td>Azure</td>
@@ -97,48 +92,6 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
-              <td>linux_64_cgofalsego_variant_strnocgo</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cgofalsego_variant_strnocgo" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_cgotruego_variant_strcgo</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cgotruego_variant_strcgo" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_aarch64_cgofalsego_variant_strnocgo</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cgofalsego_variant_strnocgo" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_aarch64_cgotruego_variant_strcgo</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cgotruego_variant_strcgo" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_ppc64le_cgofalsego_variant_strnocgo</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_cgofalsego_variant_strnocgo" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_ppc64le_cgotruego_variant_strcgo</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_ppc64le_cgotruego_variant_strcgo" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
               <td>osx_64_cgofalsego_variant_strnocgo</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
@@ -150,34 +103,6 @@ Current build status
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_cgotruego_variant_strcgo" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_arm64_cgofalsego_variant_strnocgo</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_cgofalsego_variant_strnocgo" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>osx_arm64_cgotruego_variant_strcgo</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_cgotruego_variant_strcgo" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>win_64_cgofalsego_variant_strnocgo</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=win&configuration=win%20win_64_cgofalsego_variant_strnocgo" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>win_64_cgotruego_variant_strcgo</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5217&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/go-feedstock?branchName=main&jobName=win&configuration=win%20win_64_cgotruego_variant_strcgo" alt="variant">
                 </a>
               </td>
             </tr>
@@ -207,31 +132,73 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `go, go-cgo, go-nocgo` can be installed with `conda`:
+How to use
+----------
+
+<details>
+<summary>With conda</summary>
 
 ```
 conda install go go-cgo go-nocgo
 ```
 
-or with `mamba`:
+</details>
+
+<details>
+<summary>With mamba</summary>
 
 ```
 mamba install go go-cgo go-nocgo
 ```
 
-It is possible to list all of the versions of `go` available on your platform with `conda`:
+</details>
+
+<details>
+<summary>With pixi</summary>
+
+```
+# for adding to your local project
+pixi add go go-cgo go-nocgo
+# for installing globally
+pixi global install go go-cgo go-nocgo
+```
+
+</details>
+
+Search package versions
+-----------------------
+
+It is possible to list all of the versions of `go` available on your platform:
+
+<details>
+<summary>With conda</summary>
 
 ```
 conda search go --channel conda-forge
 ```
 
-or with `mamba`:
+</details>
+
+<details>
+<summary>With mamba</summary>
 
 ```
 mamba search go --channel conda-forge
 ```
 
-Alternatively, `mamba repoquery` may provide more information:
+</details>
+
+<details>
+<summary>With pixi</summary>
+
+```
+pixi search go --channel conda-forge
+```
+
+</details>
+
+<details>
+<summary>With mamba repoquery, which may provide more information</summary>
 
 ```
 # Search all versions available on your platform:
@@ -243,6 +210,8 @@ mamba repoquery whoneeds go --channel conda-forge
 # List dependencies of `go`:
 mamba repoquery depends go --channel conda-forge
 ```
+
+</details>
 
 
 About conda-forge
@@ -313,6 +282,7 @@ Feedstock Maintainers
 
 * [@hmaarrfk](https://github.com/hmaarrfk/)
 * [@nehaljwani](https://github.com/nehaljwani/)
+* [@pavelzw](https://github.com/pavelzw/)
 * [@scopatz](https://github.com/scopatz/)
 * [@sodre](https://github.com/sodre/)
 * [@stuarteberg](https://github.com/stuarteberg/)
