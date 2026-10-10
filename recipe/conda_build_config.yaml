@@ -4,28 +4,13 @@
 #   - @conda-forge-admin, please rerender                                     #
 # ########################################################################### #
 
-# Select the MACOSX Deployment target
-# This will change depending on the version of go
-# For the correct deployment target, please see go's Release notes
-# c.f.: https://golang.org/doc/go1.16#darwin
-MACOSX_SDK_VERSION:        # [osx and x86_64]
-  - '10.14'                # [osx and x86_64]
-c_stdlib_version:          # [osx and x86_64]
-  - '10.14'                # [osx and x86_64]
-
 # We use go1.4 as our bootstrap compiler
 go14_compiler:
   - go1.4-bootstrap
 
-# Select the GO variants that we are building
-# The variant names, and versions come from
-# https://github.com/conda-forge/_go_select-feedstock/blob/main/recipe/conda_build_config.yaml
 go_variant_str:
   - cgo
   - nocgo
-go_variant_ver:
-  - 2.3.0
-  - 2.2.0
 
 # One-hot-encoding of the variant selection above
 cgo:
@@ -37,7 +22,6 @@ cgo:
 zip_keys:
   -
     - go_variant_str
-    - go_variant_ver
     - cgo
 
 c_stdlib_version:   # [linux]
