@@ -1,0 +1,179 @@
+schema_version: 1
+
+context:
+  version: "1.25.14"
+  build: 1
+
+recipe:
+  name: go-${{ go_variant_str }}-split
+  version: ${{ version }}
+
+source:
+  - url: https://dl.google.com/go/go${{ version }}.src.tar.gz
+    sha256: 9e83f44f5fc297378861b4e16cc6aa114be8add7993fb3ceb2c512380aa4d582
+    target_directory: go
+    patches:
+      # Please see patches/README.md for more details
+      - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
+      - patches/0002-Add-CC-C-CPP-LD-FLAGS-to-script_test-extraEnvKeys.patch
+      - patches/0003-Inherit-CGO_-environment-variables.patch
+      - patches/0004-Add-conda-aware-default-values-for-GOPATH-and-GOBIN.patch
+      - patches/0005-cmd-link-internal-ld-disable-testWindowsBuildmodeCSh.patch
+      - patches/0006-Revert-cmd-link-enable-internal-linker-in-more-cases.patch
+      - patches/0007-Mark-ftree-as-a-safe-compiler-flag.patch
+
+  # Update this with a release from https://go.dev/dl/
+  - if: build_platform == "linux-64"
+    then:
+      url: https://go.dev/dl/go${{ version }}.linux-amd64.tar.gz
+      sha256: a21ae5633a269bcd7e90cf767e48225633795e99d831742cbf3397064fee7712
+      target_directory: go-bootstrap
+  - if: build_platform == "linux-aarch64"
+    then:
+      url: https://go.dev/dl/go${{ version }}.linux-arm64.tar.gz
+      sha256: 9bf234ea70ffec9347fdf6b22ce4add51717d3386a38a441e8c8743fceb5eaee
+      target_directory: go-bootstrap
+  - if: build_platform == "win-64"
+    then:
+      url: https://go.dev/dl/go${{ version }}.windows-amd64.zip
+      sha256: 119044a92b3987c341cd6aebb256676dd4780d292f7b4e72a3e9976677841697
+      target_directory: go-bootstrap
+  # Both osx-64 and osx-arm64 use the amd64 bootstrap
+  - if: build_platform == "osx-64" or build_platform == "osx-arm64"
+    then:
+      url: https://go.dev/dl/go${{ version }}.darwin-amd64.tar.gz
+      sha256: b09087a67d5792a8b0fcbf74212d62560c94ac8a8fd750ff920d8cb5f1e20118
+      target_directory: go-bootstrap
+
+build:
+  number: ${{ build }}
+  skip: linux and s390x
+
+outputs:
+  - package:
+      name: go
+    build:
+      string: ${{ go_variant_str }}_h${{ hash }}_${{ build }}
+      script:
+        file: ${{ go_variant_str }}/build
+      dynamic_linking:
+        binary_relocation: false
+      prefix_detection:
+        ignore_binary_files: true
+    requirements:
+      build:
+        - if: unix and cgo
+          then:
+            - ${{ compiler('c') }}
+            - ${{ stdlib("c") }}
+            - ${{ compiler('cxx') }}
+            - ${{ compiler('fortran') }}
+        - if: win and cgo
+          then:
+            - ${{ compiler('m2w64_c') }}
+            - ${{ stdlib("m2w64_c") }}
+            - ${{ compiler('m2w64_cxx') }}
+            - ${{ compiler('m2w64_fortran') }}
+      run_constraints:
+        - _go_select <0.0a0
+        # https://github.com/prefix-dev/rattler-build/issues/2792
+        - if: unix and cgo
+          then:
+            - ${{ compiler('c') }}
+            - ${{ compiler('cxx') }}
+            - ${{ compiler('fortran') }}
+        - if: win and cgo
+          then:
+            - ${{ compiler('m2w64_c') }}
+            - ${{ compiler('m2w64_cxx') }}
+            - ${{ compiler('m2w64_fortran') }}
+      run_exports:
+        strong:
+          - if: linux and cgo
+            then: __glibc >=${{ c_stdlib_version }}
+          - if: osx and cgo
+            then: __osx >=12
+    tests:
+      - files:
+          recipe:
+            - ${{ go_variant_str }}/
+        requirements:
+          run:
+            - if: unix and cgo
+              then: ${{ compiler('c') }}
+            - if: win and cgo
+              then: ${{ compiler('m2w64_c') }}
+            - if: unix
+              then: git
+            - perl
+        script:
+          # telemetry counter files are written asynchronously into $HOME, which
+          # races with the test directory cleanup
+          - go telemetry off
+          - if: unix
+            then:
+              - ./${{ go_variant_str }}/test.sh
+              # etc/conda/env_vars.d/go.json is activated and its baked-in build
+              # prefix was rewritten to the installation prefix
+              - test "$GOTOOLCHAIN" = "local"
+              - test "$GOROOT" = "$CONDA_PREFIX/go"
+              - test "$(go env GOROOT)" = "$CONDA_PREFIX/go"
+          - if: win
+            then:
+              - ${{ go_variant_str }}\test.bat
+              # etc/conda/env_vars.d/go.json is activated and its baked-in build
+              # prefix was rewritten to the installation prefix. The JSON stores
+              # forward slashes, so compare slash-insensitively.
+              - if not "%GOTOOLCHAIN%"=="local" exit /b 1
+              - 'if not "%GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
+              - 'for /f "delims=" %%i in (''go env GOROOT'') do set "GO_GOROOT=%%i"'
+              - 'if not "%GO_GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
+    about:
+      homepage: https://go.dev/
+      license: BSD-3-Clause
+      license_file: go/LICENSE
+      summary: The Go Programming Language
+
+  # meta-package for non-feedstock use
+  - package:
+      name: go-${{ go_variant_str }}
+    requirements:
+      run:
+        - ${{ pin_subpackage('go', exact=True) }}
+        - if: unix and cgo
+          then: ${{ compiler('c') }}
+        - if: win and cgo
+          then: ${{ compiler('m2w64_c') }}
+    tests:
+      - script:
+          # telemetry counter files are written asynchronously into $HOME, which
+          # races with the test directory cleanup
+          - go telemetry off
+          - go help
+
+about:
+  homepage: https://go.dev/
+  license: BSD-3-Clause
+  license_file: go/LICENSE
+  summary: The Go Programming Language (${{ go_variant_str }})
+  description: |
+    Go is expressive, concise, clean, and efficient. Its concurrency mechanisms
+    make it easy to write programs that get the most out of multicore and
+    networked machines, while its novel type system enables flexible and
+    modular program construction. Go compiles quickly to machine code yet has
+    the convenience of garbage collection and the power of run-time reflection.
+    It's a fast, statically typed, compiled language that feels like a
+    dynamically typed, interpreted language.
+  documentation: https://go.dev/doc
+  repository: https://github.com/golang/
+
+extra:
+  feedstock-name: go
+  recipe-maintainers:
+    - pavelzw
+    - nehaljwani
+    - scopatz
+    - sodre
+    - stuarteberg
+    - xhochy
+    - hmaarrfk
