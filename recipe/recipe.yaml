@@ -72,7 +72,6 @@ outputs:
             - ${{ compiler('m2w64_cxx') }}
             - ${{ compiler('m2w64_fortran') }}
       run_constraints:
-        # TODO: remove on next go version (>1.27.1), this is just to not accidentally select the wrong activation script
         - _go_select <0.0a0
         # https://github.com/prefix-dev/rattler-build/issues/2792
         - if: unix and cgo
