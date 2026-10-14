@@ -1,0 +1,58 @@
+--- a/src/cmd/go/internal/work/exec.go
++++ b/src/cmd/go/internal/work/exec.go
+@@ -3345,6 +3345,12 @@
+ 	dynobj := objdir + "_cgo_.o"
+ 
+ 	ldflags := cgoLDFLAGS
++	if cfg.Goos == "windows" && cfg.Goarch == "arm64" && b.gccSupportsFlag(b.ccExe(), "-Wl,-opt:noref") {
++		// The temporary executable's main does not call the CGo wrappers.
++		// Keep their COMDAT sections so DLL import discovery includes the
++		// imports needed when these objects are later linked internally.
++		ldflags = append(slices.Clone(ldflags), "-Wl,-opt:noref")
++	}
+ 	if (cfg.Goarch == "arm" && cfg.Goos == "linux") || cfg.Goos == "android" {
+ 		if !slices.Contains(ldflags, "-no-pie") {
+ 			// we need to use -pie for Linux/ARM to get accurate imported sym (added in https://golang.org/cl/5989058)
+--- a/src/cmd/link/link_test.go
++++ b/src/cmd/link/link_test.go
+@@ -354,7 +354,7 @@
+ 	if err == nil {
+ 		t.Fatalf("expected link to fail, but it succeeded")
+ 	}
+-	re := regexp.MustCompile(`(?m)^main\(.*text\): relocation target undefined not defined$`)
++	re := regexp.MustCompile(`(?m)^main\(.*text(?::[0-9]+)?\): relocation target undefined not defined$`)
+ 	if !re.Match(out) {
+ 		t.Fatalf("got:\n%q\nwant:\n%s", out, re)
+ 	}
+--- a/src/os/os_windows_test.go
++++ b/src/os/os_windows_test.go
+@@ -542,20 +542,21 @@
+ 	if _, err := exec.LookPath("wsl"); err != nil {
+ 		t.Skip("skipping: WSL not detected")
+ 	}
++	// Probe before entering the temporary directory: WSL setup processes
++	// can retain their working directory when no distribution is installed.
++	if _, err := testenv.Command(t, "wsl", "/bin/true").Output(); err != nil {
++		t.Skipf("skipping: WSL is not correctly installed: %v", err)
++	}
+ 
+ 	t.Chdir(t.TempDir())
+ 
+ 	const target = "target"
+ 	const link = "link"
+ 
+-	_, err := testenv.Command(t, "wsl", "/bin/mkdir", target).Output()
+-	if err != nil {
+-		// This normally happens when WSL still doesn't have a distro installed to run on.
+-		t.Skipf("skipping: WSL is not correctly installed: %v", err)
+-	}
+-
+-	_, err = testenv.Command(t, "wsl", "/bin/ln", "-s", target, link).Output()
+-	if err != nil {
++	if _, err := testenv.Command(t, "wsl", "/bin/mkdir", target).Output(); err != nil {
++		t.Fatal(err)
++	}
++	if _, err := testenv.Command(t, "wsl", "/bin/ln", "-s", target, link).Output(); err != nil {
+ 		t.Fatal(err)
+ 	}
+ 
