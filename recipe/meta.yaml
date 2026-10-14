@@ -1,5 +1,5 @@
 {% set name = "go" %}
-{% set version = "1.27.1" %}
+{% set version = "1.27.2" %}
 
 package:
   name: {{ name }}-{{ go_variant_str }}-split
@@ -8,7 +8,7 @@ package:
 source:
   - folder: go
     url: https://dl.google.com/{{ name }}/go{{ version }}.src.tar.gz
-    sha256: 4e408abae126d916b6164627193f2c54f0e3ca1312d693b86db45f862ab238b1
+    sha256: 03495da2ba64894d40f5c4992e49454fa78b50690604ff92b6afff5081b76e62
     patches:
       # Please see patches/README.md for more details
       - patches/0001-Fix-cgo_fortran-test-setup-for-conda.patch
@@ -24,19 +24,19 @@ source:
   # Update this with a release from https://go.dev/dl/
   - folder: go-bootstrap
     url: https://go.dev/dl/go{{ version }}.linux-arm64.tar.gz  # [linux and aarch64]
-    sha256: 3450b45a3f9ee8568792736a5c5e70a1f2e9b36c35a8f74958c03e51d7d92bec  # [linux and aarch64]
+    sha256: 94f3e30b8e374bc285e7dadc11e0865726b9bc6e85b841ccceaabc0214c6b7c8  # [linux and aarch64]
 
     url: https://go.dev/dl/go{{ version }}.linux-amd64.tar.gz  # [linux and x86_64]
-    sha256: 63d339f0da5ab53635a56f2490a7984dfe12dfcff22ad749f63edaf590168445  # [linux and x86_64]
+    sha256: ecbadb99091a3f46e31f5f934b068b1864eafa7995211b39eaddf76996045fe5  # [linux and x86_64]
 
     url: https://go.dev/dl/go{{ version }}.windows-amd64.zip  # [win64]
-    sha256: a3911b5e0e1b1053f25ed0675f4c1c6aad1e2bfcf253df2b9be4caabd2edd95d  # [win64]
+    sha256: 1314008898bd40df77af4b014f777f08873dbdfbcd3d92308728ee03304fe04f  # [win64]
 
     url: https://go.dev/dl/go{{ version }}.darwin-arm64.tar.gz  # [osx]
-    sha256: ee215d57e0ec269c60cc9ceca68e6bda321ba9ee5afe24f4b0988703c2d87d12  # [osx]
+    sha256: 76812b213b1b2302c978d28fa52fa92d541704b9e7d9d5db8002c50e4018c4c5  # [osx]
 
     url: https://go.dev/dl/go{{ version }}.windows-arm64.zip  # [win and arm64]
-    sha256: 13b69b87bb0e83f96bc68560a8cace7f0343b1e03469f1110ea18d17e3234069  # [win and arm64]
+    sha256: 5c4b294f23b558619ae8a4aa94d023e3bca03f52c8398bb41b9026002b0013de  # [win and arm64]
 
 build:
   number: 0
@@ -54,7 +54,8 @@ outputs:
     requirements:
       run:
         - {{ pin_subpackage(name, exact=true) }}
-        - {{ compiler('c') }}        # [unix and cgo]
+        - {{ stdlib('c') }}           # [unix and cgo]
+        - {{ compiler('c') }}         # [unix and cgo]
         - {{ compiler('ucrt64_c') }}  # [win and x86_64 and cgo]
         - clangarm64-clang-toolchain_win-arm64  # [win and arm64 and cgo]
         - clangarm64-flang  # [win and arm64 and cgo]
@@ -99,11 +100,9 @@ outputs:
 
         - {{ pin_compatible(compiler('c')) }}        # [unix and cgo]
         - {{ pin_compatible(compiler('cxx')) }}      # [unix and cgo]
-        - {{ pin_compatible(compiler('fortran')) }}  # [unix and cgo]
 
         - {{ pin_compatible(compiler('ucrt64_c')) }}        # [win and x86_64]]
         - {{ pin_compatible(compiler('ucrt64_cxx')) }}      # [win and x86_64]]
-        - {{ pin_compatible(compiler('ucrt64_fortran')) }}  # [win and x86_64]]
         - clangarm64-clang-toolchain_win-arm64 >=22.1.8  # [win and arm64 and cgo]
         - clangarm64-flang >=22.1.8  # [win and arm64 and cgo]
     test:
