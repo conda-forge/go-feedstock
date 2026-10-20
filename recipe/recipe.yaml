@@ -1,8 +1,8 @@
 schema_version: 1
 
 context:
-  version: "1.27.2"
-  build: 1
+  version: "1.27.3"
+  build: 0
 
 recipe:
   name: go-${{ go_variant_str }}-split
@@ -10,7 +10,7 @@ recipe:
 
 source:
   - url: https://dl.google.com/go/go${{ version }}.src.tar.gz
-    sha256: 03495da2ba64894d40f5c4992e49454fa78b50690604ff92b6afff5081b76e62
+    sha256: 6e7749035cf360f06b2575d162ea79df9fda8ef671889e5c375f8e50777f26bb
     target_directory: go
     patches:
       # Please see patches/README.md for more details
@@ -28,32 +28,32 @@ source:
   - if: build_platform == "linux-64"
     then:
       url: https://go.dev/dl/go${{ version }}.linux-amd64.tar.gz
-      sha256: ecbadb99091a3f46e31f5f934b068b1864eafa7995211b39eaddf76996045fe5
+      sha256: 65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40
       target_directory: go-bootstrap
   - if: build_platform == "linux-aarch64"
     then:
       url: https://go.dev/dl/go${{ version }}.linux-arm64.tar.gz
-      sha256: 94f3e30b8e374bc285e7dadc11e0865726b9bc6e85b841ccceaabc0214c6b7c8
+      sha256: a06e99309dbcbdca1a8ccd2282c3ee146e55930886e26b4f1193269587165f49
       target_directory: go-bootstrap
   - if: build_platform == "win-64"
     then:
       url: https://go.dev/dl/go${{ version }}.windows-amd64.zip
-      sha256: 1314008898bd40df77af4b014f777f08873dbdfbcd3d92308728ee03304fe04f
+      sha256: f26081f438319757f8a1b46d7d0b2c5ec7583d4038e485e0aa725cfde7885fff
       target_directory: go-bootstrap
   - if: build_platform == "win-arm64"
     then:
       url: https://go.dev/dl/go${{ version }}.windows-arm64.zip
-      sha256: 5c4b294f23b558619ae8a4aa94d023e3bca03f52c8398bb41b9026002b0013de
+      sha256: c507872ff21f8a7cd3c1c217b059c6f7271a4a9d8e692810ef9dd3e1f601197c
       target_directory: go-bootstrap
   - if: build_platform == "osx-64"
     then:
       url: https://go.dev/dl/go${{ version }}.darwin-amd64.tar.gz
-      sha256: 587b59182488b23aa6e5fc25110405a3e0e5b38ed2f5b2f46ed13c32aee356fe
+      sha256: b6f8e931e4ab497fcde6da8ae4499a58f9d258e55c8a80824a516eae5950a750
       target_directory: go-bootstrap
   - if: build_platform == "osx-arm64"
     then:
       url: https://go.dev/dl/go${{ version }}.darwin-arm64.tar.gz
-      sha256: 76812b213b1b2302c978d28fa52fa92d541704b9e7d9d5db8002c50e4018c4c5
+      sha256: dd3908cf20959d798c1e06ebe5b72213f0505ce01373b40ce3110975a6cd99c2
       target_directory: go-bootstrap
 
 build:
