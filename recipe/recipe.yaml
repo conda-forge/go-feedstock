@@ -1,8 +1,8 @@
 schema_version: 1
 
 context:
-  version: "1.27.2"
-  build: 1
+  version: "1.27.3"
+  build: 0
 
 recipe:
   name: go-${{ go_variant_str }}-split
@@ -10,7 +10,7 @@ recipe:
 
 source:
   - url: https://dl.google.com/go/go${{ version }}.src.tar.gz
-    sha256: 03495da2ba64894d40f5c4992e49454fa78b50690604ff92b6afff5081b76e62
+    sha256: 6e7749035cf360f06b2575d162ea79df9fda8ef671889e5c375f8e50777f26bb
     target_directory: go
     patches:
       # Please see patches/README.md for more details
