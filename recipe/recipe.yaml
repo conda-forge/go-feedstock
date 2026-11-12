@@ -116,6 +116,19 @@ outputs:
           # telemetry counter files are written asynchronously into $HOME, which
           # races with the test directory cleanup
           - go telemetry off
+          # conda-smithy 2026.11+ no longer puts MACOSX_DEPLOYMENT_TARGET into
+          # the build variant, so rattler-build falls back to the oldest
+          # supported macOS version (10.9 on osx-64, 11.0 on osx-arm64) for the
+          # test environment. Go emits its Mach-O objects for macOS 13.0 (its
+          # minimum supported version), so linking against an older target makes
+          # ld warn about objects built for a newer macOS version and changes
+          # the Mach-O layout, which breaks cmd/cgo and cmd/link tests. Align the
+          # compiler and linker flags with the deployment target go was built
+          # for (c_stdlib_version).
+          - if: osx
+            then:
+              - export MACOSX_DEPLOYMENT_TARGET=${{ c_stdlib_version }}
+              - for var in CPPFLAGS CFLAGS CXXFLAGS LDFLAGS CGO_CPPFLAGS CGO_CFLAGS CGO_CXXFLAGS CGO_LDFLAGS; do export "$var=${!var:-} -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET"; done
           - if: unix
             then:
               - ./${{ go_variant_str }}/test.sh
