@@ -56,15 +56,15 @@ index e0e53eb..ed62377 100644
  		}
  
 -		// We expect to find the contents of cgoLDFLAGS used when running the CGO action in flags.
--		if len(runCgoProvider.LDFLAGS) > 0 {
+-		if n := len(runCgoProvider.LDFLAGS); n > 0 {
 -		outer:
--			for i := range flags {
+-			for i := 0; i+n <= len(flags); i++ {
 -				for j, f := range runCgoProvider.LDFLAGS {
 -					if f != flags[i+j] {
 -						continue outer
 -					}
 -				}
--				flags = append(flags[:i], flags[i+len(runCgoProvider.LDFLAGS):]...)
+-				flags = append(flags[:i], flags[i+n:]...)
 -				break
 -			}
 -		}

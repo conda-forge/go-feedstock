@@ -19,9 +19,10 @@ index 50bfd0a..7509fad 100644
  	re(`-f(no-)?inline-functions`),
  	re(`-finput-charset=([^@\-].*)`),
  	re(`-f(no-)?fat-lto-objects`),
-@@ -91,6 +92,7 @@ var validCompilerFlags = []*lazyregexp.Regexp{
+@@ -91,7 +92,8 @@ var validCompilerFlags = []*lazyregexp.Regexp{
  	re(`-f(no-)?visibility-inlines-hidden`),
- 	re(`-fsanitize=(.+)`),
+ 	re(`-fsanitize=([^@\-].*)`),
+ 	re(`-fsanitize-undefined-strip-path-components=(-)?[0-9]+`),
  	re(`-ftemplate-depth-(.+)`),
 +	re(`-ftree-vectorize`),
  	re(`-ftls-model=(global-dynamic|local-dynamic|initial-exec|local-exec)`),
