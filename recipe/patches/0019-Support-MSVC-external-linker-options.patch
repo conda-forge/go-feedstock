@@ -1,0 +1,385 @@
+Preserve MSVC external linker options and their tests.
+
+diff --git a/src/cmd/link/internal/ld/lib.go b/src/cmd/link/internal/ld/lib.go
+index 8e29b8c..b7ed728 100644
+--- a/src/cmd/link/internal/ld/lib.go
++++ b/src/cmd/link/internal/ld/lib.go
+@@ -56,6 +56,7 @@ import (
+ 	"cmd/internal/goobj"
+ 	"cmd/internal/hash"
+ 	"cmd/internal/objabi"
++	"cmd/internal/quoted"
+ 	"cmd/internal/sys"
+ 	"cmd/link/internal/loadelf"
+ 	"cmd/link/internal/loader"
+@@ -487,16 +488,36 @@ func (ctxt *Link) extld() []string {
+ 		// Return the default external linker for the platform.
+ 		// This only matters when link tool is called directly without explicit -extld,
+ 		// go tool already passes the correct linker in other cases.
+-		switch buildcfg.GOOS {
+-		case "darwin", "freebsd", "openbsd":
+-			flagExtld = []string{"clang"}
+-		default:
+-			flagExtld = []string{"gcc"}
++		var err error
++		flagExtld, err = defaultExternalLinker(buildcfg.GOOS, buildcfg.GOARCH, os.Getenv("CC"))
++		if err != nil {
++			Exitf("invalid CC for the default external linker: %v", err)
+ 		}
+ 	}
+ 	return flagExtld
+ }
+ 
++func defaultExternalLinker(goos, goarch, cc string) ([]string, error) {
++	if goos == "windows" && goarch == "arm64" {
++		// Conda's native ARM64 C compiler is Clang, not MinGW GCC.
++		// Honor the active compiler when tests invoke go tool link directly.
++		args, err := quoted.Split(cc)
++		if err != nil {
++			return nil, err
++		}
++		if len(args) != 0 {
++			return args, nil
++		}
++		return []string{"clang.exe"}, nil
++	}
++	switch goos {
++	case "darwin", "freebsd", "openbsd":
++		return []string{"clang"}, nil
++	default:
++		return []string{"gcc"}, nil
++	}
++}
++
+ // findLibPathCmd uses cmd command to find gcc library libname.
+ // It returns library full path if found, or "none" if not found.
+ func (ctxt *Link) findLibPathCmd(cmd, libname string) string {
+@@ -1444,7 +1465,15 @@ func (ctxt *Link) hostlink() {
+ 	argv = append(argv, ctxt.extld()...)
+ 	argv = append(argv, hostlinkArchArgs(ctxt.Arch)...)
+ 
+-	if *FlagS || debug_s {
++	var isMSVC, isLLD bool // used on Windows
++	if ctxt.IsWindows() {
++		isMSVC = ctxt.isMSVC()
++		isLLD = ctxt.isLLD()
++	}
++
++	if isMSVC && isLLD {
++		argv = append(argv, msvcDebugFlags(*FlagS || debug_s, *FlagW)...)
++	} else if *FlagS || debug_s {
+ 		if ctxt.HeadType == objabi.Hdarwin {
+ 			// Recent versions of macOS print
+ 			//	ld: warning: option -s is obsolete and being ignored
+@@ -1462,7 +1491,6 @@ func (ctxt *Link) hostlink() {
+ 	// Only macOS supports unmapped segments such as our __DWARF segment.
+ 	combineDwarf := ctxt.IsDarwin() && !*FlagW && machoPlatform == PLATFORM_MACOS
+ 
+-	var isMSVC, isLLD bool // used on Windows
+ 	wlPrefix := "-Wl,--"
+ 
+ 	switch ctxt.HeadType {
+@@ -1515,8 +1543,6 @@ func (ctxt *Link) hostlink() {
+ 			argv = append(argv, "-Wl,--no-execute-only")
+ 		}
+ 	case objabi.Hwindows:
+-		isMSVC = ctxt.isMSVC()
+-		isLLD = ctxt.isLLD()
+ 		if isMSVC {
+ 			// For various options, MSVC lld-link only accepts one dash.
+ 			// TODO: It seems mingw clang supports one or two dashes,
+@@ -1981,7 +2007,7 @@ func (ctxt *Link) hostlink() {
+ 	if ctxt.HeadType == objabi.Hwindows {
+ 		// use gcc linker script to work around gcc bug
+ 		// (see https://golang.org/issue/20183 for details).
+-		if !isLLD {
++		if windowsNeedsGDBLinkerScript(isMSVC, isLLD) {
+ 			p := writeGDBLinkerScript()
+ 			argv = append(argv, "-Wl,-T,"+p)
+ 		}
+@@ -3173,6 +3197,27 @@ func (ctxt *Link) findExtLinkTool(toolname string) string {
+ 	return cmdpath
+ }
+ 
++// windowsNeedsGDBLinkerScript limits the GNU ld workaround to its toolchain.
++// LLD does not need the workaround, and Microsoft LINK cannot read GNU scripts.
++func windowsNeedsGDBLinkerScript(isMSVC, isLLD bool) bool {
++	return !isMSVC && !isLLD
++}
++
++// msvcDebugFlags preserves Go's symbol and DWARF settings with lld-link.
++// Unlike GNU ld, lld-link omits the COFF symbol table and DWARF by default,
++// and MSVC-target Clang does not accept the GNU -s and -Wl,-S options.
++func msvcDebugFlags(stripSymbols, stripDWARF bool) []string {
++	if stripSymbols {
++		return []string{"-Wl,-debug:none"}
++	}
++	if stripDWARF {
++		return []string{"-Wl,-debug:symtab", "-Wl,-debug:nodwarf", "-Wl,-opt:ref"}
++	}
++	// /debug changes lld-link's default to /opt:noref. Preserve the normal
++	// removal of unreferenced COMDATs while retaining symbols and DWARF.
++	return []string{"-Wl,-debug:dwarf", "-Wl,-opt:ref"}
++}
++
+ // isMSVC reports whether the C toolchain is clang with a -msvc target,
+ // e.g. the clang bundled in MSVC.
+ func (ctxt *Link) isMSVC() bool {
+diff --git a/src/cmd/link/internal/ld/pe_msvc_test.go b/src/cmd/link/internal/ld/pe_msvc_test.go
+new file mode 100644
+index 0000000..84d43f6
+--- /dev/null
++++ b/src/cmd/link/internal/ld/pe_msvc_test.go
+@@ -0,0 +1,252 @@
++// Copyright 2026 The Go Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style
++// license that can be found in the LICENSE file.
++
++package ld
++
++import (
++	"bytes"
++	"cmd/internal/quoted"
++	"debug/pe"
++	"internal/testenv"
++	"os"
++	"path/filepath"
++	"runtime"
++	"slices"
++	"strings"
++	"testing"
++)
++
++func TestWindowsGDBLinkerScript(t *testing.T) {
++	for _, test := range []struct {
++		name            string
++		msvc, lld, want bool
++	}{
++		{"GNU ld", false, false, true},
++		{"MinGW LLD", false, true, false},
++		{"Microsoft LINK", true, false, false},
++		{"MSVC LLD", true, true, false},
++	} {
++		t.Run(test.name, func(t *testing.T) {
++			if got := windowsNeedsGDBLinkerScript(test.msvc, test.lld); got != test.want {
++				t.Fatalf("windowsNeedsGDBLinkerScript() = %v, want %v", got, test.want)
++			}
++		})
++	}
++}
++
++func TestMSVCDebugFlags(t *testing.T) {
++	for _, test := range []struct {
++		name                     string
++		stripSymbols, stripDWARF bool
++		want                     []string
++	}{
++		{"default", false, false, []string{"-Wl,-debug:dwarf", "-Wl,-opt:ref"}},
++		{"symbols only", false, true, []string{"-Wl,-debug:symtab", "-Wl,-debug:nodwarf", "-Wl,-opt:ref"}},
++		{"stripped", true, true, []string{"-Wl,-debug:none"}},
++		{"strip symbols implies no DWARF", true, false, []string{"-Wl,-debug:none"}},
++	} {
++		t.Run(test.name, func(t *testing.T) {
++			if got := msvcDebugFlags(test.stripSymbols, test.stripDWARF); !slices.Equal(got, test.want) {
++				t.Fatalf("msvcDebugFlags() = %q, want %q", got, test.want)
++			}
++		})
++	}
++}
++
++func TestDefaultExternalLinker(t *testing.T) {
++	for _, test := range []struct {
++		name, goos, goarch, cc string
++		want                   []string
++	}{
++		{"native ARM64 default", "windows", "arm64", "", []string{"clang.exe"}},
++		{"native ARM64 activation", "windows", "arm64", "clang.exe", []string{"clang.exe"}},
++		{"quoted compiler", "windows", "arm64", `"C:\Program Files\LLVM\bin\clang.exe" -fuse-ld=lld`, []string{`C:\Program Files\LLVM\bin\clang.exe`, "-fuse-ld=lld"}},
++		{"Windows x64 unchanged", "windows", "amd64", "clang.exe", []string{"gcc"}},
++		{"Windows x86 unchanged", "windows", "386", "clang.exe", []string{"gcc"}},
++		{"Linux unchanged", "linux", "arm64", "clang", []string{"gcc"}},
++		{"Darwin unchanged", "darwin", "arm64", "gcc", []string{"clang"}},
++		{"FreeBSD unchanged", "freebsd", "amd64", "gcc", []string{"clang"}},
++		{"OpenBSD unchanged", "openbsd", "amd64", "gcc", []string{"clang"}},
++	} {
++		t.Run(test.name, func(t *testing.T) {
++			got, err := defaultExternalLinker(test.goos, test.goarch, test.cc)
++			if err != nil || !slices.Equal(got, test.want) {
++				t.Fatalf("defaultExternalLinker() = %q, %v; want %q", got, err, test.want)
++			}
++		})
++	}
++	if _, err := defaultExternalLinker("windows", "arm64", `"unterminated`); err == nil {
++		t.Error("malformed CC did not return an error")
++	}
++
++	saved := flagExtld
++	defer func() { flagExtld = saved }()
++	want := []string{"explicit-linker", "explicit-argument"}
++	flagExtld = slices.Clone(want)
++	if got := new(Link).extld(); !slices.Equal(got, want) {
++		t.Fatalf("explicit -extld was replaced: %q", got)
++	}
++}
++
++func mustHaveMSVC(t *testing.T) string {
++	t.Helper()
++	if runtime.GOOS != "windows" {
++		t.Skip("Windows PE executable test")
++	}
++	testenv.MustHaveGoBuild(t)
++	testenv.MustHaveCGO(t)
++	goTool := testenv.GoToolPath(t)
++	ccOutput, err := testenv.Command(t, goTool, "env", "CC").Output()
++	if err != nil {
++		t.Fatal(err)
++	}
++	cc, err := quoted.Split(strings.TrimSpace(string(ccOutput)))
++	if err != nil || len(cc) == 0 {
++		t.Fatalf("invalid CC %q: %v", ccOutput, err)
++	}
++	version, err := testenv.Command(t, cc[0], append(cc[1:], "--version")...).CombinedOutput()
++	if err != nil {
++		t.Fatalf("querying CC: %v\n%s", err, version)
++	}
++	if !bytes.Contains(version, []byte("-msvc")) {
++		t.Skip("requires MSVC-target Clang")
++	}
++	return goTool
++}
++
++func TestWindowsMSVCExternalDebugInfo(t *testing.T) {
++	goTool := mustHaveMSVC(t)
++	dir := t.TempDir()
++	src := filepath.Join(dir, "main.go")
++	if err := os.WriteFile(src, []byte(`package main
++// int answer(void) { return 42; }
++import "C"
++func main() { if C.answer() != 42 { panic("incorrect C result") } }
++`), 0666); err != nil {
++		t.Fatal(err)
++	}
++	for _, test := range []struct {
++		name, flags    string
++		symbols, dwarf bool
++	}{
++		{"default", "", true, true},
++		{"w", "-w", true, false},
++		{"s", "-s", false, false},
++	} {
++		t.Run(test.name, func(t *testing.T) {
++			exe := filepath.Join(dir, test.name+".exe")
++			out, err := testenv.Command(t, goTool, "build", "-ldflags=-linkmode=external "+test.flags, "-o", exe, src).CombinedOutput()
++			if err != nil || len(out) != 0 {
++				t.Fatalf("external build: %v\n%s", err, out)
++			}
++			f, err := pe.Open(exe)
++			if err != nil {
++				t.Fatal(err)
++			}
++			defer f.Close()
++			if got := len(f.Symbols) != 0; got != test.symbols {
++				t.Errorf("COFF symbols present = %v, want %v", got, test.symbols)
++			}
++			if test.symbols {
++				for _, name := range []string{"main.main", "runtime.pclntab", "runtime.types"} {
++					if !slices.ContainsFunc(f.Symbols, func(s *pe.Symbol) bool { return s.Name == name }) {
++						t.Errorf("missing Go symbol %q", name)
++					}
++				}
++			}
++			if got := f.Section(".debug_info") != nil; got != test.dwarf {
++				t.Errorf("DWARF present = %v, want %v", got, test.dwarf)
++			}
++			if test.dwarf {
++				if _, err := f.DWARF(); err != nil {
++					t.Errorf("reading DWARF: %v", err)
++				}
++			}
++			if out, err := testenv.Command(t, exe).CombinedOutput(); err != nil || len(out) != 0 {
++				t.Fatalf("executing CGo program: %v\n%s", err, out)
++			}
++		})
++	}
++}
++
++func TestWindowsMSVCLinkerNoGDBScript(t *testing.T) {
++	goTool := mustHaveMSVC(t)
++	if runtime.GOARCH != "arm64" {
++		t.Skip("Windows ARM64 MSVC linker regression")
++	}
++	testenv.MustHaveExecPath(t, "link.exe")
++	dir := t.TempDir()
++	src := filepath.Join(dir, "main.go")
++	if err := os.WriteFile(src, []byte(`package main
++// int answer(void) { return 42; }
++import "C"
++func main() { if C.answer() != 42 { panic("incorrect C result") } }
++`), 0666); err != nil {
++		t.Fatal(err)
++	}
++	exe := filepath.Join(dir, "main.exe")
++	cmd := testenv.Command(t, goTool, "build", "-ldflags=-linkmode=external -extldflags=-fuse-ld=link -v", "-o", exe, src)
++	// A consumer can replace CGO_LDFLAGS without retaining conda's LLD
++	// default. Exercise that supported environment override with a plain
++	// CGo program, selecting Microsoft LINK explicitly for this test.
++	cmd.Env = append(cmd.Environ(), "CGO_LDFLAGS=-Wno-such-warning -Wno-unknown-warning-option")
++	out, err := cmd.CombinedOutput()
++	if err != nil {
++		t.Fatalf("Microsoft LINK build: %v\n%s", err, out)
++	}
++	if bytes.Contains(out, []byte("fix_debug_gdb_scripts.ld")) ||
++		!bytes.Contains(out, []byte("-fuse-ld=link")) || !bytes.Contains(out, []byte("-Wno-such-warning")) {
++		t.Fatalf("incorrect Microsoft LINK command:\n%s", out)
++	}
++	f, err := pe.Open(exe)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer f.Close()
++	if f.Machine != pe.IMAGE_FILE_MACHINE_ARM64 {
++		t.Fatalf("PE machine = %#x, want ARM64", f.Machine)
++	}
++	if out, err := testenv.Command(t, exe).CombinedOutput(); err != nil || len(out) != 0 {
++		t.Fatalf("Microsoft LINK CGo execution: %v\n%s", err, out)
++	}
++}
++
++func TestWindowsMSVCSharedInitializer(t *testing.T) {
++	goTool := mustHaveMSVC(t)
++	testenv.MustHaveBuildMode(t, "c-shared")
++	dir := t.TempDir()
++	src := filepath.Join(dir, "main.go")
++	if err := os.WriteFile(src, []byte(`package main
++import "C"
++//export Answer
++func Answer() int { return 42 }
++func main() {}
++`), 0666); err != nil {
++		t.Fatal(err)
++	}
++	linktmp := filepath.Join(dir, "linktmp")
++	if err := os.Mkdir(linktmp, 0777); err != nil {
++		t.Fatal(err)
++	}
++	dll := filepath.Join(dir, "test.dll")
++	out, err := testenv.Command(t, goTool, "build", "-buildmode=c-shared", "-ldflags=-tmpdir="+linktmp, "-o", dll, src).CombinedOutput()
++	if err != nil {
++		t.Fatalf("building shared library: %v\n%s", err, out)
++	}
++	f, err := pe.Open(filepath.Join(linktmp, "go.o"))
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer f.Close()
++	if f.Section(".ctors") != nil {
++		t.Error("MSVC shared library still uses a MinGW initializer")
++	}
++	init := f.Section(".CRT$XCU")
++	if init == nil {
++		t.Fatal("MSVC shared library has no CRT initializer")
++	}
++	if len(init.Relocs) != 1 {
++		t.Errorf("CRT initializer has %d relocations, want 1", len(init.Relocs))
++	}
++}

@@ -1,0 +1,95 @@
+--- a/src/cmd/go/internal/work/exec.go
++++ b/src/cmd/go/internal/work/exec.go
+@@ -3114,6 +3114,47 @@
+ 
+ 	sh := b.Shell(a)
+ 
++
++	var collectAction *Action
++	for _, dep := range a.Deps {
++		if dep.Mode == "collect cgo" {
++			collectAction = dep
++		}
++	}
++	if collectAction == nil {
++		base.Fatalf("internal error: no cgo collect action")
++	}
++	for _, dep := range collectAction.Deps {
++		outObj = append(outObj, dep.Target)
++	}
++
++	switch cfg.BuildToolchainName {
++	case "gc":
++		importGo := objdir + "_cgo_import.go"
++		dynOutGo, dynOutObj, err := b.dynimport(a, objdir, importGo, cgoExe, runCgoProvider.CFLAGS, runCgoProvider.LDFLAGS, outObj)
++		if err != nil {
++			return nil, nil, err
++		}
++		if dynOutGo != "" {
++			outGo = append(outGo, dynOutGo)
++		}
++		if dynOutObj != "" {
++			outObj = append(outObj, dynOutObj)
++		}
++
++	case "gccgo":
++		defunC := objdir + "_cgo_defun.c"
++		defunObj := objdir + "_cgo_defun.o"
++		if err := BuildToolchain.cc(b, a, defunObj, defunC); err != nil {
++			return nil, nil, err
++		}
++		outObj = append(outObj, defunObj)
++
++	default:
++		noCompiler()
++	}
++
++	// Add the archive marker after dynimport; it is not a C linker input.
+ 	// Output the preferlinkext file if the run cgo action determined this package
+ 	// was not compatible for internal linking based on CFLAGS, CXXFLAGS, or FFLAGS.
+ 	if runCgoProvider.notCompatibleForInternalLinking {
+@@ -3124,44 +3165,6 @@
+ 		outObj = append(outObj, tokenFile)
+ 	}
+ 
+-	var collectAction *Action
+-	for _, dep := range a.Deps {
+-		if dep.Mode == "collect cgo" {
+-			collectAction = dep
+-		}
+-	}
+-	if collectAction == nil {
+-		base.Fatalf("internal error: no cgo collect action")
+-	}
+-	for _, dep := range collectAction.Deps {
+-		outObj = append(outObj, dep.Target)
+-	}
+-
+-	switch cfg.BuildToolchainName {
+-	case "gc":
+-		importGo := objdir + "_cgo_import.go"
+-		dynOutGo, dynOutObj, err := b.dynimport(a, objdir, importGo, cgoExe, runCgoProvider.CFLAGS, runCgoProvider.LDFLAGS, outObj)
+-		if err != nil {
+-			return nil, nil, err
+-		}
+-		if dynOutGo != "" {
+-			outGo = append(outGo, dynOutGo)
+-		}
+-		if dynOutObj != "" {
+-			outObj = append(outObj, dynOutObj)
+-		}
+-
+-	case "gccgo":
+-		defunC := objdir + "_cgo_defun.c"
+-		defunObj := objdir + "_cgo_defun.o"
+-		if err := BuildToolchain.cc(b, a, defunObj, defunC); err != nil {
+-			return nil, nil, err
+-		}
+-		outObj = append(outObj, defunObj)
+-
+-	default:
+-		noCompiler()
+-	}
+ 
+ 	// Double check the //go:cgo_ldflag comments in the generated files.
+ 	// The compiler only permits such comments in files whose base name

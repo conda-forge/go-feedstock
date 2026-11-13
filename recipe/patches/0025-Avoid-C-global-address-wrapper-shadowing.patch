@@ -1,0 +1,64 @@
+--- a/src/cmd/cgo/out.go
++++ b/src/cmd/cgo/out.go
+@@ -775,6 +775,14 @@
+ 
+ 	ctype, _ := p.structType(n)
+ 
++	// Resolve variable addresses outside the wrapper scope: its parameters
++	// and temporaries may otherwise shadow the C global (for example, v).
++	varAddr := strings.HasPrefix(n.Mangle, "_Cvaraddr_")
++	addrHelper := "_cgo" + cPrefix + n.Mangle + "_addr"
++	if varAddr {
++		fmt.Fprintf(fgcc, "static void *%s(void) { return %s; }\n", addrHelper, n.C)
++	}
++
+ 	// Gcc wrapper unpacks the C argument struct
+ 	// and calls the actual C function.
+ 	fmt.Fprintf(fgcc, "CGO_NO_SANITIZE_THREAD\n")
+@@ -811,7 +819,9 @@
+ 			fmt.Fprint(fgcc, "(__typeof__(_cgo_a->r)) ")
+ 		}
+ 	}
+-	if n.Kind == "macro" {
++	if varAddr {
++		fmt.Fprintf(fgcc, "%s();\n", addrHelper)
++	} else if n.Kind == "macro" {
+ 		fmt.Fprintf(fgcc, "%s;\n", n.C)
+ 	} else {
+ 		fmt.Fprintf(fgcc, "%s(", n.C)
+--- /dev/null
++++ b/src/cmd/cgo/internal/test/varaddr_windows_arm64.go
+@@ -0,0 +1,17 @@
++// Copyright 2026 The Go Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style
++// license that can be found in the LICENSE file.
++
++package cgotest
++
++/*
++static int v = 42;
++static int _cgo_a = 43;
++static int _cgo_r = 44;
++static int _cgo_stktop = 45;
++*/
++import "C"
++
++func variableAddressValues() [4]int {
++	return [4]int{int(C.v), int(C._cgo_a), int(C._cgo_r), int(C._cgo_stktop)}
++}
+--- /dev/null
++++ b/src/cmd/cgo/internal/test/varaddr_windows_arm64_test.go
+@@ -0,0 +1,13 @@
++// Copyright 2026 The Go Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style
++// license that can be found in the LICENSE file.
++
++package cgotest
++
++import "testing"
++
++func TestVariableAddressShadowing(t *testing.T) {
++	if got, want := variableAddressValues(), [4]int{42, 43, 44, 45}; got != want {
++		t.Fatalf("C globals with wrapper-local names: got %v, want %v", got, want)
++	}
++}
