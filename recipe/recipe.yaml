@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   version: "1.27.4"
-  build: 0
+  build: 1
 
 recipe:
   name: go-${{ go_variant_str }}-split
@@ -100,8 +100,8 @@ outputs:
         strong:
           - if: linux and cgo
             then: __glibc >=${{ c_stdlib_version }}
-          - if: osx and cgo
-            then: __osx >=12
+          - if: osx
+            then: __osx >=${{ c_stdlib_version }}
     tests:
       - files:
           recipe:
