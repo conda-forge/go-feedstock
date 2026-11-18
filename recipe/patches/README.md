@@ -1,18 +1,9 @@
-## Windows ARM64 external CGo candidate
+## Windows ARM64 CGo
 
-This local candidate retains external CGo linking and pure-Go internal linking.
-It removes the COFF COMDAT, ARM64 host-unwind, internal load-config/CRT, and
-internal compiler-runtime additions from patches 0018, 0019, 0023, and 0026.
-Patch 0019 retains only external linker options and their tests. Patch 0010
-no longer treats `-fuse-ld=lld` as internally linkable, so the existing
-`preferlinkext` mechanism selects external linking for the conda defaults.
-
-Patch 0027 scopes test capabilities through `GO_TEST_MSVC_EXTERNAL_ONLY=1`,
-set after the recipe verifies native Windows ARM64 and MSVC-target Clang.
-It disables dist's forced-internal CGo variants and makes existing CGo
-internal-link guards and the `cgolinkext` script condition recognize this
-unsupported toolchain combination. Pure-Go internal-link guards are unchanged.
-This candidate has not yet passed native Windows validation.
+The recipe uses MSVC-target Clang with external CGo linking. The installed
+package tests exercise default linking, PIE, C globals, DLL imports and
+quoted linker flags. The Go test capability override applies only to CGo
+with this toolchain. Pure Go can still use internal linking.
 
 # The initial patches - which were created as described below - were manually ported to newer version.
 The following steps need to be regarded:

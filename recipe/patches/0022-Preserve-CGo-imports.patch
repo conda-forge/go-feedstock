@@ -1,0 +1,15 @@
+--- a/src/cmd/go/internal/work/exec.go
++++ b/src/cmd/go/internal/work/exec.go
+@@ -3345,6 +3345,12 @@
+ 	dynobj := objdir + "_cgo_.o"
+ 
+ 	ldflags := cgoLDFLAGS
++	if cfg.Goos == "windows" && cfg.Goarch == "arm64" && b.gccSupportsFlag(b.ccExe(), "-Wl,-opt:noref") {
++		// The temporary executable's main does not call the CGo wrappers.
++		// Keep their COMDAT sections so DLL import discovery includes the
++		// imports needed when these objects are later linked internally.
++		ldflags = append(slices.Clone(ldflags), "-Wl,-opt:noref")
++	}
+ 	if (cfg.Goarch == "arm" && cfg.Goos == "linux") || cfg.Goos == "android" {
+ 		if !slices.Contains(ldflags, "-no-pie") {
+ 			// we need to use -pie for Linux/ARM to get accurate imported sym (added in https://golang.org/cl/5989058)

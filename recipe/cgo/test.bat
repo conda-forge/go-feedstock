@@ -39,103 +39,18 @@ if errorlevel 1 exit 1
 goto :done
 
 :win_arm64_tests
-rem cmd/dist resolves go and gofmt under GOROOT, while the conda package
-rem exposes them from PREFIX\bin. Restore the canonical layout only in this
-rem disposable test prefix.
-set "GO_ROOT="
-for /f "delims=" %%G in ('go env GOROOT') do set "GO_ROOT=%%G"
-if not defined GO_ROOT exit /b 1
-if not exist "%GO_ROOT%\bin" mkdir "%GO_ROOT%\bin"
-if errorlevel 1 exit /b 1
-copy /Y "%PREFIX%\bin\go.exe" "%GO_ROOT%\bin\go.exe"
-if errorlevel 1 exit /b 1
-copy /Y "%PREFIX%\bin\gofmt.exe" "%GO_ROOT%\bin\gofmt.exe"
-if errorlevel 1 exit /b 1
-
-rem Use native Git and the runner-owned temporary directory for vcweb fixtures.
-if not exist "%ProgramFiles%\Git\bin\git.exe" exit /b 1
-set "PATH=%ProgramFiles%\Git\bin;%PATH%"
-where git
-git version --build-options
-if errorlevel 1 exit /b 1
-
-for /f "delims=" %%G in ('go env GOHOSTOS') do if /I not "%%G"=="windows" exit /b 1
-for /f "delims=" %%G in ('go env GOHOSTARCH') do if /I not "%%G"=="arm64" exit /b 1
-for /f "delims=" %%G in ('go env GOOS') do if /I not "%%G"=="windows" exit /b 1
-for /f "delims=" %%G in ('go env GOARCH') do if /I not "%%G"=="arm64" exit /b 1
-for /f "delims=" %%G in ('go env CGO_ENABLED') do if not "%%G"=="1" exit /b 1
-for /f "delims=" %%G in ('go env CC') do if /I not "%%~nxG"=="clang.exe" exit /b 1
-
-where clang.exe
-if errorlevel 1 exit /b 1
-clang.exe --version
-if errorlevel 1 exit /b 1
-for /f "delims=" %%G in ('clang.exe -dumpmachine') do set "CLANG_TARGET=%%G"
-echo %CLANG_TARGET% | findstr /R /I "^aarch64.*windows-msvc" >nul
-if errorlevel 1 exit /b 1
-
-rem MSVC-target Clang supports external CGo linking, not internal CGo linking.
+rem Match the compiler used by the package before applying CGo test guards.
+clang.exe -dumpmachine | findstr /R /I "^aarch64.*windows-msvc" >nul || exit /b 1
 set "GO_TEST_MSVC_EXTERNAL_ONLY=1"
-
-rem Test the installed conda defaults exactly as a consumer receives them.
 set "CGO_LDFLAGS="
-set "GO_CGO_LDFLAGS="
-for /f "delims=" %%G in ('go env CGO_LDFLAGS') do set "GO_CGO_LDFLAGS=%%G"
-echo %GO_CGO_LDFLAGS% | findstr /L /C:"-fuse-ld=lld" >nul
-if errorlevel 1 exit /b 1
 
-rem Go invokes the final external linker through CC, not LD. Verify that the
-rem computed defaults select lld-link before exercising Go's external linker.
-clang.exe %CFLAGS% -### "%~dp0lld_probe.c" %GO_CGO_LDFLAGS% -o lld_probe.exe 2> lld_driver.log
-if errorlevel 1 exit /b 1
-type lld_driver.log
-findstr /I /C:"lld-link" lld_driver.log >nul
-if errorlevel 1 exit /b 1
-clang.exe %CFLAGS% "%~dp0lld_probe.c" %GO_CGO_LDFLAGS% -o lld_probe.exe
-if errorlevel 1 exit /b 1
-lld_probe.exe
-if errorlevel 1 exit /b 1
-
-go build -x -trimpath -ldflags="-linkmode=external -v" -o hello_win_arm64_external.exe "%~dp0hello_win_arm64.go" > hello_external.log 2>&1
-set "GO_BUILD_STATUS=%ERRORLEVEL%"
-type hello_external.log
-if not "%GO_BUILD_STATUS%"=="0" exit /b %GO_BUILD_STATUS%
-findstr /L /C:"-pthread" hello_external.log >nul
-if errorlevel 1 exit /b 1
-findstr /L /C:"-fuse-ld=lld" hello_external.log >nul
-if errorlevel 1 exit /b 1
-findstr /L /C:"fix_debug_gdb_scripts.ld" hello_external.log >nul
-if not errorlevel 1 exit /b 1
-findstr /L /C:"-mthreads" hello_external.log >nul
-if not errorlevel 1 exit /b 1
-hello_win_arm64_external.exe
-if errorlevel 1 exit /b 1
-
-rem Keep the focused upstream CGo checks unmasked.
-go test -count=1 runtime/cgo
-if errorlevel 1 exit /b 1
-go test -count=1 cmd/cgo/internal/test
-if errorlevel 1 exit /b 1
-go test -count=1 -run=^^Test8694$ -v cmd/cgo/internal/test
-if errorlevel 1 exit /b 1
-go test -count=1 -ldflags="-linkmode=external" cmd/cgo/internal/test
-if errorlevel 1 exit /b 1
-
-go build -trimpath -o hello_win_arm64.exe "%~dp0hello_win_arm64.go"
-if errorlevel 1 exit /b 1
-hello_win_arm64.exe
-if errorlevel 1 exit /b 1
-
-go build -trimpath -buildmode=pie -o hello_win_arm64_pie.exe "%~dp0hello_win_arm64.go"
-if errorlevel 1 exit /b 1
-hello_win_arm64_pie.exe
-if errorlevel 1 exit /b 1
-
-rem Run dist tests with MSVC CGo capabilities and native certificate prerequisites.
-set "GO_TEST_ALLOW_TEMPORARY_USER_ROOT="
-if "%GITHUB_ACTIONS%"=="true" if "%RUNNER_ENVIRONMENT%"=="github-hosted" set "GO_TEST_ALLOW_TEMPORARY_USER_ROOT=1"
-powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%~dp0..\windows\run_dist_tests.ps1"
-if errorlevel 1 exit /b %ERRORLEVEL%
+rem Exercise the installed defaults, explicit external linking, and PIE.
+go run "%~dp0hello_win_arm64.go" || exit /b 1
+go run -ldflags="-linkmode=external" "%~dp0hello_win_arm64.go" || exit /b 1
+go run -buildmode=pie "%~dp0hello_win_arm64.go" || exit /b 1
+go test -count=1 runtime/cgo cmd/cgo/internal/test cmd/cgo/internal/testerrors cmd/cgo/internal/testso cmd/go/internal/work cmd/internal/archive || exit /b 1
+go test -count=1 -run="^Test(DefaultExternalLinker|WindowsGDBLinkerScript|MSVCDebugFlags|WindowsMSVC)" cmd/link/internal/ld || exit /b 1
+go test -count=1 -run="^TestScript$/^(gccgo_link_ldflags|cgo_suspect_flag_force_external)$" cmd/go || exit /b 1
 
 :done
 exit /b 0

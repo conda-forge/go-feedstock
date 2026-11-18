@@ -3,18 +3,6 @@ Limit CGo internal-link tests to toolchains that support them.
 Opt in only from the validated Windows ARM64 MSVC recipe test environment.
 Pure-Go internal linking and external CGo tests remain enabled.
 
---- a/src/cmd/dist/test.go
-+++ b/src/cmd/dist/test.go
-@@ -1232,6 +1232,9 @@
- }
- 
- func (t *tester) internalLink() bool {
-+	if goos == "windows" && goarch == "arm64" && os.Getenv("GO_TEST_MSVC_EXTERNAL_ONLY") == "1" {
-+		return false // MSVC-target C objects are not supported by the internal linker.
-+	}
- 	if gohostos == "dragonfly" {
- 		// linkmode=internal fails on dragonfly since errno is a TLS relocation.
- 		return false
 --- a/src/internal/testenv/testenv.go
 +++ b/src/internal/testenv/testenv.go
 @@ -353,6 +353,9 @@

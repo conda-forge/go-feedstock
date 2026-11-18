@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   version: "1.27.4"
-  build: 1
+  build: 2
 
 recipe:
   name: go-${{ go_variant_str }}-split
@@ -32,8 +32,8 @@ source:
       - patches/0017-Initialize-MSVC-Go-DLLs.patch
       - patches/0019-Support-MSVC-external-linker-options.patch
       - patches/0020-Support-MSVC-CGo-variables-and-fixtures.patch
-      - patches/0021-Fix-CGo-flag-and-archive-validation.patch
-      - patches/0022-Preserve-CGo-imports-and-fix-Windows-test-setup.patch
+      - patches/0021-Isolate-CGo-script-test-flags.patch
+      - patches/0022-Preserve-CGo-imports.patch
       - patches/0025-Avoid-C-global-address-wrapper-shadowing.patch
       - patches/0027-Scope-MSVC-CGo-test-capabilities.patch
 
@@ -125,7 +125,6 @@ outputs:
       - files:
           recipe:
             - ${{ go_variant_str }}/
-            - windows/
         requirements:
           run:
             - if: unix and cgo
@@ -135,45 +134,40 @@ outputs:
             - if: target_platform == "win-arm64" and cgo
               then: ${{ compiler('c') }}
         script:
-          # Read runner flags when testing, not when rendering the package.
-          secrets:
-            - GITHUB_ACTIONS
-            - RUNNER_ENVIRONMENT
-          content:
-            # telemetry counter files are written asynchronously into $HOME, which
-            # races with the test directory cleanup
-            - go telemetry off
-            # conda-smithy 2026.11+ no longer puts MACOSX_DEPLOYMENT_TARGET into
-            # the build variant, so rattler-build falls back to the oldest
-            # supported macOS version (10.9 on osx-64, 11.0 on osx-arm64) for the
-            # test environment. Go emits its Mach-O objects for macOS 13.0 (its
-            # minimum supported version), so linking against an older target makes
-            # ld warn about objects built for a newer macOS version and changes
-            # the Mach-O layout, which breaks cmd/cgo and cmd/link tests. Align the
-            # compiler and linker flags with the deployment target go was built
-            # for (c_stdlib_version).
-            - if: osx
-              then:
-                - export MACOSX_DEPLOYMENT_TARGET=${{ c_stdlib_version }}
-                - for var in CPPFLAGS CFLAGS CXXFLAGS LDFLAGS CGO_CPPFLAGS CGO_CFLAGS CGO_CXXFLAGS CGO_LDFLAGS; do export "$var=${!var:-} -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET"; done
-            - if: unix
-              then:
-                - ./${{ go_variant_str }}/test.sh
-                # etc/conda/env_vars.d/go.json is activated and its baked-in build
-                # prefix was rewritten to the installation prefix
-                - test "$GOTOOLCHAIN" = "local"
-                - test "$GOROOT" = "$CONDA_PREFIX/go"
-                - test "$(go env GOROOT)" = "$CONDA_PREFIX/go"
-            - if: win
-              then:
-                - call ${{ go_variant_str }}\test.bat
-                # etc/conda/env_vars.d/go.json is activated and its baked-in build
-                # prefix was rewritten to the installation prefix. The JSON stores
-                # forward slashes, so compare slash-insensitively.
-                - if not "%GOTOOLCHAIN%"=="local" exit /b 1
-                - 'if not "%GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
-                - 'for /f "delims=" %%i in (''go env GOROOT'') do set "GO_GOROOT=%%i"'
-                - 'if not "%GO_GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
+          # telemetry counter files are written asynchronously into $HOME, which
+          # races with the test directory cleanup
+          - go telemetry off
+          # conda-smithy 2026.11+ no longer puts MACOSX_DEPLOYMENT_TARGET into
+          # the build variant, so rattler-build falls back to the oldest
+          # supported macOS version (10.9 on osx-64, 11.0 on osx-arm64) for the
+          # test environment. Go emits its Mach-O objects for macOS 13.0 (its
+          # minimum supported version), so linking against an older target makes
+          # ld warn about objects built for a newer macOS version and changes
+          # the Mach-O layout, which breaks cmd/cgo and cmd/link tests. Align the
+          # compiler and linker flags with the deployment target go was built
+          # for (c_stdlib_version).
+          - if: osx
+            then:
+              - export MACOSX_DEPLOYMENT_TARGET=${{ c_stdlib_version }}
+              - for var in CPPFLAGS CFLAGS CXXFLAGS LDFLAGS CGO_CPPFLAGS CGO_CFLAGS CGO_CXXFLAGS CGO_LDFLAGS; do export "$var=${!var:-} -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET"; done
+          - if: unix
+            then:
+              - ./${{ go_variant_str }}/test.sh
+              # etc/conda/env_vars.d/go.json is activated and its baked-in build
+              # prefix was rewritten to the installation prefix
+              - test "$GOTOOLCHAIN" = "local"
+              - test "$GOROOT" = "$CONDA_PREFIX/go"
+              - test "$(go env GOROOT)" = "$CONDA_PREFIX/go"
+          - if: win
+            then:
+              - call ${{ go_variant_str }}\test.bat
+              # etc/conda/env_vars.d/go.json is activated and its baked-in build
+              # prefix was rewritten to the installation prefix. The JSON stores
+              # forward slashes, so compare slash-insensitively.
+              - if not "%GOTOOLCHAIN%"=="local" exit /b 1
+              - 'if not "%GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
+              - 'for /f "delims=" %%i in (''go env GOROOT'') do set "GO_GOROOT=%%i"'
+              - 'if not "%GO_GOROOT:\=/%"=="%CONDA_PREFIX:\=/%/go" exit /b 1'
     about:
       homepage: https://go.dev/
       license: BSD-3-Clause

@@ -1,0 +1,36 @@
+Keep the CGo script test independent of the conda compiler defaults.
+
+diff --git a/src/cmd/go/testdata/script/cgo_suspect_flag_force_external.txt b/src/cmd/go/testdata/script/cgo_suspect_flag_force_external.txt
+index 0d17cbf..6c9889a 100644
+--- a/src/cmd/go/testdata/script/cgo_suspect_flag_force_external.txt
++++ b/src/cmd/go/testdata/script/cgo_suspect_flag_force_external.txt
+@@ -8,6 +8,13 @@
+ [!cgo] skip 'test verifies behavior that depends on CGO_CFLAGS'
+ [mustlinkext] skip 'test expects internal linking for non-cgo programs'
+ 
++# Isolate conda's fallback flags: this test varies CGO_* to distinguish
++# ordinary flags from flags that specifically require external linking.
++env CFLAGS=-O2
++env CXXFLAGS=-O2
++env FFLAGS=-O2
++env LDFLAGS=-g
++
+ # Here we build three program: one with explicit CGO use, one with no
+ # CGO use, and one that uses a stdlib package ("runtime/cgo") that has
+ # CGO in it. It used to be that only the explicit use of CGO would
+diff --git a/src/cmd/internal/archive/archive_test.go b/src/cmd/internal/archive/archive_test.go
+index 10a3d6e..f758bba 100644
+--- a/src/cmd/internal/archive/archive_test.go
++++ b/src/cmd/internal/archive/archive_test.go
+@@ -282,6 +282,11 @@ func TestParseCGOArchive(t *testing.T) {
+ 				t.Errorf("text header does not contain GOARCH %s: %q", runtime.GOARCH, e.Obj.TextHeader)
+ 			}
+ 			continue
++		case EntrySentinelNonObj:
++			if e.Size != 0 || (e.Name != "preferlinkext" && e.Name != "dynimportfail") {
++				t.Fatalf("invalid linker sentinel: %+v", e)
++			}
++			continue
+ 		case EntryNativeObj:
+ 		}
+ 
