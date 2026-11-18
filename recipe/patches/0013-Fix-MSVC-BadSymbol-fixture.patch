@@ -1,0 +1,99 @@
+From: ClayWarren <warren.clay@icloud.com>
+Subject: [PATCH] testerrors: construct valid MSVC BadSymbol fixtures
+
+Export and import the fixture data explicitly for MSVC targets, mutate the
+import archive, and normalize directive paths. Require the intended CGo
+rejection so unrelated linker failures cannot produce a false pass.
+
+--- a/src/cmd/cgo/internal/testerrors/badsym_test.go
++++ b/src/cmd/cgo/internal/testerrors/badsym_test.go
+@@ -11,6 +11,7 @@
+ 	"os"
+ 	"os/exec"
+ 	"path/filepath"
++	"runtime"
+ 	"strings"
+ 	"testing"
+ 	"unicode"
+@@ -23,8 +24,16 @@
+ const magicReplace = "\n//go:cgo_ldflag \"-badflag\"\n//"
+ 
+ const cSymbol = "BadSymbol" + magicInput + "Name"
+-const cDefSource = "int " + cSymbol + " = 1;"
+-const cRefSource = "extern int " + cSymbol + "; int F() { return " + cSymbol + "; }"
++const cDefSource = `
++#ifdef _MSC_VER
++__declspec(dllexport)
++#endif
++int ` + cSymbol + " = 1;"
++const cRefSource = `
++#ifdef _MSC_VER
++__declspec(dllimport)
++#endif
++extern int ` + cSymbol + "; int F() { return " + cSymbol + "; }"
+ 
+ // goSource is the source code for the trivial Go file we use.
+ // We will replace TMPDIR with the temporary directory name.
+@@ -69,10 +78,23 @@
+ 	cRefFile := makeFile(cdir, "cref.c", cRefSource)
+ 
+ 	ccCmd := cCompilerCmd(t)
++	msvc := false
++	if runtime.GOOS == "windows" {
++		probe := append(append([]string(nil), ccCmd...), "-dM", "-E", "-x", "c", "-")
++		macros, err := exec.Command(probe[0], probe[1:]...).CombinedOutput()
++		if err != nil {
++			t.Fatalf("probing compiler target: %v\n%s", err, macros)
++		}
++		msvc = bytes.Contains(macros, []byte("#define _MSC_VER "))
++	}
++	cImport := filepath.Join(cdir, "c.lib")
+ 
+ 	cCompile := func(arg, base, src string) string {
+ 		out := filepath.Join(cdir, base)
+-		run := append(ccCmd, arg, "-o", out, src)
++		run := append(append([]string(nil), ccCmd...), arg, "-o", out, src)
++		if msvc && arg == "-shared" {
++			run = append(run, "-Wl,-implib:"+cImport)
++		}
+ 		output, err := exec.Command(run[0], run[1:]...).CombinedOutput()
+ 		if err != nil {
+ 			t.Log(run)
+@@ -130,7 +152,14 @@
+ 	cBadObj := filepath.Join(godir, "cbad.o")
+ 	rewrite(cObj, cBadObj)
+ 
+-	goSourceBadObject := strings.ReplaceAll(goSource, "TMPDIR", godir)
++	goSourceBadObject := strings.ReplaceAll(goSource, "TMPDIR", filepath.ToSlash(godir))
++	if msvc {
++		// MSVC links an import library rather than the DLL itself.
++		// Keep the malformed symbol in every linker input, using an
++		// archive suffix accepted by the existing CGo flag validation.
++		rewrite(cImport, filepath.Join(godir, "cbad.a"))
++		goSourceBadObject = strings.ReplaceAll(goSourceBadObject, "cbad.so", "cbad.a")
++	}
+ 	makeFile(godir, "go.go", goSourceBadObject)
+ 
+ 	makeFile(godir, "go.mod", "module badsym")
+@@ -150,9 +179,11 @@
+ 
+ 	t.Logf("%s", output)
+ 
++	foundRejection := false
+ 	for _, line := range bytes.Split(output, []byte("\n")) {
+ 		if bytes.Contains(line, []byte("dynamic symbol")) && bytes.Contains(line, []byte("contains unsupported character")) {
+ 			// This is the error from cgo.
++			foundRejection = true
+ 			continue
+ 		}
+ 
+@@ -168,6 +199,9 @@
+ 		if bytes.Contains(line, []byte("unrecognized")) || bytes.Contains(output, []byte("unknown")) {
+ 			t.Error("problem should have been caught before invoking C linker")
+ 		}
++	}
++	if !foundRejection {
++		t.Error("missing CGo unsupported-character rejection")
+ 	}
+ }
+ 

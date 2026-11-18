@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: conda-forge go-feedstock maintainers <noreply@conda-forge.org>
+Date: Thu, 3 Sep 2026 00:00:00 +0000
+Subject: [PATCH] cmd/cgo/internal/test: support Windows Clang complex types
+
+MSVC's complex.h does not provide the C99 complex macro consistently,
+and UCRT headers can instead define it as the legacy _complex struct.
+Clang supports the underlying _Complex keyword when targeting the MSVC
+ABI, so normalize the macro locally to keep issue 8694's complex-macro
+coverage on native Windows ARM64.
+---
+ src/cmd/cgo/internal/test/issue8694.go | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/cmd/cgo/internal/test/issue8694.go b/src/cmd/cgo/internal/test/issue8694.go
+--- a/src/cmd/cgo/internal/test/issue8694.go
++++ b/src/cmd/cgo/internal/test/issue8694.go
+@@ -9,6 +9,13 @@ package cgotest
+ /*
+ #include <complex.h>
+ 
++#if defined(_MSC_VER) && defined(__clang__)
++#ifdef complex
++#undef complex
++#endif
++#define complex _Complex
++#endif
++
+ complex float complexFloatSquared(complex float a) { return a*a; }
+ complex double complexDoubleSquared(complex double a) { return a*a; }
+ */
+-- 
+2.51.0

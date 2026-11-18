@@ -14,15 +14,19 @@
 c_stdlib_version:         # [osx]
   - '13.0'                # [osx]
 
-# cgo needs a mingw-w64 toolchain on Windows, which conda-forge only provides
-# for win-64 (the m2w64_* compilers). Ship nocgo only on win-arm64.
+# Native Windows ARM64 CGo uses Clang's GCC-compatible driver.
+c_compiler:                 # [win and arm64]
+  - clang                   # [win and arm64]
+c_compiler_version:         # [win and arm64]
+  - 23                      # [win and arm64]
+
 go_variant_str:
-  - cgo                   # [not (win and arm64)]
+  - cgo
   - nocgo
 
 # One-hot-encoding of the variant selection above
 cgo:
-  - true                  # [not (win and arm64)]
+  - true
   - false
 
 #

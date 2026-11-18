@@ -1,3 +1,10 @@
+## Windows ARM64 CGo
+
+The recipe uses MSVC-target Clang with external CGo linking. The installed
+package tests exercise default linking, PIE, C globals, DLL imports and
+quoted linker flags. The Go test capability override applies only to CGo
+with this toolchain. Pure Go can still use internal linking.
+
 # The initial patches - which were created as described below - were manually ported to newer version.
 The following steps need to be regarded:
  1. : disable backported patches already in new version available

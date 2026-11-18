@@ -1,0 +1,37 @@
+--- a/src/cmd/go/internal/work/exec.go
++++ b/src/cmd/go/internal/work/exec.go
+@@ -3157,16 +3157,6 @@ func (b *Builder) processCgoOutputs(a *Action, runCgoProvider *runCgoProvider, c
+ 
+ 	sh := b.Shell(a)
+ 
+-	// Output the preferlinkext file if the run cgo action determined this package
+-	// was not compatible for internal linking based on CFLAGS, CXXFLAGS, or FFLAGS.
+-	if runCgoProvider.notCompatibleForInternalLinking {
+-		tokenFile := objdir + "preferlinkext"
+-		if err := sh.writeFile(tokenFile, nil); err != nil {
+-			return nil, nil, err
+-		}
+-		outObj = append(outObj, tokenFile)
+-	}
+-
+ 	var collectAction *Action
+ 	for _, dep := range a.Deps {
+ 		if dep.Mode == "collect cgo" {
+@@ -3206,6 +3196,17 @@ func (b *Builder) processCgoOutputs(a *Action, runCgoProvider *runCgoProvider, c
+ 		noCompiler()
+ 	}
+ 
++	// Add the archive marker after dynimport; it is not a C linker input.
++	// Output the preferlinkext file if the run cgo action determined this package
++	// was not compatible for internal linking based on CFLAGS, CXXFLAGS, or FFLAGS.
++	if runCgoProvider.notCompatibleForInternalLinking {
++		tokenFile := objdir + "preferlinkext"
++		if err := sh.writeFile(tokenFile, nil); err != nil {
++			return nil, nil, err
++		}
++		outObj = append(outObj, tokenFile)
++	}
++
+ 	// Double check the //go:cgo_ldflag comments in the generated files.
+ 	// The compiler only permits such comments in files whose base name
+ 	// starts with "_cgo_". Make sure that the comments in those files

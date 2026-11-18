@@ -1,0 +1,37 @@
+Select lld-link for Windows ARM64 external CGo linking.
+
+diff --git a/src/cmd/go/internal/work/exec.go b/src/cmd/go/internal/work/exec.go
+--- a/src/cmd/go/internal/work/exec.go
++++ b/src/cmd/go/internal/work/exec.go
+@@ -2644,6 +2644,7 @@ func (b *Builder) gccArchArgs() []string {
+ // using conda based compilers, or return the unmodified default no environment variable is found.
+ // On linux, it will disable the linker's gc-sections option.
+ // On mac/darwin, it will change/reset the macosx minimal version, and set the isysroot if available.
++// On Windows ARM64, it will select lld-link for CGo.
+ func condaGetCompilerFlags(key, def string) string {
+ 	if value, ok := os.LookupEnv(key); ok {
+ 		switch cfg.Goos {
+@@ -2667,6 +2668,11 @@ func condaGetCompilerFlags(key, def string) string {
+ 					value = value + " -isysroot " + sysroot
+ 				}
+ 			}
++		case "windows":
++			// Go's MSVC-target Clang support requires lld-link.
++			if key == "LDFLAGS" && cfg.Goarch == "arm64" {
++				value += " -fuse-ld=lld"
++			}
+ 		}
+ 		return value
+ 	}
+diff --git a/src/cmd/link/internal/ld/lib.go b/src/cmd/link/internal/ld/lib.go
+--- a/src/cmd/link/internal/ld/lib.go
++++ b/src/cmd/link/internal/ld/lib.go
+@@ -3187,6 +3187,7 @@ func (ctxt *Link) isLLD() bool {
+ 	extld := ctxt.extld()
+ 	name, args := extld[0], extld[1:]
+-	args = append(args, trimLinkerArgv(flagExtldflags)...)
++	linkerFlags := slices.Concat(ldflag, flagExtldflags)
++	args = append(args, trimLinkerArgv(linkerFlags)...)
+ 	args = append(args, "-Wl,--version")
+ 	cmd := exec.Command(name, args...)
+ 	if out, err := cmd.CombinedOutput(); err == nil {
