@@ -119,8 +119,8 @@ outputs:
         strong:
           - if: linux and cgo
             then: __glibc >=${{ c_stdlib_version }}
-          - if: osx and cgo
-            then: __osx >=12
+          - if: osx
+            then: __osx >=${{ c_stdlib_version }}
     tests:
       - files:
           recipe:
